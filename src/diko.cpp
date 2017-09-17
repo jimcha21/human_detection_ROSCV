@@ -14,9 +14,8 @@
 using namespace cv;
 using namespace std;
 
-void load_images( const string & prefix, const string & filename, vector< Mat > & img_lst , const bool isitPos)
+void load_images( const string & prefix, const string & filename, vector< Mat > & img_lst)
 {
-	cout << "mpainei sto " << prefix << " kai to arxeio eiani to " << filename << endl;
 	string line;
     ifstream file;
 
@@ -37,7 +36,7 @@ void load_images( const string & prefix, const string & filename, vector< Mat > 
             break;
         }
 		Mat img;
-		if(isitPos){
+		if(!filename.compare("pos.lst")){
 			img = imread( (prefix+"pos/"+line).c_str() ); // load the image
        	}else{
 			img = imread( (prefix+"neg/"+line).c_str() ); // load the image
@@ -46,8 +45,8 @@ void load_images( const string & prefix, const string & filename, vector< Mat > 
 		if( img.empty() ) // invalid image, just skip it.
             continue;
 
-        imshow( "image", img );
-        waitKey( 3 );
+/*        imshow( "image", img );
+        waitKey( 0 );*/
         img_lst.push_back( img.clone() );
     }
 }
@@ -55,6 +54,7 @@ void load_images( const string & prefix, const string & filename, vector< Mat > 
 
 void sample_neg( const vector< Mat > & full_neg_lst, vector< Mat > & neg_lst, const Size & size )
 {
+	cout<<"negs"<<endl;
     Rect box;
     box.width = size.width;
     box.height = size.height;
@@ -68,16 +68,25 @@ void sample_neg( const vector< Mat > & full_neg_lst, vector< Mat > & neg_lst, co
     vector< Mat >::const_iterator end = full_neg_lst.end();
     for( ; img != end ; ++img )
     {
+		if(img->cols<= size.width && img->rows<= size.height){
+			Mat roi = (*img);
+			neg_lst.push_back( roi.clone() );
+			imshow( "img", roi.clone() );
+			waitKey(0 );
+			continue;
+		}//else
+		
         box.x = rand() % (img->cols - size_x);
         box.y = rand() % (img->rows - size_y);
         Mat roi = (*img)(box);
         neg_lst.push_back( roi.clone() );
 
-        imshow( "img", roi.clone() );
-        waitKey( 10 );
+/*        imshow( "img", roi.clone() );
+        waitKey(0);*/
 
     }
 }
+
 int main( int argc,char *argv[],char *envp[]  )
 {
 	int count;  
@@ -90,6 +99,7 @@ int main( int argc,char *argv[],char *envp[]  )
 	}	
 		
 	vector< Mat > pos_lst;
+	
 	vector< Mat > full_neg_lst;
 	vector< Mat > neg_lst;
 	vector< Mat > gradient_lst;
@@ -98,9 +108,15 @@ int main( int argc,char *argv[],char *envp[]  )
     string pos_dir=argv[1];
 	string neg_dir=argv[2];
 
-	load_images(pos_dir,"pos.lst",pos_lst,true);
+	load_images(pos_dir,"pos.lst",pos_lst);
 	labels.assign( pos_lst.size(), +1 );
+	const unsigned int old = (unsigned int)labels.size();
 	
+	load_images( neg_dir, "neg.lst", full_neg_lst );
+	sample_neg( full_neg_lst, neg_lst, Size( 64,128 ) );
+    labels.insert( labels.end(), neg_lst.size(), -1 );
+	printf("%d %d\n",(int)pos_lst.size(),(int)neg_lst.size());
+    
 	//sample_neg( full_neg_lst, neg_lst, Size( 64,128 ) );
 }
 
