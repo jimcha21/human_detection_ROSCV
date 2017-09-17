@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>human_detection</name>
+  <name>detection</name>
   <version>0.0.0</version>
   <description>The human_detection package</description>
 
