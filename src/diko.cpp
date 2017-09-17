@@ -45,8 +45,11 @@ void load_images( const string & prefix, const string & filename, vector< Mat > 
 		if( img.empty() ) // invalid image, just skip it.
             continue;
 
-/*        imshow( "image", img );
-        waitKey( 0 );*/
+/*
+        imshow( "image", img );
+        waitKey( 0 );
+*/
+		
         img_lst.push_back( img.clone() );
     }
 }
@@ -81,9 +84,11 @@ void sample_neg( const vector< Mat > & full_neg_lst, vector< Mat > & neg_lst, co
         Mat roi = (*img)(box);
         neg_lst.push_back( roi.clone() );
 
-/*        imshow( "img", roi.clone() );
-        waitKey(0);*/
 
+/*		imshow( "img", roi.clone() );
+		waitKey(0);
+*/
+		
     }
 }
 
@@ -115,7 +120,7 @@ int main( int argc,char *argv[],char *envp[]  )
 	load_images( neg_dir, "neg.lst", full_neg_lst );
 	sample_neg( full_neg_lst, neg_lst, Size( 64,128 ) );
     labels.insert( labels.end(), neg_lst.size(), -1 );
-	printf("%d %d\n",(int)pos_lst.size(),(int)neg_lst.size());
+	printf("Negs %d %d\n",(int)pos_lst.size(),(int)neg_lst.size());
     
 	//sample_neg( full_neg_lst, neg_lst, Size( 64,128 ) );
 }
