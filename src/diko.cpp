@@ -1,5 +1,8 @@
 #include <opencv2/opencv.hpp>
 #include "opencv2/core/core.hpp"
+
+#include "opencv2/ml/ml.hpp"
+
 #include <string>
 #include <fstream>
 #include <iostream>     // std::cout
@@ -12,7 +15,11 @@
 #define GetCurrentDir getcwd
 
 using namespace cv;
+//using namespace ml;
 using namespace std;
+
+void train_svm( const vector< Mat > & gradient_lst, const vector< int > & labels );
+
 
 void load_images( const string & prefix, const string & filename, vector< Mat > & img_lst)
 {
@@ -53,7 +60,99 @@ void load_images( const string & prefix, const string & filename, vector< Mat > 
         img_lst.push_back( img.clone() );
     }
 }
+void convert_to_ml(const std::vector< cv::Mat > & train_samples, cv::Mat& trainData )
+{
+    //--Convert data
+    const int rows = (int)train_samples.size();
+    const int cols = (int)std::max( train_samples[0].cols, train_samples[0].rows );
+    cv::Mat tmp(1, cols, CV_32FC1); //< used for transposition if needed
+    trainData = cv::Mat(rows, cols, CV_32FC1 );
+    vector< Mat >::const_iterator itr = train_samples.begin();
+    vector< Mat >::const_iterator end = train_samples.end();
+    for( int i = 0 ; itr != end ; ++itr, ++i )
+    {
+        CV_Assert( itr->cols == 1 ||
+            itr->rows == 1 );
+        if( itr->cols == 1 )
+        {
+            transpose( *(itr), tmp );
+            tmp.copyTo( trainData.row( i ) );
+        }
+        else if( itr->rows == 1 )
+        {
+            itr->copyTo( trainData.row( i ) );
+        }
+    }
+}
 
+//checks the params pls --> http://docs.opencv.org/2.4.13/modules/ml/doc/support_vector_machines.html?highlight=cvsvm
+	void train_svm( const vector< Mat > & gradient_lst, const vector< int > & labels )
+{
+
+    Mat train_data;
+    convert_to_ml( gradient_lst, train_data );
+
+    clog << "Start training...";
+	CvSVM svm;
+	
+	
+    //Ptr<cvSVM> svm = cvSVM::create();
+	
+	CvSVMParams params;
+    params.svm_type=CvSVM::EPS_SVR;
+	params.kernel_type=CvSVM::RBF;
+	params.degree=3;
+	params.gamma=0;
+	params.coef0=0.0;
+	params.Cvalue=0.1;
+	params.nu=0.5;
+	params.p=0.1;
+	params.class_weights=0;
+	params.term_crit=cvTermCriteria( CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 1000, FLT_EPSILON );
+	
+	//svm->setCoef0(0.0);
+    //svm->setDegree(3);
+    //svm->setTermCriteria(TermCriteria( CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 1000, 1e-3 ));
+    //svm->setGamma(0);
+    //svm->setKernel(SVM::LINEAR);
+    //svm->setNu(0.5);
+    //svm->setP(0.1); // for EPSILON_SVR, epsilon in loss function?
+    //svm->setC(0.01); // From paper, soft classifier
+    
+	//svm->setType(SVM::EPS_SVR); // C_SVC; // EPSILON_SVR; // may be also NU_SVR; // do regression task
+    
+    svm.train(train_data, labelsMat, Mat(), Mat(), params);
+	//svm->train(train_data, ROW_SAMPLE, Mat(labels));
+    
+	clog << "...[done]" << endl;
+
+    svm->save( "my_people_detector.yml" );
+}
+
+void compute_hog( const vector< Mat > & img_lst, vector< Mat > & gradient_lst, const Size & size )
+{
+    HOGDescriptor hog;
+    hog.winSize = size;
+    Mat gray;
+    vector< Point > location;
+    vector< float > descriptors;
+
+    vector< Mat >::const_iterator img = img_lst.begin();
+    vector< Mat >::const_iterator end = img_lst.end();
+    int c=0;
+    for( ; img != end ; ++img )
+    {
+        c++;
+        cvtColor( *img, gray, COLOR_BGR2GRAY );
+        hog.compute( gray, descriptors, Size( 8, 8 ), Size( 0, 0 ), location );
+        gradient_lst.push_back( Mat( descriptors ).clone() );
+/*
+        imshow( "gradient", get_hogdescriptor_visu( img->clone(), descriptors, size ) );
+        waitKey( 0 );*/
+
+    }
+    printf("%d\n", c);
+}
 
 void sample_neg( const vector< Mat > & full_neg_lst, vector< Mat > & neg_lst, const Size & size )
 {
@@ -94,6 +193,7 @@ void sample_neg( const vector< Mat > & full_neg_lst, vector< Mat > & neg_lst, co
 
 int main( int argc,char *argv[],char *envp[]  )
 {
+
 	int count;  
 
 	string current_dir=argv[0];	
@@ -121,8 +221,12 @@ int main( int argc,char *argv[],char *envp[]  )
 	sample_neg( full_neg_lst, neg_lst, Size( 64,128 ) );
     labels.insert( labels.end(), neg_lst.size(), -1 );
 	printf("Negs %d %d\n",(int)pos_lst.size(),(int)neg_lst.size());
-    
-	//sample_neg( full_neg_lst, neg_lst, Size( 64,128 ) );
+	CV_Assert( old < labels.size() );
+	
+	compute_hog( pos_lst, gradient_lst, Size( 64,128 ) );
+	compute_hog( neg_lst, gradient_lst, Size( 64,128 ) );
+	train_svm( gradient_lst, labels );
+	
 }
 
 
