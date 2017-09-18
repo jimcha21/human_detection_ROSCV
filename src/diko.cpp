@@ -152,7 +152,11 @@ gml_writer.write(argv[3], Users, edges);*/
 	//hog_detector.push_back()
 	cout<<hog_detector.size()<<endl;
 	//cout<<"o arithmos einain "<<hog_detector[0]<<" "<<hog_detector[1]<< "kai to size einai "<<hog.detector.size()<<endl;
-	
+
+	cout<<svm2.get_decision_function()->rho<<endl;
+	//cout<<svm2.decision_func.rho<<endl;
+
+
 }
 
 
