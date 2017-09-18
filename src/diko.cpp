@@ -100,15 +100,15 @@ void convert_to_ml(const std::vector< cv::Mat > & train_samples, cv::Mat& trainD
 	
 	CvSVMParams params;
     params.svm_type=CvSVM::EPS_SVR;
-	params.kernel_type=CvSVM::RBF;
+	params.kernel_type=CvSVM::LINEAR;
 	params.degree=3;
 	params.gamma=0;
 	params.coef0=0.0;
-	params.Cvalue=0.1;
+	params.C=0.01;
 	params.nu=0.5;
 	params.p=0.1;
 	params.class_weights=0;
-	params.term_crit=cvTermCriteria( CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 1000, FLT_EPSILON );
+	params.term_crit=cvTermCriteria(CV_TERMCRIT_ITER, 100, 1e-6);
 	
 	//svm->setCoef0(0.0);
     //svm->setDegree(3);
@@ -121,12 +121,12 @@ void convert_to_ml(const std::vector< cv::Mat > & train_samples, cv::Mat& trainD
     
 	//svm->setType(SVM::EPS_SVR); // C_SVC; // EPSILON_SVR; // may be also NU_SVR; // do regression task
     
-    svm.train(train_data, labelsMat, Mat(), Mat(), params);
+    svm.train(train_data, Mat(labels), Mat(), Mat(), params);
 	//svm->train(train_data, ROW_SAMPLE, Mat(labels));
     
 	clog << "...[done]" << endl;
 
-    svm->save( "my_people_detector.yml" );
+	svm.save( "my_people_detector.yml" );
 }
 
 void compute_hog( const vector< Mat > & img_lst, vector< Mat > & gradient_lst, const Size & size )
