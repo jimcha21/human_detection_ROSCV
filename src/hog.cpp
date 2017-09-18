@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include "opencv2/gpu/gpu.hpp"
 #include "opencv2/highgui/highgui.hpp"
+#include "opencv2/ml/ml.hpp"
 
 using namespace std;
 using namespace cv;
@@ -249,13 +250,24 @@ void App::run()
     Size win_size(args.win_width, args.win_width * 2); //(64, 128) or (48, 96)
     Size win_stride(args.win_stride_width, args.win_stride_height);
 
+/*CV_WRAP CvSVM svm;
+CvStatModel model;	
+svm.load("my_people_detector.yml");
+	
+vector< float > hog_detector;
+hog_detector=svm.get_support_vector();*/
+/*my_hog.setSVMDetector( hog_detector );
+// Set the people detector.
+hog.setSVMDetector( hog.getDefaultPeopleDetector() );*/
+// Open the camera.
+	
     // Create HOG descriptors and detectors here
     vector<float> detector;
     if (win_size == Size(64, 128))
         detector = cv::gpu::HOGDescriptor::getPeopleDetector64x128();
     else
         detector = cv::gpu::HOGDescriptor::getPeopleDetector48x96();
-
+    cout<<"detector size is "<<detector[0]<< endl;
     cv::gpu::HOGDescriptor gpu_hog(win_size, Size(16, 16), Size(8, 8), Size(8, 8), 9,
                                    cv::gpu::HOGDescriptor::DEFAULT_WIN_SIGMA, 0.2, gamma_corr,
                                    cv::gpu::HOGDescriptor::DEFAULT_NLEVELS);
@@ -264,6 +276,7 @@ void App::run()
     gpu_hog.setSVMDetector(detector);
     cpu_hog.setSVMDetector(detector);
 
+  //  return;
     while (running)
     {
         VideoCapture vc;

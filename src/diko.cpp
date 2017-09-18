@@ -127,7 +127,35 @@ void convert_to_ml(const std::vector< cv::Mat > & train_samples, cv::Mat& trainD
 	clog << "...[done]" << endl;
 
 	svm.save( "my_people_detector.yml" );
+
+
+/*	GMLwriter gml_writer;   
+gml_writer.write(argv[3], Users, edges);*/
+
+	CV_WRAP CvSVM svm2;
+	CvStatModel model;	
+	svm2.load("my_people_detector.yml");
+
+	//float* hog_detector;
+	const float* float_mat =svm2.get_support_vector(0);
+	cout<<float_mat[3779]<<" "<<float_mat[3780]<< endl;
+	
+	 //this is protected, but can access due to inheritance rules 
+	 // const CvSVMDecisionFunc *dec = CvSVM::decision_func;
+
+	//cout<<svm::decision_func.rho<<endl;
+	vector<float> hog_detector;
+	for(int i=0; i<svm2.get_var_count();i++){
+		hog_detector.push_back(float_mat[i]);
+	}
+	//float rho=svm2.get_params().
+	//hog_detector.push_back()
+	cout<<hog_detector.size()<<endl;
+	//cout<<"o arithmos einain "<<hog_detector[0]<<" "<<hog_detector[1]<< "kai to size einai "<<hog.detector.size()<<endl;
+	
 }
+
+
 
 void compute_hog( const vector< Mat > & img_lst, vector< Mat > & gradient_lst, const Size & size )
 {
@@ -173,8 +201,8 @@ void sample_neg( const vector< Mat > & full_neg_lst, vector< Mat > & neg_lst, co
 		if(img->cols<= size.width && img->rows<= size.height){
 			Mat roi = (*img);
 			neg_lst.push_back( roi.clone() );
-			imshow( "img", roi.clone() );
-			waitKey(0 );
+/*			imshow( "img", roi.clone() );
+			waitKey(0 );*/
 			continue;
 		}//else
 		
