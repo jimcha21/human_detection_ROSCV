@@ -260,20 +260,50 @@ hog_detector=svm.get_support_vector();*/
 // Set the people detector.
 hog.setSVMDetector( hog.getDefaultPeopleDetector() );*/
 // Open the camera.
-	
+
+CV_WRAP CvSVM svm2;
+CvStatModel model;
+//return;
+svm2.load("my_people_detector.yml");
+//return;
+//float* hog_detector;
+const float* float_mat =svm2.get_support_vector(0);
+//cout<<float_mat[3779]<<" "<<float_mat[3780]<< endl;
+
+ //this is protected, but can access due to inheritance rules 
+ // const CvSVMDecisionFunc *dec = CvSVM::decision_func;
+
+//cout<<svm::decision_func.rho<<endl;
+vector<float> hog_detector;
+for(int i=0; i<svm2.get_var_count();i++){
+        hog_detector.push_back(float_mat[i]);
+}
+//float rho=svm2.get_params().
+//hog_detector.push_back()
+cout<<"Hog detector size->"<<hog_detector.size()<<endl;
+//cout<<"o arithmos einain "<<hog_detector[0]<<" "<<hog_detector[1]<< "kai to size einai "<<hog.detector.size()<<endl;
+
+cout<<"SVM file's rho parameter="<<svm2.get_decision_function()->rho<<endl;
+//cout<<svm2.decision_func.rho<<endl;
+
+
     // Create HOG descriptors and detectors here
     vector<float> detector;
     if (win_size == Size(64, 128))
         detector = cv::gpu::HOGDescriptor::getPeopleDetector64x128();
     else
         detector = cv::gpu::HOGDescriptor::getPeopleDetector48x96();
-    cout<<"detector size is "<<detector[0]<< endl;
+    cout<<"First vector  "<<detector[0]<< endl;
     cv::gpu::HOGDescriptor gpu_hog(win_size, Size(16, 16), Size(8, 8), Size(8, 8), 9,
                                    cv::gpu::HOGDescriptor::DEFAULT_WIN_SIGMA, 0.2, gamma_corr,
                                    cv::gpu::HOGDescriptor::DEFAULT_NLEVELS);
     cv::HOGDescriptor cpu_hog(win_size, Size(16, 16), Size(8, 8), Size(8, 8), 9, 1, -1,
                               HOGDescriptor::L2Hys, 0.2, gamma_corr, cv::HOGDescriptor::DEFAULT_NLEVELS);
-    gpu_hog.setSVMDetector(detector);
+    cout<<"Final auto detector size= "<<detector.size()<<endl;
+    hog_detector.push_back(svm2.get_decision_function()->rho);
+    cout<<"Final custom detector size = "<< hog_detector.size()<<endl;
+     
+    gpu_hog.setSVMDetector(hog_detector);
     cpu_hog.setSVMDetector(detector);
 
   //  return;
@@ -356,6 +386,13 @@ hog.setSVMDetector( hog.getDefaultPeopleDetector() );*/
             putText(img_to_show, "FPS (HOG only): " + hogWorkFps(), Point(5, 65), FONT_HERSHEY_SIMPLEX, 1., Scalar(255, 100, 0), 2);
             putText(img_to_show, "FPS (total): " + workFps(), Point(5, 105), FONT_HERSHEY_SIMPLEX, 1., Scalar(255, 100, 0), 2);
             imshow("opencv_gpu_hog", img_to_show);
+
+	    //store result image,
+	    vector<int> compression_params;
+	    compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+	    compression_params.push_back(9);
+	    imwrite("result_img.png", img_to_show, compression_params);
+            
 
             if (args.src_is_video || args.src_is_camera) vc >> frame;
 

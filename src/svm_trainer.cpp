@@ -188,7 +188,7 @@ void compute_hog( const vector< Mat > & img_lst, vector< Mat > & gradient_lst, c
 
 void sample_neg( const vector< Mat > & full_neg_lst, vector< Mat > & neg_lst, const Size & size )
 {
-	cout<<"negs"<<endl;
+//	cout<<"negs"<<endl;
     Rect box;
     box.width = size.width;
     box.height = size.height;
@@ -228,13 +228,20 @@ int main( int argc,char *argv[],char *envp[]  )
 
 	int count;  
 
-	string current_dir=argv[0];	
+	string pos_dir,neg_dir,current_dir=argv[0];	
 	
 	if(argc!=3){
-		cout<<"Please insert dataset dirs. /$ .. <pos_dir> <neg_dir>"<<endl;
-		return 0;
-	}	
+		cout<<"Please insert dataset dirs. /$ .. <pos_dir> <neg_dir>\nSetting manual folder directory (opencv/AerialDat)"<<endl;
+		pos_dir="opencv/AerialDat/";
+		neg_dir="opencv/AerialDat/";
+		//return 0;
 		
+	}else{
+		pos_dir=argv[1];
+		neg_dir=argv[2];
+	}		
+	
+	//string dir_name="opencv/AerialDat/";	
 	vector< Mat > pos_lst;
 	
 	vector< Mat > full_neg_lst;
@@ -242,17 +249,14 @@ int main( int argc,char *argv[],char *envp[]  )
 	vector< Mat > gradient_lst;
 	vector< int > labels;
 	
-    string pos_dir=argv[1];
-	string neg_dir=argv[2];
-
 	load_images(pos_dir,"pos.lst",pos_lst);
 	labels.assign( pos_lst.size(), +1 );
 	const unsigned int old = (unsigned int)labels.size();
-	
+
 	load_images( neg_dir, "neg.lst", full_neg_lst );
 	sample_neg( full_neg_lst, neg_lst, Size( 64,128 ) );
-    labels.insert( labels.end(), neg_lst.size(), -1 );
-	printf("Negs %d %d\n",(int)pos_lst.size(),(int)neg_lst.size());
+        labels.insert( labels.end(), neg_lst.size(), -1 );
+	printf("Pos num %d , Neg num  %d\n",(int)pos_lst.size(),(int)neg_lst.size());
 	CV_Assert( old < labels.size() );
 	
 	compute_hog( pos_lst, gradient_lst, Size( 64,128 ) );
