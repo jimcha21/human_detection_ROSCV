@@ -32,8 +32,20 @@ include_directories(include
   ${OpenCV_INCLUDE_DIRS}
 )
 
+add_executable(simple_pub src/simple_pub.cpp)
+target_link_libraries(simple_pub ${catkin_LIBRARIES} )
+
+add_executable(tool src/tool.cpp)
+target_link_libraries(tool ${catkin_LIBRARIES} )
+
+add_executable(stereo_match nrc/stereo_match.cpp)
+target_link_libraries(stereo_match ${catkin_LIBRARIES} )
+
 add_executable(gpu_similarity src/gpu_similarity.cpp)
 target_link_libraries(gpu_similarity ${catkin_LIBRARIES} )
+
+add_executable(multi_sm src/multi_sm.cpp)
+target_link_libraries(multi_sm ${catkin_LIBRARIES} )
 
 add_executable(hog src/hog.cpp)
 target_link_libraries(hog ${catkin_LIBRARIES} )
