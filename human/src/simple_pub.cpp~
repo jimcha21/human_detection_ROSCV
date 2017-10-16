@@ -1,9 +1,10 @@
 #include "ros/ros.h"
 #include "std_msgs/Bool.h"
 
+#include <guidance/sonar_info.h>
 #include <sstream>
 
-std_msgs::Bool hello;
+guidance::sonar_info hello;
 
 /**
  * This tutorial demonstrates simple sending of messages over the ROS system.
@@ -13,10 +14,10 @@ int main(int argc, char **argv)
 
   ros::init(argc, argv, "talker");
 
- 
+ 	
   ros::NodeHandle n;
 
-  ros::Publisher pub = n.advertise<std_msgs::Bool>("chatter", 1);
+  ros::Publisher pub = n.advertise<guidance::sonar_info>("chatter", 1);
 
   ros::Rate loop_rate(10);
 
@@ -25,8 +26,17 @@ int main(int argc, char **argv)
   while (ros::ok())
   {
  
-    hello.data=True;
+	 hello.obstacle_close.push_back(true);
+	 hello.obstacle_close.push_back(false);
+	 hello.sonar_id.push_back(1);
+	 hello.sonar_id.push_back(2);
+	 hello.distance.push_back(3.2);
+	 hello.distance.push_back(2.1);
+
     pub.publish(hello);
+	 hello.obstacle_close.clear();
+	 hello.sonar_id.clear();
+	hello.distance.clear();	
 
     ros::spinOnce();
 
