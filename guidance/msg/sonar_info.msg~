@@ -1,3 +1,0 @@
-bool obstacle_close
-int32 sonar_id
-float32 distance
