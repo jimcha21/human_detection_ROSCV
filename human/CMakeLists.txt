@@ -32,8 +32,8 @@ include_directories(include
   ${OpenCV_INCLUDE_DIRS}
 )
 
-add_executable(simple_pub src/simple_pub.cpp)
-target_link_libraries(simple_pub ${catkin_LIBRARIES} )
+#add_executable(simple_pub src/simple_pub.cpp)
+#target_link_libraries(simple_pub ${catkin_LIBRARIES} )
 
 add_executable(tool src/tool.cpp)
 target_link_libraries(tool ${catkin_LIBRARIES} )
