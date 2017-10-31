@@ -1,0 +1,33 @@
+#include <sys/statvfs.h>
+#include <iostream>
+#include <cstring>
+#include <stdio.h>
+#include <iostream>   
+#include <cstdlib> 
+
+using namespace std;
+
+int main( int argc, char *argv[] )
+{
+    struct statvfs fiData;
+	char* storage_name;
+	storage_name = (char*)malloc(200 * sizeof(char));
+	if(storage_name == NULL){
+		cerr << "Error..." << endl;
+		return 0;
+	}
+	strcpy(storage_name,"/media/ubuntu/3163-6234/"); 
+	cout<<storage_name<< <<endl;
+	
+    //Lets loopyloop through the argvs
+    for( int  i= 1 ; i<argc; i++ ) {
+            if((statvfs(argv[i],&fiData)) < 0 ) {
+                    cout << "\nFailed to stat:"  << argv[i];
+            } else {
+                    cout << "\nDisk: " <<  argv[i];
+                    cout << "\nBlock size: "<< fiData.f_bsize;
+                    cout << "\nTotal no blocks: "<< fiData.f_blocks;
+                    cout << "\nFree blocks: "<< fiData.f_bfree;
+            }
+    }
+}
