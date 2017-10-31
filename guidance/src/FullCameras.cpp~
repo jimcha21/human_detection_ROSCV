@@ -7,44 +7,44 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+#include <sstream>
 #include <ros/ros.h>
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/Image.h>
 #include <sensor_msgs/image_encodings.h>
-#include <guidance/sonar_info.h>
+
 #include <opencv2/opencv.hpp>
 
 #include "DJI_guidance.h"
 #include "DJI_utility.h"
 
-//#include <geometry_msgs/TransformStamped.h> //IMU
-//#include <geometry_msgs/Vector3Stamped.h> //velocity
-
+#include <geometry_msgs/TransformStamped.h> //IMU
+#include <geometry_msgs/Vector3Stamped.h> //velocity
 #include <sensor_msgs/LaserScan.h> //obstacle distance & ultrasonic
 
-using namespace cv;
+#include <sys/statvfs.h>
+#include <iostream>
+#include <cstring>
+
+#include <cstdlib> 
+
 using namespace std;
+using namespace cv;
 
 #define WIDTH 320
 #define HEIGHT 240
 #define IMAGE_SIZE (HEIGHT * WIDTH)
 
-#define CAMERA_PAIR_NUM 5
-bool ultrasonicSensors_fusion=false;
-guidance::sonar_info sonar_info_matr;
-float distance_low_thres=0.3;
 
-ros::Publisher image_pubs[10];
-ros::Publisher ultrasonic_pub,sonar_info_pub;
+ ros::Publisher image_pubs[10];
+ cv_bridge::CvImage images[10];
+ Mat greyscales[10] {Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),
+                    Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1)};
 
-cv_bridge::CvImage images[10];
-Mat greyscales[10] {Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),
-            Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1)};
-
-char       key         = 0;
-bool       show_images = 0;
-DJI_lock   g_lock;
-DJI_event  g_event;
+ char       key         = 0;
+ bool       show_images = 0;
+ DJI_lock   g_lock;
+ DJI_event  g_event;
 
  std::ostream& operator<<(std::ostream& out, const e_sdk_err_code value){
    const char* s = 0;
@@ -70,94 +70,100 @@ DJI_event  g_event;
   return out << s;
 }
 
+bool storage_check()
+{
+    struct statvfs fiData;
+	char* storage_name;
+	storage_name = (char*)malloc(200 * sizeof(char));
+	if(storage_name == NULL){
+		//cerr << "Error..." << endl;
+		return 0;
+	}
+	strcpy(storage_name,"/media/ubuntu/3163-6234/"); 
+	//cout<<storage_name<<endl;
+	
+    //Lets loopyloop through the argvs
+	if((statvfs(storage_name,&fiData)) < 0 ) {
+			cout << "\nFailed to stat:"  << endl;
+			return false;
+	} else {
+		//cout << "\nDisk: " <<  argv[i];
+/*			cout << "\nBlock size: "<< fiData.f_bsize;
+			cout << "\nTotal no blocks: "<< fiData.f_blocks;
+			cout << "\nFree blocks: "<< fiData.f_bfree;*/
+			
+			//if (fiData.f_bsize*fiData.f_bfree<3)
+			float free_space = (long long)(fiData.f_bfree)*(long long)fiData.f_bsize * pow(10,-9);
+			//cout << free_space << endl;	
+			if (free_space<0.1)	return false;
+	}	
+	return true;
+}
+
 int my_callback(int data_type, int data_len, char *content)
 {
-	  g_lock.enter();
+  g_lock.enter();
 
-		/* image data */
-	if (e_image == data_type && NULL != content)
-	{
-		//cout<<"image data "<< endl;
-		  
-		image_data* data = (image_data*)content;
-		//printf("hey");
-		for (int i = 0; i < 5; ++i)
-		{
-          if(!sonar_info_matr.enable_camera[i]) 
-              continue;
-		  
-          int j = 2*i;
-		  if(data->m_greyscale_image_left[i]){
-			memcpy(greyscales[j].data, data->m_greyscale_image_left[i], IMAGE_SIZE);
-			greyscales[j].copyTo(images[j].image);
-			images[j].header.stamp  = ros::Time::now();
-			images[j].encoding    = sensor_msgs::image_encodings::MONO8;
-			image_pubs[j].publish(images[j].toImageMsg());
-			  
-		cv_bridge::CvImagePtr cv_ptr;
-		try
-		{
-			cv_ptr = cv_bridge::toCvCopy(images[j].toImageMsg(), sensor_msgs::image_encodings::MONO8);
-		}
-		catch (cv_bridge::Exception& e)
-		{
-			ROS_ERROR("cv_bridge exception: %s", e.what());
-			return -1;
-		}
-		if(i==0){
-			cv::imshow("aa", cv_ptr->image);
-			cv::waitKey(3);
-		}		
-		
-		  }
-		  if(data->m_greyscale_image_right[i]){
-			memcpy(greyscales[j+1].data, data->m_greyscale_image_right[i], IMAGE_SIZE);
-			greyscales[j+1].copyTo(images[j+1].image);
-			images[j+1].header.stamp = ros::Time::now();
-			images[j+1].encoding = sensor_msgs::image_encodings::MONO8;
-			image_pubs[j+1].publish(images[j+1].toImageMsg());
-			  
-		  }
-		}
-
-
-	}
-	
-      /* ultrasonic */
-    if ( e_ultrasonic == data_type && NULL != content )
+    /* image data */
+  if (e_image == data_type && NULL != content)
+  {        
+    image_data* data = (image_data*)content;
+    
+    for (int i = 0; i < 5; ++i)
     {
-		
-	    //cout<<"ultrasonic data "<< endl;
-        ultrasonic_data *ultrasonic = (ultrasonic_data*)content;
-        // publish ultrasonic data
-        sensor_msgs::LaserScan g_ul;
-        g_ul.ranges.resize(CAMERA_PAIR_NUM);
-        g_ul.intensities.resize(CAMERA_PAIR_NUM);
-        g_ul.header.frame_id = "guidance";
-        g_ul.header.stamp = ros::Time::now();
-		sonar_info_matr.stamp = ros::Time::now(); 
-		
-        for ( int d = 0; d < CAMERA_PAIR_NUM; ++d ){
-            g_ul.ranges[d] = 0.001f * ultrasonic->ultrasonic[d];
-            g_ul.intensities[d] = 1.0 * ultrasonic->reliability[d];
-			sonar_info_matr.sonar_id.push_back(d+1);
-				
-			if(g_ul.ranges[d]<distance_low_thres){
-				sonar_info_matr.distance.push_back(g_ul.ranges[d]); sonar_info_matr.enable_camera.push_back(true);
-			}else{
-				sonar_info_matr.distance.push_back(-99); sonar_info_matr.enable_camera.push_back(false);
-			}
-			
-		}
-		
-		sonar_info_pub.publish(sonar_info_matr);
-        ultrasonic_pub.publish(g_ul);
-	
-		sonar_info_matr.enable_camera.clear();
-		sonar_info_matr.sonar_id.clear();
-		sonar_info_matr.distance.clear();		
+      int j = 2*i;
+      if(data->m_greyscale_image_left[i]){
+        memcpy(greyscales[j].data, data->m_greyscale_image_left[i], IMAGE_SIZE);
+		greyscales[j].copyTo(images[j].image);
 
-	}
+	  if(storage_check){
+			vector<int> compression_params;
+			compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+			compression_params.push_back(9);
+			std::string name="/media/ubuntu/3163-6234/stereo_footage/left_cam_";
+			std::stringstream id_info,id_info2;
+			id_info << i+1;
+			name=name + id_info.str();
+			id_info2 << ros::Time::now().toNSec();
+			//std::cout <<  ros::Time::now().toSec() <<std::endl;
+			name=name + "_" + id_info2.str() +".png" ;
+			//std::string timestamp= ;
+			//std::string name = a+".png";
+			imwrite(name, images[j].image, compression_params);
+	  }
+
+
+        images[j].header.stamp  = ros::Time::now();
+        images[j].encoding    = sensor_msgs::image_encodings::MONO8;
+        image_pubs[j].publish(images[j].toImageMsg());
+      }
+      if(data->m_greyscale_image_right[i]){
+        memcpy(greyscales[j+1].data, data->m_greyscale_image_right[i], IMAGE_SIZE);
+		greyscales[j+1].copyTo(images[j+1].image);
+
+	  if(storage_check){
+			vector<int> compression_params;
+			compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+			compression_params.push_back(9);
+			std::string name="/media/ubuntu/3163-6234/stereo_footage/right_cam_";
+			std::stringstream id_info,id_info2;
+			id_info << i+1;
+			name=name + id_info.str();
+			id_info2 << ros::Time::now().toNSec();
+			//std::cout <<  ros::Time::now().toSec() <<std::endl;
+			name=name + "_" + id_info2.str() +".png" ;
+			//std::string timestamp= ;
+			//std::string name = a+".png";
+			imwrite(name, images[j+1].image, compression_params);
+	  }
+
+        images[j+1].header.stamp = ros::Time::now();
+        images[j+1].encoding = sensor_msgs::image_encodings::MONO8;
+        image_pubs[j+1].publish(images[j+1].toImageMsg());
+      }
+    }
+
+  }
 
   key = waitKey(1);
 
@@ -196,9 +202,6 @@ int main(int argc, char** argv)
   image_pubs[8] = my_node.advertise<sensor_msgs::Image>("/guidance/4/left",1);
   image_pubs[9] = my_node.advertise<sensor_msgs::Image>("/guidance/4/right",1);
 
-  ultrasonic_pub			= my_node.advertise<sensor_msgs::LaserScan>("/guidance/ultrasonic",1);
-  sonar_info_pub 			= my_node.advertise<guidance::sonar_info>("/guidance/sonar_info", 1);
-  
   images[0].header.frame_id = "guidanceDown";
   images[1].header.frame_id = "guidanceDown";
   images[2].header.frame_id = "guidanceFront";
@@ -254,23 +257,11 @@ int main(int argc, char** argv)
   RETURN_IF_ERR(err_code);
   err_code = select_greyscale_image(e_vbus5, false);
   RETURN_IF_ERR(err_code);
-
-  //select ultrasonic data
-  select_ultrasonic();
-
   /* start data transfer */
   err_code = set_sdk_event_handler(my_callback);
   RETURN_IF_ERR(err_code);
   err_code = start_transfer();
   RETURN_IF_ERR(err_code);
-
-// for cameras' setting exposure MAKE IT LIKE GUIDANCENODE
-/*	exposure_param para;
-	para.m_is_auto_exposure = 1;
-	para.m_step = 10;
-	para.m_expected_brightness = 120;
-    para.m_camera_pair_index = CAMERA_ID;
-*/
 
   std::cout << "start_transfer" << std::endl;
 

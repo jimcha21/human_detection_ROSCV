@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 2.8.3)
-
 project(guidance)
 
 find_package(catkin REQUIRED COMPONENTS
@@ -19,7 +18,6 @@ add_message_files(
 generate_messages()
 
 catkin_package(
-CATKIN_DEPENDS message_runtime
 )
 
 include_directories(
@@ -27,7 +25,6 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   include
 )
-
 
 message("System is: " ${CMAKE_SYSTEM_PROCESSOR})
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -58,11 +55,17 @@ link_libraries(
 add_executable(guidanceNode
   src/GuidanceNode.cpp
   src/DJI_utility.cpp)
-  
-add_executable(allCameras
-  src/FullCameras.cpp
-  src/DJI_utility.cpp)
-  
+
+add_executable(allCameras 
+	src/FullCameras.cpp
+	src/DJI_utility.cpp
+	)
+
+add_executable(node 
+	src/node.cpp
+	src/DJI_utility.cpp
+	)
+
 add_executable(guidanceNodeTest
   src/GuidanceNodeTest.cpp)
 
