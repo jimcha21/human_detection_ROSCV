@@ -87,8 +87,8 @@ bool SDcard_storage_check()
 		return 0;
 	}
 	
-	//!!!
-	strcpy(storage_name,"/media/ubuntu/3163-6234/"); 
+	//!!! must check that..
+	strcpy(storage_name,saving_dir); 
 	
 	if((statvfs(storage_name,&fiData)) < 0 ) {
 			cout << "\nFailed to stat:"  << endl;
