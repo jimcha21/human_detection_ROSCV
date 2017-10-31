@@ -22,8 +22,14 @@
 #include <geometry_msgs/Vector3Stamped.h> //velocity
 #include <sensor_msgs/LaserScan.h> //obstacle distance & ultrasonic
 
+#include <sys/statvfs.h>
+#include <iostream>
+#include <cstring>
 
- using namespace cv;
+#include <cstdlib> 
+
+using namespace std;
+using namespace cv;
 
 #define WIDTH 320
 #define HEIGHT 240
@@ -64,6 +70,36 @@
   return out << s;
 }
 
+bool storage_check()
+{
+    struct statvfs fiData;
+	char* storage_name;
+	storage_name = (char*)malloc(200 * sizeof(char));
+	if(storage_name == NULL){
+		//cerr << "Error..." << endl;
+		return 0;
+	}
+	strcpy(storage_name,"/media/ubuntu/3163-6234/"); 
+	//cout<<storage_name<<endl;
+	
+    //Lets loopyloop through the argvs
+	if((statvfs(storage_name,&fiData)) < 0 ) {
+			cout << "\nFailed to stat:"  << endl;
+			return false;
+	} else {
+		//cout << "\nDisk: " <<  argv[i];
+/*			cout << "\nBlock size: "<< fiData.f_bsize;
+			cout << "\nTotal no blocks: "<< fiData.f_blocks;
+			cout << "\nFree blocks: "<< fiData.f_bfree;*/
+			
+			//if (fiData.f_bsize*fiData.f_bfree<3)
+			float free_space = (long long)(fiData.f_bfree)*(long long)fiData.f_bsize * pow(10,-9);
+			//cout << free_space << endl;	
+			if (free_space<0.1)	return false;
+	}	
+	return true;
+}
+
 int my_callback(int data_type, int data_len, char *content)
 {
   g_lock.enter();
@@ -80,20 +116,21 @@ int my_callback(int data_type, int data_len, char *content)
         memcpy(greyscales[j].data, data->m_greyscale_image_left[i], IMAGE_SIZE);
 		greyscales[j].copyTo(images[j].image);
 
-vector<int> compression_params;
-compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
-compression_params.push_back(9);
-std::string name="left_cam_";
-std::stringstream id_info,id_info2;
-id_info << i;
-name=name + id_info.str();
-id_info2 << ros::Time::now().toSec();
-std::cout <<  ros::Time::now().toSec() <<std::endl;
-name=name + "_" + id_info2.str() +".png" ;
-//std::string timestamp= ;
-//std::string name = a+".png";
-
-imwrite(name, images[j].image, compression_params);
+	  if(storage_check){
+			vector<int> compression_params;
+			compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+			compression_params.push_back(9);
+			std::string name="/media/ubuntu/3163-6234/stereo_footage/left_cam_";
+			std::stringstream id_info,id_info2;
+			id_info << i+1;
+			name=name + id_info.str();
+			id_info2 << ros::Time::now().toNSec();
+			//std::cout <<  ros::Time::now().toSec() <<std::endl;
+			name=name + "_" + id_info2.str() +".png" ;
+			//std::string timestamp= ;
+			//std::string name = a+".png";
+			imwrite(name, images[j].image, compression_params);
+	  }
 
 
         images[j].header.stamp  = ros::Time::now();
@@ -104,12 +141,21 @@ imwrite(name, images[j].image, compression_params);
         memcpy(greyscales[j+1].data, data->m_greyscale_image_right[i], IMAGE_SIZE);
 		greyscales[j+1].copyTo(images[j+1].image);
 
-vector<int> compression_params;
-compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
-compression_params.push_back(9);
-imwrite("right.png", images[j+1].image, compression_params);
-
-
+	  if(storage_check){
+			vector<int> compression_params;
+			compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+			compression_params.push_back(9);
+			std::string name="/media/ubuntu/3163-6234/stereo_footage/right_cam_";
+			std::stringstream id_info,id_info2;
+			id_info << i+1;
+			name=name + id_info.str();
+			id_info2 << ros::Time::now().toNSec();
+			//std::cout <<  ros::Time::now().toSec() <<std::endl;
+			name=name + "_" + id_info2.str() +".png" ;
+			//std::string timestamp= ;
+			//std::string name = a+".png";
+			imwrite(name, images[j+1].image, compression_params);
+	  }
 
         images[j+1].header.stamp = ros::Time::now();
         images[j+1].encoding = sensor_msgs::image_encodings::MONO8;

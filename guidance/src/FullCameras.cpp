@@ -28,8 +28,8 @@
 
 #include <cstdlib> 
 
- using namespace std;
- using namespace cv;
+using namespace std;
+using namespace cv;
 
 #define WIDTH 320
 #define HEIGHT 240
