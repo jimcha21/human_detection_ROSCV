@@ -56,5 +56,9 @@ target_link_libraries(hog ${catkin_LIBRARIES} )
 add_executable(svm_trainer src/svm_trainer.cpp)
 target_link_libraries(svm_trainer ${catkin_LIBRARIES} )
 
+add_executable(talker src/talker.cpp)
+target_link_libraries(talker ${catkin_LIBRARIES})
 
 
+#add_executable(descriptor_extractor_matcher nrc/descriptor_extractor_matcher.cpp)
+#target_link_libraries(descriptor_extractor_matcher ${catkin_LIBRARIES} )

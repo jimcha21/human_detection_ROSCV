@@ -1,0 +1,105 @@
+#include <ros/ros.h>
+#include <image_transport/image_transport.h>
+#include <cv_bridge/cv_bridge.h>
+#include <sensor_msgs/image_encodings.h>
+
+#include <stdlib.h>
+
+#include <iostream>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/core/version.hpp>
+#include <opencv2/contrib/contrib.hpp>
+
+#include <libsgm.h>
+
+#if CV_MAJOR_VERSION == 2
+#endif
+
+using namespace std;
+
+static const std::string OPENCV_WINDOW = "Image window";
+
+class ImageConverter
+{
+  ros::NodeHandle nh_;
+  image_transport::ImageTransport it_;
+  image_transport::Subscriber image_sub_left_,image_sub_right_;
+  image_transport::Publisher image_pub_;
+
+public:
+  ImageConverter()
+    : it_(nh_)
+  {
+    // Subscrive to input video feed and publish output video feed
+    image_sub_left_ = it_.subscribe("/guidance/left_image", 1, &ImageConverter::imageCb, this);
+    image_sub_right_ = it_.subscribe("/guidance/right_image", 1, &ImageConverter::imageCb, this);
+    //image_pub_ = it_.advertise("/image_converter/output_video", 1);
+
+    cv::namedWindow(OPENCV_WINDOW);
+  }
+
+  ~ImageConverter()
+  {
+    cv::destroyWindow(OPENCV_WINDOW);
+  }
+
+  void imageCb(const sensor_msgs::ImageConstPtr& msg)
+  {
+    cv_bridge::CvImagePtr cv_ptr;
+    try
+    {
+      cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::MONO8);
+    }
+    catch (cv_bridge::Exception& e)
+    {
+      ROS_ERROR("cv_bridge exception: %s", e.what());
+      return;
+    }
+
+	int disp_size = 64,bits;
+	cout<<cv_ptr->image.type()<<"\n"<<endl;
+	cout<<"to CV_8UC1 "<<CV_8UC1<<"\n"<<endl;
+	cout<<"to CV_16UC1 "<<CV_16UC1<<"\n"<<endl;
+	cout<<"to CV_8UC3 "<<CV_8UC3<<"\n"<<endl;
+	cout<<"to CV_8UC4 "<<CV_8UC4<<"\n"<<endl;
+
+	switch (cv_ptr->image.type()) {
+	case CV_8UC1: bits = 8; cout<<"8 bit\n"; break;
+	case CV_16UC1: bits = 16; break;
+	default:
+		std::cerr << "invalid input image color format" << cv_ptr->image.type() << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+
+	sgm::StereoSGM ssgm(cv_ptr->image.cols, cv_ptr->image.rows, disp_size, bits, 8, sgm::EXECUTE_INOUT_HOST2HOST);
+
+	cv::Mat output(cv::Size(cv_ptr->image.cols, cv_ptr->image.rows), CV_8UC1);
+
+	ssgm.execute(cv_ptr->image.data, cv_ptr->image.data, (void**)&output.data);
+	
+
+	// Draw an example circle on the video stream
+	// if (cv_ptr->image.rows > 60 && cv_ptr->image.cols > 60)
+	// cv::circle(cv_ptr->image, cv::Point(50, 50), 10, CV_RGB(255,0,0));
+	// Update GUI Window
+	// cv::imshow(OPENCV_WINDOW, cv_ptr->image);
+	// cv::waitKey(3);
+
+	cv::imshow("image", output * 256 / disp_size);
+	int key = cv::waitKey();
+
+    // Output modified video stream
+    //image_pub_.publish(cv_ptr->toImageMsg());
+  }
+};
+
+int main(int argc, char** argv)
+{
+  ros::init(argc, argv, "image_converter");
+  ImageConverter ic;
+
+  ros::spin();
+  return 0;
+}
