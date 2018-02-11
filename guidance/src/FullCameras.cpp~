@@ -79,7 +79,7 @@ bool storage_check()
 		//cerr << "Error..." << endl;
 		return 0;
 	}
-	strcpy(storage_name,"/media/ubuntu/3163-6234/"); 
+	strcpy(storage_name,"/media/ubuntu/FLIR_DATA1/"); 
 	//cout<<storage_name<<endl;
 	
     //Lets loopyloop through the argvs
@@ -120,7 +120,7 @@ int my_callback(int data_type, int data_len, char *content)
 			vector<int> compression_params;
 			compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
 			compression_params.push_back(9);
-			std::string name="/media/ubuntu/3163-6234/stereo_footage/left_cam_";
+			std::string name="/media/ubuntu/FLIR_DATA1/stereo_footage/left_cam_";
 			std::stringstream id_info,id_info2;
 			id_info << i+1;
 			name=name + id_info.str();
@@ -145,7 +145,7 @@ int my_callback(int data_type, int data_len, char *content)
 			vector<int> compression_params;
 			compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
 			compression_params.push_back(9);
-			std::string name="/media/ubuntu/3163-6234/stereo_footage/right_cam_";
+			std::string name="/media/ubuntu/FLIR_DATA1/stereo_footage/right_cam_";
 			std::stringstream id_info,id_info2;
 			id_info << i+1;
 			name=name + id_info.str();

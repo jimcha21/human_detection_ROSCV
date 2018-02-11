@@ -10,9 +10,6 @@
 using namespace cv;
 using namespace std;
 
-std::vector<bool> hello;
-ros::Publisher pub;
-
 int main(int argc, char** argv)
 {
 	if( argc != 2)
@@ -36,23 +33,14 @@ int main(int argc, char** argv)
 	waitKey(0);                                          // Wait for a keystroke in the window
 	return 0;*/
 	
-	/*cvtColor(image, image, COLOR_BGRA2BGR);
+	cvtColor(image, image, COLOR_BGRA2BGR);
 	//capturing image here
 	vector<int> compression_params;
 	compression_params.push_back(CV_IMWRITE_PXM_BINARY);
 	compression_params.push_back(1);
-*/
-	
-	pub== my_node.advertise<sensor_msgs::Image>("/guidance/right_image",1);
-	while(ros::ok){
-		hello.push_back("True");;
-		pub.publish(hello);
-		hello.clear();	
-		ros::spin();   
-}
 
 	//writing as ppm image
-//	imwrite("Image_1.ppm", image, compression_params);
+	imwrite("Image_1.ppm", image, compression_params);
 	return 0;
 	
 	
