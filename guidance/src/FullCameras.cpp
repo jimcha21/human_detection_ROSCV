@@ -35,14 +35,17 @@ using namespace cv;
 #define HEIGHT 240
 #define IMAGE_SIZE (HEIGHT * WIDTH)
 
-
  ros::Publisher image_pubs[10];
  cv_bridge::CvImage images[10];
  Mat greyscales[10] {Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),
                     Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1)};
 
  char       key         = 0;
- bool       show_images = 0;
+ bool       enable_sonars= false;
+ bool       enable_cams = false;
+ bool       store_images = false;
+ std::string    path = "/media/ubuntu/USB";
+
  DJI_lock   g_lock;
  DJI_event  g_event;
 
@@ -79,9 +82,10 @@ bool storage_check()
 		//cerr << "Error..." << endl;
 		return 0;
 	}
-	strcpy(storage_name,"/media/ubuntu/FLIR_DATA1/"); 
-	//cout<<storage_name<<endl;
-	
+//strcpy(storage_name,"/media/ubuntu/FLIR_DATA1/"); 
+	strcpy(storage_name,path.c_str());
+        cout<<storage_name<<endl;
+	return  false;
     //Lets loopyloop through the argvs
 	if((statvfs(storage_name,&fiData)) < 0 ) {
 			cout << "\nFailed to stat:"  << endl;
@@ -176,17 +180,50 @@ int my_callback(int data_type, int data_len, char *content)
 #define RETURN_IF_ERR(err_code) { if( err_code ){ release_transfer(); \
 std::cout<<"Error: "<<(e_sdk_err_code)err_code<<" at "<<__LINE__<<","<<__FILE__<<std::endl; return -1;}}
 
+void print_help(){
+    printf("Execute like 'rosrun guidance allCameras -cam -son -store /media/ubuntu/USB' \nThis program publish all the cameras in topics (-cam) and sonar info in separate topics (-son) \n press 'q' to quit.\n");
+    return;
+}
+
 int main(int argc, char** argv)
 {
-  if (argc < 2) {
-    show_images = true;
+  //printf("the argc %d",argc);
+ storage_check(); 
+ if(argc>=2){
+     for(int i=1;i<argc;i++){
+        if(!strcmp(argv[i], "-h")){
+            print_help();
+            i=999;
+            return 0;
+        }else if(!strcmp(argv[i], "-cam")){
+            printf("Enabling Camera topics.\n");
+            enable_cams=true;        
+        }else if(!strcmp(argv[i], "-son")){
+             printf("Enabling Sonar topics.\n");
+             enable_sonars=true;
+        }else if(!strcmp(argv[i], "-store")){
+            printf("Storing images at:\n");
+            store_images=true;
+            if(argc!=i+1){
+                if (argv[i+1][0]=='/'){
+                    printf("Saving in directory %s",argv[++i]); //to bypass the directory parameter
+                    path = argv[i];
+               }else{
+                    printf("Invalid storing path!\n");
+                    return 0;
+                } 
+           }
+        }else{
+            printf("Unknown parameter/s!\n");
+            return 0;
+        }
+     }
+  }else{
+    print_help(); return 0; 
   }
-  if(argc>=2 && !strcmp(argv[1], "h")){
-    printf("This program publish all the cameras in topics \n from /guidance/cameras/0/left to /guidance/cameras/4/right\n"
-           "press 'q' to quit.");
-    return 0;
-  }
-
+  
+  printf("the program ended\n");
+  return 0;
   /* initialize ros */
   ros::init(argc, argv, "GuidanceCamerasOnly");
   ros::NodeHandle my_node;
