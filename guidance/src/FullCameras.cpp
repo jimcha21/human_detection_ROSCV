@@ -73,6 +73,7 @@ using namespace cv;
   return out << s;
 }
 
+//Checking available space in $path directory.
 bool storage_check()
 {
     struct statvfs fiData;
@@ -82,10 +83,23 @@ bool storage_check()
 		//cerr << "Error..." << endl;
 		return 0;
 	}
-//strcpy(storage_name,"/media/ubuntu/FLIR_DATA1/"); 
-	strcpy(storage_name,path.c_str());
-        cout<<storage_name<<endl;
-	return  false;
+    
+    //strcpy(storage_name,"/media/ubuntu/FLIR_DATA1/"); 
+	//strcpy(storage_name,path.c_str());
+    //cout<<storage_name<<endl;
+    
+    //strcat(storage_name,"/stereo_footage/left_cam_");
+    //storage_name.append(3, '*');
+    //std::string name=storage_name;//"/stereo_footage/left_cam_";
+    //std::stringstream id_info,id_info2;
+    //id_info << 1;
+    //name=name + id_info.str();
+    //id_info2 << ros::Time::now().toNSec();
+    
+    //cout<<"final countdown "<<name<<endl;
+
+
+    return  false;
     //Lets loopyloop through the argvs
 	if((statvfs(storage_name,&fiData)) < 0 ) {
 			cout << "\nFailed to stat:"  << endl;
@@ -124,7 +138,8 @@ int my_callback(int data_type, int data_len, char *content)
 			vector<int> compression_params;
 			compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
 			compression_params.push_back(9);
-			std::string name="/media/ubuntu/FLIR_DATA1/stereo_footage/left_cam_";
+//			strcpy(storage_name,"stereo_footage/left_cam_")
+            std::string name=path;//"/media/ubuntu/FLIR_DATA1/stereo_footage/left_cam_";
 			std::stringstream id_info,id_info2;
 			id_info << i+1;
 			name=name + id_info.str();
@@ -149,7 +164,8 @@ int my_callback(int data_type, int data_len, char *content)
 			vector<int> compression_params;
 			compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
 			compression_params.push_back(9);
-			std::string name="/media/ubuntu/FLIR_DATA1/stereo_footage/right_cam_";
+  //          strcpy(storage_name,"/stereo_footage/right_cam_");
+			std::string name=path;//"/media/ubuntu/FLIR_DATA1/stereo_footage/right_cam_";
 			std::stringstream id_info,id_info2;
 			id_info << i+1;
 			name=name + id_info.str();
@@ -188,7 +204,7 @@ void print_help(){
 int main(int argc, char** argv)
 {
   //printf("the argc %d",argc);
- storage_check(); 
+storage_check(); 
  if(argc>=2){
      for(int i=1;i<argc;i++){
         if(!strcmp(argv[i], "-h")){
@@ -202,7 +218,6 @@ int main(int argc, char** argv)
              printf("Enabling Sonar topics.\n");
              enable_sonars=true;
         }else if(!strcmp(argv[i], "-store")){
-            printf("Storing images at:\n");
             store_images=true;
             if(argc!=i+1){
                 if (argv[i+1][0]=='/'){
@@ -218,10 +233,13 @@ int main(int argc, char** argv)
             return 0;
         }
      }
-  }else{
-    print_help(); return 0; 
   }
-  
+
+  if(!enable_sonars&&!enable_cams){
+    printf("Please enable sonars' or cameras' topics. Add argument -son or -cam. ");
+  }
+
+
   printf("the program ended\n");
   return 0;
   /* initialize ros */
@@ -268,6 +286,7 @@ int main(int argc, char** argv)
   err_code = get_stereo_cali(cali);
   RETURN_IF_ERR(err_code);
   std::cout<<"cu\tcv\tfocal\tbaseline\n";
+  
   for (int i=0; i<5; i++)
   {
     std::cout<<cali[i].cu<<"\t"<<cali[i].cv<<"\t"<<cali[i].focal<<"\t"<<cali[i].baseline<<std::endl;
