@@ -35,7 +35,8 @@ using namespace cv;
 #define HEIGHT 240
 #define IMAGE_SIZE (HEIGHT * WIDTH)
 
- ros::Publisher image_pubs[10];
+ ros::Publisher image_pubs[10]; 
+ ros::Publisher ultrasonic_pub;
  cv_bridge::CvImage images[10];
  Mat greyscales[10] {Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),
                     Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1)};
@@ -44,7 +45,7 @@ using namespace cv;
  bool       enable_sonars= false;
  bool       enable_cams = false;
  bool       store_images = false;
- std::string    path = "/media/ubuntu/USB";
+ std::string    path = "/media/ubuntu/USB"; //default path
 
  DJI_lock   g_lock;
  DJI_event  g_event;
@@ -123,7 +124,7 @@ int my_callback(int data_type, int data_len, char *content)
   g_lock.enter();
 
     /* image data */
-  if (e_image == data_type && NULL != content)
+  if (e_image == data_type && NULL != content && enable_cams)
   {        
     image_data* data = (image_data*)content;
     
@@ -185,6 +186,31 @@ int my_callback(int data_type, int data_len, char *content)
 
   }
 
+      /* ultrasonic */
+    if ( e_ultrasonic == data_type && NULL != content && enable_sonars)
+    {
+        ultrasonic_data *ultrasonic = (ultrasonic_data*)content;
+        if (verbosity > 1) {
+            printf( "frame index: %d, stamp: %d\n", ultrasonic->frame_index, ultrasonic->time_stamp );
+            for ( int d = 0; d < 5; ++d )
+            {
+                printf( "ultrasonic distance: %f, reliability: %d\n", ultrasonic->ultrasonic[d] * 0.001f, (int)ultrasonic->reliability[d] );
+            }
+        }
+  
+    // publish ultrasonic data
+    sensor_msgs::LaserScan g_ul;
+    g_ul.ranges.resize(5);
+    g_ul.intensities.resize(5);
+    g_ul.header.frame_id = "guidance";
+    g_ul.header.stamp    = ros::Time::now();
+    for ( int d = 0; d < 5; ++d ){
+      g_ul.ranges[d] = 0.001f * ultrasonic->ultrasonic[d];
+      g_ul.intensities[d] = 1.0 * ultrasonic->reliability[d];
+    }
+    ultrasonic_pub.publish(g_ul);
+  }
+
   key = waitKey(1);
 
   g_lock.leave();
@@ -243,7 +269,7 @@ storage_check();
   printf("the program ended\n");
   return 0;
   /* initialize ros */
-  ros::init(argc, argv, "GuidanceCamerasOnly");
+  ros::init(argc, argv, "GuidanceCamerasAndSonarOnly");
   ros::NodeHandle my_node;
 
   image_pubs[0] = my_node.advertise<sensor_msgs::Image>("/guidance/0/left",1);
@@ -256,6 +282,7 @@ storage_check();
   image_pubs[7] = my_node.advertise<sensor_msgs::Image>("/guidance/3/right",1);
   image_pubs[8] = my_node.advertise<sensor_msgs::Image>("/guidance/4/left",1);
   image_pubs[9] = my_node.advertise<sensor_msgs::Image>("/guidance/4/right",1);
+  ultrasonic_pub      = my_node.advertise<sensor_msgs::LaserScan>("/guidance/ultrasonic",1);
 
   images[0].header.frame_id = "guidanceDown";
   images[1].header.frame_id = "guidanceDown";
@@ -313,6 +340,10 @@ storage_check();
   RETURN_IF_ERR(err_code);
   err_code = select_greyscale_image(e_vbus5, false);
   RETURN_IF_ERR(err_code);
+  
+  select_ultrasonic();
+  RETURN_IF_ERR(err_code);
+  
   /* start data transfer */
   err_code = set_sdk_event_handler(my_callback);
   RETURN_IF_ERR(err_code);
