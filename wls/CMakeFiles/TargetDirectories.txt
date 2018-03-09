@@ -1,0 +1,4 @@
+/home/jimcha/workspace/wls/CMakeFiles/edit_cache.dir
+/home/jimcha/workspace/wls/CMakeFiles/rebuild_cache.dir
+/home/jimcha/workspace/wls/CMakeFiles/disparity.dir
+/home/jimcha/workspace/wls/CMakeFiles/DisplayImage.dir
