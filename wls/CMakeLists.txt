@@ -13,5 +13,5 @@ add_executable(disparity disparity_filters.cpp)
 target_link_libraries(disparity ${OpenCV_LIBS})
 
 
-#add_executable(wls wls.cpp)
-#target_link_libraries(wls ${OpenCV_LIBS})
+add_executable(wls wls.cpp)
+target_link_libraries(wls ${OpenCV_LIBS})

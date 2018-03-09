@@ -6,10 +6,22 @@
 
 #IncludeRegexTransform: 
 
-/home/jimcha/workspace/human_detection_ROSCV/wls/DisplayImage.cpp
-stdio.h
+/home/jimcha/workspace/human_detection_ROSCV/wls/wls.cpp
+opencv2/calib3d.hpp
+/home/jimcha/workspace/human_detection_ROSCV/wls/opencv2/calib3d.hpp
+opencv2/imgproc.hpp
+/home/jimcha/workspace/human_detection_ROSCV/wls/opencv2/imgproc.hpp
+opencv2/imgcodecs.hpp
+/home/jimcha/workspace/human_detection_ROSCV/wls/opencv2/imgcodecs.hpp
+opencv2/highgui.hpp
+/home/jimcha/workspace/human_detection_ROSCV/wls/opencv2/highgui.hpp
+opencv2/core/utility.hpp
+/home/jimcha/workspace/human_detection_ROSCV/wls/opencv2/core/utility.hpp
+opencv2/ximgproc/disparity_filter.hpp
+/home/jimcha/workspace/human_detection_ROSCV/wls/opencv2/ximgproc/disparity_filter.hpp
+iostream
 -
-opencv2/opencv.hpp
+string
 -
 
 /usr/local/include/opencv/cxcore.h
@@ -1323,4 +1335,10 @@ opencv2/videostab/log.hpp
 /usr/local/include/opencv2/xfeatures2d/cuda.hpp
 opencv2/core/cuda.hpp
 /usr/local/include/opencv2/xfeatures2d/opencv2/core/cuda.hpp
+
+/usr/local/include/opencv2/ximgproc/disparity_filter.hpp
+opencv2/core.hpp
+-
+opencv2/calib3d.hpp
+-
 

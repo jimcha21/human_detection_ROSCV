@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/jimcha/workspace/wls
+CMAKE_SOURCE_DIR = /home/jimcha/workspace/human_detection_ROSCV/wls
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/jimcha/workspace/wls
+CMAKE_BINARY_DIR = /home/jimcha/workspace/human_detection_ROSCV/wls
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jimcha/workspace/wls/CMakeFiles /home/jimcha/workspace/wls/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jimcha/workspace/human_detection_ROSCV/wls/CMakeFiles /home/jimcha/workspace/human_detection_ROSCV/wls/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jimcha/workspace/wls/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jimcha/workspace/human_detection_ROSCV/wls/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,19 +111,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named disparity
-
-# Build rule for target.
-disparity: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 disparity
-.PHONY : disparity
-
-# fast build rule for target.
-disparity/fast:
-	$(MAKE) -f CMakeFiles/disparity.dir/build.make CMakeFiles/disparity.dir/build
-.PHONY : disparity/fast
-
-#=============================================================================
 # Target rules for targets named DisplayImage
 
 # Build rule for target.
@@ -135,6 +122,32 @@ DisplayImage: cmake_check_build_system
 DisplayImage/fast:
 	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/build
 .PHONY : DisplayImage/fast
+
+#=============================================================================
+# Target rules for targets named wls
+
+# Build rule for target.
+wls: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 wls
+.PHONY : wls
+
+# fast build rule for target.
+wls/fast:
+	$(MAKE) -f CMakeFiles/wls.dir/build.make CMakeFiles/wls.dir/build
+.PHONY : wls/fast
+
+#=============================================================================
+# Target rules for targets named disparity
+
+# Build rule for target.
+disparity: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 disparity
+.PHONY : disparity
+
+# fast build rule for target.
+disparity/fast:
+	$(MAKE) -f CMakeFiles/disparity.dir/build.make CMakeFiles/disparity.dir/build
+.PHONY : disparity/fast
 
 DisplayImage.o: DisplayImage.cpp.o
 
@@ -190,6 +203,33 @@ disparity_filters.cpp.s:
 	$(MAKE) -f CMakeFiles/disparity.dir/build.make CMakeFiles/disparity.dir/disparity_filters.cpp.s
 .PHONY : disparity_filters.cpp.s
 
+wls.o: wls.cpp.o
+
+.PHONY : wls.o
+
+# target to build an object file
+wls.cpp.o:
+	$(MAKE) -f CMakeFiles/wls.dir/build.make CMakeFiles/wls.dir/wls.cpp.o
+.PHONY : wls.cpp.o
+
+wls.i: wls.cpp.i
+
+.PHONY : wls.i
+
+# target to preprocess a source file
+wls.cpp.i:
+	$(MAKE) -f CMakeFiles/wls.dir/build.make CMakeFiles/wls.dir/wls.cpp.i
+.PHONY : wls.cpp.i
+
+wls.s: wls.cpp.s
+
+.PHONY : wls.s
+
+# target to generate assembly for a file
+wls.cpp.s:
+	$(MAKE) -f CMakeFiles/wls.dir/build.make CMakeFiles/wls.dir/wls.cpp.s
+.PHONY : wls.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -197,15 +237,19 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
-	@echo "... rebuild_cache"
-	@echo "... disparity"
 	@echo "... DisplayImage"
+	@echo "... wls"
+	@echo "... disparity"
+	@echo "... rebuild_cache"
 	@echo "... DisplayImage.o"
 	@echo "... DisplayImage.i"
 	@echo "... DisplayImage.s"
 	@echo "... disparity_filters.o"
 	@echo "... disparity_filters.i"
 	@echo "... disparity_filters.s"
+	@echo "... wls.o"
+	@echo "... wls.i"
+	@echo "... wls.s"
 .PHONY : help
 
 

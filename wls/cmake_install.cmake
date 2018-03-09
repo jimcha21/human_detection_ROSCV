@@ -1,4 +1,4 @@
-# Install script for directory: /home/jimcha/workspace/wls
+# Install script for directory: /home/jimcha/workspace/human_detection_ROSCV/wls
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/jimcha/workspace/wls/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/jimcha/workspace/human_detection_ROSCV/wls/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
