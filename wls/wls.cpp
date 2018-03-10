@@ -23,7 +23,7 @@ int main(int argc, char const *argv[])
     Mat left,right;
     left = imread(argv[1], CV_LOAD_IMAGE_COLOR);   // Read the file
     right = imread(argv[2], CV_LOAD_IMAGE_COLOR);   // Read the file
-
+    
     if(!right.data  || !left.data)                              // Check for invalid input
     {
         cout <<  "Could not open or find the image" << std::endl ;
@@ -37,14 +37,14 @@ int main(int argc, char const *argv[])
     waitKey(0);*/
 
 
-    int window_size=3;
+    int window_size=9,numofdisp=32;
 
     Mat left_for_matcher  = left.clone();
     Mat right_for_matcher = right.clone();
 
 
-    Ptr<StereoSGBM> left_matcher =  StereoSGBM::create(0,64,9);
-   
+    Ptr<StereoSGBM> left_matcher =  StereoSGBM::create(0,64,window_size);
+    
 /*    
     left_matcher->setBlockSize(23);
 */
@@ -53,9 +53,9 @@ int main(int argc, char const *argv[])
     left_matcher->setMinDisparity(0);
 
     left_matcher->setMode(0);
-    left_matcher->setNumDisparities(32);
+    left_matcher->setNumDisparities(numofdisp);
     left_matcher->setP1(0);
-    left_matcher->setP2(760);
+    left_matcher->setP2(1000);
     left_matcher->setPreFilterCap(1);
     left_matcher->setSpeckleRange(0);
     left_matcher->setSpeckleWindowSize(0);
@@ -68,8 +68,8 @@ int main(int argc, char const *argv[])
     left_matcher->compute(left_for_matcher, right_for_matcher, left_disp);
     right_matcher->compute(right_for_matcher,left_for_matcher, right_disp);
     
-    left_disp.convertTo(left_disp8, CV_8U, 255/(32*16.));
-    right_disp.convertTo(right_disp8, CV_8U, 255/(32*16.));
+    left_disp.convertTo(left_disp8, CV_8U, 255/(numofdisp*16.));
+    right_disp.convertTo(right_disp8, CV_8U, 255/(numofdisp*16.));
 
 /*    namedWindow("left", 1);
     imshow("left", left);
@@ -95,14 +95,16 @@ int main(int argc, char const *argv[])
     // Get the ROI that was used in the last filter call:
     ROI = wls_filter->getROI();
 
-    Mat raw_disp_vis;
-    getDisparityVis(left_disp,raw_disp_vis,10);
-    namedWindow("raw disparity", WINDOW_AUTOSIZE);
-    imshow("raw disparity", raw_disp_vis);
     Mat filtered_disp_vis;
     getDisparityVis(filtered_disp,filtered_disp_vis,10);
     namedWindow("filtered disparity", WINDOW_AUTOSIZE);
     imshow("filtered disparity", filtered_disp_vis);
+    imwrite("disparity.png",filtered_disp_vis);
+    Mat raw_disp_vis;
+    getDisparityVis(left_disp,raw_disp_vis,10);
+    namedWindow("raw disparity", WINDOW_AUTOSIZE);
+    imshow("raw disparity", raw_disp_vis);
+
     waitKey();
 
     printf("Hello world\n");
