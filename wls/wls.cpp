@@ -21,6 +21,7 @@ int main(int argc, char const *argv[])
     }
 
     Mat left,right;
+    
     left = imread(argv[1], CV_LOAD_IMAGE_COLOR);   // Read the file
     right = imread(argv[2], CV_LOAD_IMAGE_COLOR);   // Read the file
     
@@ -30,7 +31,7 @@ int main(int argc, char const *argv[])
         return -1;
     }    
 
-/*    namedWindow( "Display window", WINDOW_AUTOSIZE );// Create a window for display.
+    /*    namedWindow( "Display window", WINDOW_AUTOSIZE );// Create a window for display.
     imshow( "Display window", right );                   // Show our image inside it.
     namedWindow( "Display window2", WINDOW_AUTOSIZE );// Create a window for display.
     imshow( "Display window2", left );                   // Show our image inside it.
@@ -41,7 +42,7 @@ int main(int argc, char const *argv[])
 
     Mat left_for_matcher  = left.clone();
     Mat right_for_matcher = right.clone();
-
+    
 
     Ptr<StereoSGBM> left_matcher =  StereoSGBM::create(0,64,window_size);
     
