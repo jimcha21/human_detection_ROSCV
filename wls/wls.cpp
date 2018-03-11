@@ -18,11 +18,12 @@ using namespace std;
 Mat left_disp,right_disp;
 Mat left_for_matcher,right_for_matcher;
 const int slider_max = 100;
+int video_replay_acc=20;
 int minDisparity=0;
 int numDisparities=1; // divisible with 16
 int blockSize=9; // must be odd 
-int P1=0;
-int P2=0;
+int P1=400;
+int P2=1000;
 int disp12MaxDiff=0;
 int preFilterCap=0;
 int uniquenessRatio=0;
@@ -67,7 +68,7 @@ void on_trackbar( int , void* )
     getDisparityVis(filtered_disp,filtered_disp_vis,20);
     imshow("WLS RESULT", filtered_disp_vis);
 
-    imshow("Original", left_for_matcher);
+    //imshow("Original", left_for_matcher);
 
     //addWeighted( src1, alpha, src2, beta, 0.0, dst);
 }
@@ -88,28 +89,32 @@ double getfloatValue(){
 
 int main(int argc, char const *argv[])
 {
-    printf("%d\n", argc);
+    //printf("%d\n", argc);
     if( argc < 2)
     {
      cout <<" Usage: display_image left right images" << endl;
      return -1;
     }
    
-    Mat left,right;
+/*    Mat left,right;
     left = imread(argv[1], CV_LOAD_IMAGE_COLOR);   // Read the file
     right = imread(argv[2], CV_LOAD_IMAGE_COLOR);   // Read the file
-    
     if(!right.data  || !left.data)                              // Check for invalid input
     {
         cout <<  "Could not open or find the image" << std::endl ;
         return -1;
-    }    
-
+    }
     left_for_matcher  = left.clone();
     right_for_matcher = right.clone();
-    
-    Ptr<StereoSGBM> left_matcher =  StereoSGBM::create(minDisparity,numDisparities,blockSize,P1,P2,disp12MaxDiff,preFilterCap,uniquenessRatio,speckleWindowSize,speckleRange,mode);
-       
+    */
+
+    VideoCapture l_capture(argv[1]);
+    VideoCapture r_capture(argv[2]);    
+
+    if( !r_capture.isOpened() || !l_capture.isOpened())
+        throw "Error when reading steam_avi";
+
+      
 /*    bool stopit=true;
     while(!stopit){
         cout<<"Give value for, \n"
@@ -193,6 +198,21 @@ int main(int argc, char const *argv[])
 
     }*/
 
+    namedWindow( "r", 1);
+    namedWindow( "l", 1);
+    for( ; ; )
+    {
+        l_capture >> left_for_matcher;
+        r_capture >> right_for_matcher;
+
+        if(left_for_matcher.empty() || right_for_matcher.empty())
+            break;
+
+        imshow("l", left_for_matcher);
+        imshow("r", right_for_matcher);
+        waitKey(video_replay_acc); // waits to display frame
+
+
     namedWindow("SGBM with WLS", WINDOW_AUTOSIZE);
     
     createTrackbar( "minDisparity", "SGBM with WLS", &minDisparity, slider_max, on_trackbar );
@@ -209,8 +229,10 @@ int main(int argc, char const *argv[])
     createTrackbar( "wls_sigma", "SGBM with WLS", &wls_sigma, slider_max, on_trackbar );
 
     on_trackbar( P1, 0 );
-    waitKey(0);
-
+   
+    }
+waitKey(0); // key press to close window
+  
 
 /*    left_disp.convertTo(left_disp8, CV_8U, 255/(numDisparities*16.));
     right_disp.convertTo(right_disp8, CV_8U, 255/(numDisparities*16.));*/
