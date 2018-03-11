@@ -8,11 +8,69 @@
 #include <string>
 #include <cstdlib>
 #include <fstream>
-
+#include <stdlib.h>     //for using the function sleep
+#include <unistd.h>
 
 using namespace cv;
 using namespace cv::ximgproc;
 using namespace std;
+
+Mat left_disp,right_disp;
+Mat left_for_matcher,right_for_matcher;
+const int slider_max = 100;
+int minDisparity=0;
+int numDisparities=1; // divisible with 16
+int blockSize=9; // must be odd 
+int P1=0;
+int P2=0;
+int disp12MaxDiff=0;
+int preFilterCap=0;
+int uniquenessRatio=0;
+int speckleWindowSize=0;
+int speckleRange=0;
+int mode=StereoSGBM::MODE_SGBM;
+int wls_lambda=8000;
+int wls_sigma=15; //must divide with 10 , must be float 
+double alpha,beta;
+
+void on_trackbar( int , void* )
+{
+
+    //cout<<' '<<minDisparity<<' '<<numDisparities<<' '<<blockSize<<' '<<P1<<' '<<P2<<' '<<disp12MaxDiff<<' '<<preFilterCap<<' '<<uniquenessRatio<<' '<<speckleWindowSize<<' '<<speckleRange<<' '<<mode<<' '<<endl;
+    Ptr<StereoSGBM> left_matcher =  StereoSGBM::create(minDisparity,numDisparities*16,blockSize,P1,P2,disp12MaxDiff,preFilterCap,uniquenessRatio,speckleWindowSize,speckleRange,mode);
+    Ptr<DisparityWLSFilter>  wls_filter = createDisparityWLSFilter(left_matcher);
+    Ptr<StereoMatcher> right_matcher = createRightMatcher(left_matcher);
+    
+    
+    left_matcher->compute(left_for_matcher, right_for_matcher, left_disp);
+    right_matcher->compute(right_for_matcher,left_for_matcher, right_disp);
+    //usleep(2000); 
+
+    Mat filtered_disp;
+    Mat conf_map = Mat(left_for_matcher.rows,left_for_matcher.cols,CV_8U);
+    conf_map = Scalar(255);
+    Rect ROI;
+    wls_filter->setLambda(wls_lambda);
+    wls_filter->setSigmaColor(wls_sigma/10);
+    wls_filter->filter(left_disp,left_for_matcher,filtered_disp,right_disp);
+
+    conf_map = wls_filter->getConfidenceMap();
+
+    // Get the ROI that was used in the last filter call:
+    ROI = wls_filter->getROI();
+
+    Mat raw_disp_vis;
+    getDisparityVis(left_disp,raw_disp_vis,20);
+    imshow("SGBM with WLS", raw_disp_vis);
+
+    Mat filtered_disp_vis;
+    getDisparityVis(filtered_disp,filtered_disp_vis,20);
+    imshow("WLS RESULT", filtered_disp_vis);
+
+    imshow("Original", left_for_matcher);
+
+    //addWeighted( src1, alpha, src2, beta, 0.0, dst);
+}
 
 int getValue(){
     cout<<"Give the value:\n";
@@ -33,12 +91,11 @@ int main(int argc, char const *argv[])
     printf("%d\n", argc);
     if( argc < 2)
     {
-     cout <<" Usage: display_image left right ijamges" << endl;
+     cout <<" Usage: display_image left right images" << endl;
      return -1;
     }
-
+   
     Mat left,right;
-    
     left = imread(argv[1], CV_LOAD_IMAGE_COLOR);   // Read the file
     right = imread(argv[2], CV_LOAD_IMAGE_COLOR);   // Read the file
     
@@ -48,26 +105,12 @@ int main(int argc, char const *argv[])
         return -1;
     }    
 
-    Mat left_for_matcher  = left.clone();
-    Mat right_for_matcher = right.clone();
+    left_for_matcher  = left.clone();
+    right_for_matcher = right.clone();
     
-    int minDisparity=0;
-    int numDisparities=16;
-    int blockSize=3;
-    int P1=0;
-    int P2=0;
-    int disp12MaxDiff=0;
-    int preFilterCap=0;
-    int uniquenessRatio=0;
-    int speckleWindowSize=0;
-    int speckleRange=0;
-    int mode=StereoSGBM::MODE_SGBM;
-    int wls_lambda=8000;
-    double wls_sigma=1.5;
-
     Ptr<StereoSGBM> left_matcher =  StereoSGBM::create(minDisparity,numDisparities,blockSize,P1,P2,disp12MaxDiff,preFilterCap,uniquenessRatio,speckleWindowSize,speckleRange,mode);
        
-    bool stopit=false;
+    bool stopit=true;
     while(!stopit){
         cout<<"Give value for, \n"
         "minDisparity:1\n"
@@ -112,13 +155,12 @@ int main(int argc, char const *argv[])
         else if(choice==12)
             wls_lambda=getValue();
         else if(choice==13)
-            wls_sigma=getfloatValue();
+            wls_sigma=getValue();
 
         Ptr<StereoSGBM> left_matcher =  StereoSGBM::create(minDisparity,numDisparities,blockSize,P1,P2,disp12MaxDiff,preFilterCap,uniquenessRatio,speckleWindowSize,speckleRange,mode);
         Ptr<DisparityWLSFilter>  wls_filter = createDisparityWLSFilter(left_matcher);
         Ptr<StereoMatcher> right_matcher = createRightMatcher(left_matcher);
 
-        Mat left_disp,right_disp;
         left_matcher->compute(left_for_matcher, right_for_matcher, left_disp);
         right_matcher->compute(right_for_matcher,left_for_matcher, right_disp);
 
@@ -151,12 +193,58 @@ int main(int argc, char const *argv[])
 
     }
 
-    return 0;
-
-
+    namedWindow("SGBM with WLS", WINDOW_AUTOSIZE);
     
-/*    left_disp.convertTo(left_disp8, CV_8U, 255/(numofdisp*16.));
-    right_disp.convertTo(right_disp8, CV_8U, 255/(numofdisp*16.));*/
+/*    char TrackbarName[100];
+    sprintf( TrackbarName, "minDisparity" );
+    sprintf( TrackbarName, "numDisparities" );
+    sprintf( TrackbarName, "blockSize" );
+    sprintf( TrackbarName, "P1" );
+    sprintf( TrackbarName, "P2" );
+    sprintf( TrackbarName, "disp12MaxDiff" );
+    sprintf( TrackbarName, "preFilterCap" );
+    sprintf( TrackbarName, "uniquenessRatio" );
+    sprintf( TrackbarName, "speckleWindowSize" );
+    sprintf( TrackbarName, "speckleRange" );
+    sprintf( TrackbarName, "mode" );
+    sprintf( TrackbarName, "wls_lambda" );
+    sprintf( TrackbarName, "wls_sigma" );*/
+
+    createTrackbar( "minDisparity", "SGBM with WLS", &minDisparity, slider_max, on_trackbar );
+    createTrackbar( "numDisparities", "SGBM with WLS", &numDisparities, 10, on_trackbar );
+    createTrackbar( "P1", "SGBM with WLS", &P1, 2000, on_trackbar );
+    createTrackbar( "P2", "SGBM with WLS", &P2, 2000, on_trackbar );
+    createTrackbar( "disp12MaxDiff", "SGBM with WLS", &disp12MaxDiff, slider_max, on_trackbar );
+    createTrackbar( "preFilterCap", "SGBM with WLS", &preFilterCap, slider_max, on_trackbar );
+    createTrackbar( "uniquenessRatio", "SGBM with WLS", &uniquenessRatio, slider_max, on_trackbar );
+    createTrackbar( "speckleWindowSize", "SGBM with WLS", &speckleWindowSize, slider_max, on_trackbar );
+    createTrackbar( "speckleRange", "SGBM with WLS", &speckleRange, slider_max, on_trackbar );
+    createTrackbar( "mode", "SGBM with WLS", &mode, 3, on_trackbar );
+    createTrackbar( "wls_lambda", "SGBM with WLS", &wls_lambda, 20000, on_trackbar );    
+    createTrackbar( "wls_sigma", "SGBM with WLS", &wls_sigma, slider_max, on_trackbar );
+
+    on_trackbar( P1, 0 );
+    waitKey(0);
+
+
+/*const int slider_max = 100;
+int minDisparity=0;
+int numDisparities=16;
+int blockSize=3;
+int P1=0;
+int P2=0;
+int disp12MaxDiff=0;
+int preFilterCap=0;
+int uniquenessRatio=0;
+int speckleWindowSize=0;
+int speckleRange=0;
+int mode=StereoSGBM::MODE_SGBM;
+int wls_lambda=8000;
+double wls_sigma=1.5,alpha,beta;
+*/
+    
+/*    left_disp.convertTo(left_disp8, CV_8U, 255/(numDisparities*16.));
+    right_disp.convertTo(right_disp8, CV_8U, 255/(numDisparities*16.));*/
 
 /*    namedWindow("left", 1);
     imshow("left", left);

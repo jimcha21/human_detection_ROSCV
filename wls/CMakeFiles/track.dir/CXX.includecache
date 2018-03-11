@@ -6,7 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/jimcha/workspace/human_detection_ROSCV/wls/wls.cpp
+/home/jimcha/workspace/human_detection_ROSCV/wls/track.cpp
+cv.h
+-
 opencv2/calib3d.hpp
 /home/jimcha/workspace/human_detection_ROSCV/wls/opencv2/calib3d.hpp
 opencv2/imgproc.hpp
@@ -27,10 +29,18 @@ cstdlib
 -
 fstream
 -
-stdlib.h
--
-unistd.h
--
+
+/usr/local/include/opencv/cv.h
+opencv2/core/core_c.h
+/usr/local/include/opencv/opencv2/core/core_c.h
+opencv2/imgproc/imgproc_c.h
+/usr/local/include/opencv/opencv2/imgproc/imgproc_c.h
+opencv2/photo/photo_c.h
+/usr/local/include/opencv/opencv2/photo/photo_c.h
+opencv2/video/tracking_c.h
+/usr/local/include/opencv/opencv2/video/tracking_c.h
+opencv2/objdetect/objdetect_c.h
+/usr/local/include/opencv/opencv2/objdetect/objdetect_c.h
 
 /usr/local/include/opencv/cxcore.h
 opencv2/core/core_c.h

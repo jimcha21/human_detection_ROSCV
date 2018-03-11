@@ -124,6 +124,19 @@ DisplayImage/fast:
 .PHONY : DisplayImage/fast
 
 #=============================================================================
+# Target rules for targets named disparity
+
+# Build rule for target.
+disparity: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 disparity
+.PHONY : disparity
+
+# fast build rule for target.
+disparity/fast:
+	$(MAKE) -f CMakeFiles/disparity.dir/build.make CMakeFiles/disparity.dir/build
+.PHONY : disparity/fast
+
+#=============================================================================
 # Target rules for targets named wls
 
 # Build rule for target.
@@ -137,17 +150,17 @@ wls/fast:
 .PHONY : wls/fast
 
 #=============================================================================
-# Target rules for targets named disparity
+# Target rules for targets named track
 
 # Build rule for target.
-disparity: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 disparity
-.PHONY : disparity
+track: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 track
+.PHONY : track
 
 # fast build rule for target.
-disparity/fast:
-	$(MAKE) -f CMakeFiles/disparity.dir/build.make CMakeFiles/disparity.dir/build
-.PHONY : disparity/fast
+track/fast:
+	$(MAKE) -f CMakeFiles/track.dir/build.make CMakeFiles/track.dir/build
+.PHONY : track/fast
 
 DisplayImage.o: DisplayImage.cpp.o
 
@@ -203,6 +216,33 @@ disparity_filters.cpp.s:
 	$(MAKE) -f CMakeFiles/disparity.dir/build.make CMakeFiles/disparity.dir/disparity_filters.cpp.s
 .PHONY : disparity_filters.cpp.s
 
+track.o: track.cpp.o
+
+.PHONY : track.o
+
+# target to build an object file
+track.cpp.o:
+	$(MAKE) -f CMakeFiles/track.dir/build.make CMakeFiles/track.dir/track.cpp.o
+.PHONY : track.cpp.o
+
+track.i: track.cpp.i
+
+.PHONY : track.i
+
+# target to preprocess a source file
+track.cpp.i:
+	$(MAKE) -f CMakeFiles/track.dir/build.make CMakeFiles/track.dir/track.cpp.i
+.PHONY : track.cpp.i
+
+track.s: track.cpp.s
+
+.PHONY : track.s
+
+# target to generate assembly for a file
+track.cpp.s:
+	$(MAKE) -f CMakeFiles/track.dir/build.make CMakeFiles/track.dir/track.cpp.s
+.PHONY : track.cpp.s
+
 wls.o: wls.cpp.o
 
 .PHONY : wls.o
@@ -238,15 +278,19 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... DisplayImage"
-	@echo "... wls"
-	@echo "... disparity"
 	@echo "... rebuild_cache"
+	@echo "... disparity"
+	@echo "... wls"
+	@echo "... track"
 	@echo "... DisplayImage.o"
 	@echo "... DisplayImage.i"
 	@echo "... DisplayImage.s"
 	@echo "... disparity_filters.o"
 	@echo "... disparity_filters.i"
 	@echo "... disparity_filters.s"
+	@echo "... track.o"
+	@echo "... track.i"
+	@echo "... track.s"
 	@echo "... wls.o"
 	@echo "... wls.i"
 	@echo "... wls.s"
