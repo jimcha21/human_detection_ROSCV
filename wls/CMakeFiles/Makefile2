@@ -60,6 +60,43 @@ CMAKE_SOURCE_DIR = /home/jimcha/workspace/human_detection_ROSCV/wls
 CMAKE_BINARY_DIR = /home/jimcha/workspace/human_detection_ROSCV/wls
 
 #=============================================================================
+# Target rules for target CMakeFiles/videos.dir
+
+# All Build rule for target.
+CMakeFiles/videos.dir/all:
+	$(MAKE) -f CMakeFiles/videos.dir/build.make CMakeFiles/videos.dir/depend
+	$(MAKE) -f CMakeFiles/videos.dir/build.make CMakeFiles/videos.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jimcha/workspace/human_detection_ROSCV/wls/CMakeFiles --progress-num=7,8 "Built target videos"
+.PHONY : CMakeFiles/videos.dir/all
+
+# Include target in all.
+all: CMakeFiles/videos.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/videos.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jimcha/workspace/human_detection_ROSCV/wls/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/videos.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jimcha/workspace/human_detection_ROSCV/wls/CMakeFiles 0
+.PHONY : CMakeFiles/videos.dir/rule
+
+# Convenience name for target.
+videos: CMakeFiles/videos.dir/rule
+
+.PHONY : videos
+
+# clean rule for target.
+CMakeFiles/videos.dir/clean:
+	$(MAKE) -f CMakeFiles/videos.dir/build.make CMakeFiles/videos.dir/clean
+.PHONY : CMakeFiles/videos.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/videos.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/DisplayImage.dir
 
 # All Build rule for target.
@@ -140,7 +177,7 @@ clean: CMakeFiles/disparity.dir/clean
 CMakeFiles/wls.dir/all:
 	$(MAKE) -f CMakeFiles/wls.dir/build.make CMakeFiles/wls.dir/depend
 	$(MAKE) -f CMakeFiles/wls.dir/build.make CMakeFiles/wls.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jimcha/workspace/human_detection_ROSCV/wls/CMakeFiles --progress-num=7,8 "Built target wls"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jimcha/workspace/human_detection_ROSCV/wls/CMakeFiles --progress-num=9,10 "Built target wls"
 .PHONY : CMakeFiles/wls.dir/all
 
 # Include target in all.

@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named videos
+
+# Build rule for target.
+videos: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 videos
+.PHONY : videos
+
+# fast build rule for target.
+videos/fast:
+	$(MAKE) -f CMakeFiles/videos.dir/build.make CMakeFiles/videos.dir/build
+.PHONY : videos/fast
+
+#=============================================================================
 # Target rules for targets named DisplayImage
 
 # Build rule for target.
@@ -243,6 +256,33 @@ track.cpp.s:
 	$(MAKE) -f CMakeFiles/track.dir/build.make CMakeFiles/track.dir/track.cpp.s
 .PHONY : track.cpp.s
 
+videos.o: videos.cpp.o
+
+.PHONY : videos.o
+
+# target to build an object file
+videos.cpp.o:
+	$(MAKE) -f CMakeFiles/videos.dir/build.make CMakeFiles/videos.dir/videos.cpp.o
+.PHONY : videos.cpp.o
+
+videos.i: videos.cpp.i
+
+.PHONY : videos.i
+
+# target to preprocess a source file
+videos.cpp.i:
+	$(MAKE) -f CMakeFiles/videos.dir/build.make CMakeFiles/videos.dir/videos.cpp.i
+.PHONY : videos.cpp.i
+
+videos.s: videos.cpp.s
+
+.PHONY : videos.s
+
+# target to generate assembly for a file
+videos.cpp.s:
+	$(MAKE) -f CMakeFiles/videos.dir/build.make CMakeFiles/videos.dir/videos.cpp.s
+.PHONY : videos.cpp.s
+
 wls.o: wls.cpp.o
 
 .PHONY : wls.o
@@ -277,6 +317,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... videos"
 	@echo "... DisplayImage"
 	@echo "... rebuild_cache"
 	@echo "... disparity"
@@ -291,6 +332,9 @@ help:
 	@echo "... track.o"
 	@echo "... track.i"
 	@echo "... track.s"
+	@echo "... videos.o"
+	@echo "... videos.i"
+	@echo "... videos.s"
 	@echo "... wls.o"
 	@echo "... wls.i"
 	@echo "... wls.s"

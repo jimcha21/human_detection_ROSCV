@@ -1,6 +1,11 @@
 [
 {
   "directory": "/home/jimcha/workspace/human_detection_ROSCV/wls",
+  "command": "/usr/bin/c++    -isystem /usr/local/include -isystem /usr/local/include/opencv    -o CMakeFiles/videos.dir/videos.cpp.o -c /home/jimcha/workspace/human_detection_ROSCV/wls/videos.cpp",
+  "file": "/home/jimcha/workspace/human_detection_ROSCV/wls/videos.cpp"
+},
+{
+  "directory": "/home/jimcha/workspace/human_detection_ROSCV/wls",
   "command": "/usr/bin/c++    -isystem /usr/local/include -isystem /usr/local/include/opencv    -o CMakeFiles/DisplayImage.dir/DisplayImage.cpp.o -c /home/jimcha/workspace/human_detection_ROSCV/wls/DisplayImage.cpp",
   "file": "/home/jimcha/workspace/human_detection_ROSCV/wls/DisplayImage.cpp"
 },

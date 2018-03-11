@@ -110,7 +110,7 @@ int main(int argc, char const *argv[])
     
     Ptr<StereoSGBM> left_matcher =  StereoSGBM::create(minDisparity,numDisparities,blockSize,P1,P2,disp12MaxDiff,preFilterCap,uniquenessRatio,speckleWindowSize,speckleRange,mode);
        
-    bool stopit=true;
+/*    bool stopit=true;
     while(!stopit){
         cout<<"Give value for, \n"
         "minDisparity:1\n"
@@ -191,25 +191,10 @@ int main(int argc, char const *argv[])
 
         system("clear");
 
-    }
+    }*/
 
     namedWindow("SGBM with WLS", WINDOW_AUTOSIZE);
     
-/*    char TrackbarName[100];
-    sprintf( TrackbarName, "minDisparity" );
-    sprintf( TrackbarName, "numDisparities" );
-    sprintf( TrackbarName, "blockSize" );
-    sprintf( TrackbarName, "P1" );
-    sprintf( TrackbarName, "P2" );
-    sprintf( TrackbarName, "disp12MaxDiff" );
-    sprintf( TrackbarName, "preFilterCap" );
-    sprintf( TrackbarName, "uniquenessRatio" );
-    sprintf( TrackbarName, "speckleWindowSize" );
-    sprintf( TrackbarName, "speckleRange" );
-    sprintf( TrackbarName, "mode" );
-    sprintf( TrackbarName, "wls_lambda" );
-    sprintf( TrackbarName, "wls_sigma" );*/
-
     createTrackbar( "minDisparity", "SGBM with WLS", &minDisparity, slider_max, on_trackbar );
     createTrackbar( "numDisparities", "SGBM with WLS", &numDisparities, 10, on_trackbar );
     createTrackbar( "P1", "SGBM with WLS", &P1, 2000, on_trackbar );
@@ -227,22 +212,6 @@ int main(int argc, char const *argv[])
     waitKey(0);
 
 
-/*const int slider_max = 100;
-int minDisparity=0;
-int numDisparities=16;
-int blockSize=3;
-int P1=0;
-int P2=0;
-int disp12MaxDiff=0;
-int preFilterCap=0;
-int uniquenessRatio=0;
-int speckleWindowSize=0;
-int speckleRange=0;
-int mode=StereoSGBM::MODE_SGBM;
-int wls_lambda=8000;
-double wls_sigma=1.5,alpha,beta;
-*/
-    
 /*    left_disp.convertTo(left_disp8, CV_8U, 255/(numDisparities*16.));
     right_disp.convertTo(right_disp8, CV_8U, 255/(numDisparities*16.));*/
 
@@ -257,6 +226,5 @@ double wls_sigma=1.5,alpha,beta;
     waitKey();
     printf("\n");*/
 
-    printf("Hello world\n");
 	return 0;
 }

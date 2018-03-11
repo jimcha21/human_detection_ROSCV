@@ -18,3 +18,5 @@ target_link_libraries(wls ${OpenCV_LIBS})
 
 add_executable(track track.cpp)
 target_link_libraries(track ${OpenCV_LIBS})
+add_executable(videos videos.cpp)
+target_link_libraries(videos ${OpenCV_LIBS})
