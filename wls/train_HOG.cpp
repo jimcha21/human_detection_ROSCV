@@ -18,10 +18,10 @@ void load_images( const String & dirname, vector< Mat > & img_lst, bool showImag
 void sample_neg( const vector< Mat > & full_neg_lst, vector< Mat > & neg_lst, const Size & size );
 void computeHOGs( const Size wsize, const vector< Mat > & img_lst, vector< Mat > & gradient_lst, bool use_flip );
 void test_trained_detector( String obj_det_filename, String test_dir, String videofilename );
-void test_kinect_frame(String obj_det_filename,String image_dir);
+Rect test_kinect_frame(String obj_det_filename,String image_dir);
 
 //!! params
-String image_directory = "/home/jimcha/datasets/svm/star_f16/a85.jpg";
+String image_directory = "/home/jimcha/datasets/svm/star_f16/a154.jpg";
 String xml = "f16.xml";
 
 vector< float > get_svm_detector( const Ptr< SVM >& svm )
@@ -145,7 +145,7 @@ void computeHOGs( const Size wsize, const vector< Mat > & img_lst, vector< Mat >
     }
 }
 
-void test_kinect_frame(String obj_det_filename, String image_dir){
+Rect test_kinect_frame(String obj_det_filename, String image_dir){
     
     cout<<"Opening image in "<<image_dir<<endl;
     HOGDescriptor hog;
@@ -163,7 +163,8 @@ void test_kinect_frame(String obj_det_filename, String image_dir){
     vector< double > foundWeights;
 
     hog.detectMultiScale( img, detections, foundWeights );
-    for ( size_t j = 0; j < detections.size(); j++ )
+    size_t j;
+    for ( j = 0; j < detections.size(); j++ )
     {
         //cout<< foundWeights[j] << "mh rwtas " << j <<endl;
         if(foundWeights[j]<0.35)
@@ -171,18 +172,13 @@ void test_kinect_frame(String obj_det_filename, String image_dir){
         Scalar color = Scalar( 0, foundWeights[j] * foundWeights[j] * 200, 0 );
         cout<<detections[j]<<endl;
         rectangle( img, detections[j], color, img.cols / 400 + 1 );
-        ofstream myfile;
-        myfile.open ("roi_coords.txt");
-        myfile <<detections[j].x << " " <<detections[j].y <<endl;
-        myfile.close();
-        break;
+        
     }
 
     imshow( obj_det_filename ,img );
     waitKey(0);
-
-
-
+    return Rect(detections[j].x, detections[j].y,detections[j].width, detections[j].height);
+        
 }
 
 void test_trained_detector( String obj_det_filename, String test_dir, String videofilename )
@@ -272,16 +268,6 @@ int main( int argc, char** argv )
         "{fn    |my_detector.yml| file name of trained SVM}"
     };
 
-    int choice=1;
-    cout<<"Locate plane or star ? (1 2)"<<endl;
-    cin>>choice;
-    if (choice==1)
-    {
-        xml="f16.xml";
-    }else{
-        xml="star.xml";
-    }
-
     CommandLineParser parser( argc, argv, keys );
 
     if ( parser.has( "help" ) )
@@ -305,7 +291,16 @@ int main( int argc, char** argv )
     if ( test_detector )
     {
         //test_trained_detector( obj_det_filename, test_dir, videofilename );
-        test_kinect_frame(xml, image_directory);
+        Rect plane_r = test_kinect_frame("f16.xml", image_directory);
+        Rect star_r =test_kinect_frame("star.xml", image_directory);
+        ofstream myfile;
+        myfile.open ("roi_coords.txt");
+        myfile <<plane_r.x << " " <<plane_r.y <<endl;
+        myfile <<plane_r.x+plane_r.width << " " << plane_r.y+plane_r.height << endl; 
+        myfile<< endl;
+        myfile <<star_r.x << " " <<star_r.y <<endl;
+        myfile <<star_r.x+star_r.width << " " << star_r.y+star_r.height << endl;         
+        myfile.close();
         exit( 0 );
     }
 
