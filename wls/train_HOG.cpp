@@ -4,6 +4,8 @@
 #include "opencv2/objdetect.hpp"
 
 #include <iostream>
+#include <fstream>
+#include <iostream>
 #include <time.h>
 
 using namespace cv;
@@ -16,6 +18,11 @@ void load_images( const String & dirname, vector< Mat > & img_lst, bool showImag
 void sample_neg( const vector< Mat > & full_neg_lst, vector< Mat > & neg_lst, const Size & size );
 void computeHOGs( const Size wsize, const vector< Mat > & img_lst, vector< Mat > & gradient_lst, bool use_flip );
 void test_trained_detector( String obj_det_filename, String test_dir, String videofilename );
+void test_kinect_frame(String obj_det_filename,String image_dir);
+
+//!! params
+String image_directory = "/home/jimcha/datasets/svm/star_f16/a85.jpg";
+String xml = "f16.xml";
 
 vector< float > get_svm_detector( const Ptr< SVM >& svm )
 {
@@ -138,6 +145,46 @@ void computeHOGs( const Size wsize, const vector< Mat > & img_lst, vector< Mat >
     }
 }
 
+void test_kinect_frame(String obj_det_filename, String image_dir){
+    
+    cout<<"Opening image in "<<image_dir<<endl;
+    HOGDescriptor hog;
+    hog.load(obj_det_filename);
+
+    Mat img;
+    img = imread(image_dir, CV_LOAD_IMAGE_COLOR);   // Read the file
+
+    if(! img.data )                              // Check for invalid input
+    {
+        cout <<  "Could not open or find the image" << std::endl ;
+    }
+
+    vector< Rect > detections;
+    vector< double > foundWeights;
+
+    hog.detectMultiScale( img, detections, foundWeights );
+    for ( size_t j = 0; j < detections.size(); j++ )
+    {
+        //cout<< foundWeights[j] << "mh rwtas " << j <<endl;
+        if(foundWeights[j]<0.35)
+            continue;
+        Scalar color = Scalar( 0, foundWeights[j] * foundWeights[j] * 200, 0 );
+        cout<<detections[j]<<endl;
+        rectangle( img, detections[j], color, img.cols / 400 + 1 );
+        ofstream myfile;
+        myfile.open ("roi_coords.txt");
+        myfile <<detections[j].x << " " <<detections[j].y <<endl;
+        myfile.close();
+        break;
+    }
+
+    imshow( obj_det_filename ,img );
+    waitKey(0);
+
+
+
+}
+
 void test_trained_detector( String obj_det_filename, String test_dir, String videofilename )
 {
     cout << "Testing trained detector..." << endl;
@@ -179,6 +226,11 @@ void test_trained_detector( String obj_det_filename, String test_dir, String vid
         {
             return;
         }
+/*        
+        Size size(640,480);//the dst image size,e.g.100x100
+        Mat dst;//src image
+        resize(img,dst,size);//resize image
+        img=dst.clone();*/
 
         vector< Rect > detections;
         vector< double > foundWeights;
@@ -186,6 +238,9 @@ void test_trained_detector( String obj_det_filename, String test_dir, String vid
         hog.detectMultiScale( img, detections, foundWeights );
         for ( size_t j = 0; j < detections.size(); j++ )
         {
+            //cout<< foundWeights[j] << "mh rwtas " << j <<endl;
+            if(foundWeights[j]<0.35)
+                continue;
             Scalar color = Scalar( 0, foundWeights[j] * foundWeights[j] * 200, 0 );
             rectangle( img, detections[j], color, img.cols / 400 + 1 );
         }
@@ -217,6 +272,16 @@ int main( int argc, char** argv )
         "{fn    |my_detector.yml| file name of trained SVM}"
     };
 
+    int choice=1;
+    cout<<"Locate plane or star ? (1 2)"<<endl;
+    cin>>choice;
+    if (choice==1)
+    {
+        xml="f16.xml";
+    }else{
+        xml="star.xml";
+    }
+
     CommandLineParser parser( argc, argv, keys );
 
     if ( parser.has( "help" ) )
@@ -239,7 +304,8 @@ int main( int argc, char** argv )
 
     if ( test_detector )
     {
-        test_trained_detector( obj_det_filename, test_dir, videofilename );
+        //test_trained_detector( obj_det_filename, test_dir, videofilename );
+        test_kinect_frame(xml, image_directory);
         exit( 0 );
     }
 
@@ -386,7 +452,8 @@ int main( int argc, char** argv )
     hog.setSVMDetector( get_svm_detector( svm ) );
     hog.save( obj_det_filename );
 
-    test_trained_detector( obj_det_filename, test_dir, videofilename );
+    //test_trained_detector( obj_det_filename, test_dir, videofilename );
+    test_kinect_frame(obj_det_filename,image_directory);
 
     return 0;
 }
