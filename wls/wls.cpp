@@ -64,9 +64,12 @@ void on_trackbar( int , void* )
     getDisparityVis(left_disp,raw_disp_vis,20);
     imshow("SGBM with WLS", raw_disp_vis);
 
-    Mat filtered_disp_vis;
+    Mat filtered_disp_vis,final;
     getDisparityVis(filtered_disp,filtered_disp_vis,20);
-    imshow("WLS RESULT", filtered_disp_vis);
+
+    Size size(1024,768);//the dst image size,e.g.100x100
+	resize(filtered_disp_vis,final,size);//resize image
+    imshow("WLS RESULT", final);
 
     //imshow("Original", left_for_matcher);
 
@@ -208,7 +211,11 @@ int main(int argc, char const *argv[])
         if(left_for_matcher.empty() || right_for_matcher.empty())
             break;
 
-        imshow("l", left_for_matcher);
+		Mat l_bigger;
+		Size size(1024,768);//the dst image size,e.g.100x100
+		resize(left_for_matcher,l_bigger,size);//resize image
+
+        imshow("l", l_bigger);
         imshow("r", right_for_matcher);
         waitKey(video_replay_acc); // waits to display frame
 
