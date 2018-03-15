@@ -48,6 +48,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
+  "CMakeFiles/train_HOG.dir/DependInfo.cmake"
   "CMakeFiles/videos.dir/DependInfo.cmake"
   "CMakeFiles/DisplayImage.dir/DependInfo.cmake"
   "CMakeFiles/disparity.dir/DependInfo.cmake"

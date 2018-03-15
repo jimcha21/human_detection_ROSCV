@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named train_HOG
+
+# Build rule for target.
+train_HOG: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 train_HOG
+.PHONY : train_HOG
+
+# fast build rule for target.
+train_HOG/fast:
+	$(MAKE) -f CMakeFiles/train_HOG.dir/build.make CMakeFiles/train_HOG.dir/build
+.PHONY : train_HOG/fast
+
+#=============================================================================
 # Target rules for targets named videos
 
 # Build rule for target.
@@ -256,6 +269,33 @@ track.cpp.s:
 	$(MAKE) -f CMakeFiles/track.dir/build.make CMakeFiles/track.dir/track.cpp.s
 .PHONY : track.cpp.s
 
+train_HOG.o: train_HOG.cpp.o
+
+.PHONY : train_HOG.o
+
+# target to build an object file
+train_HOG.cpp.o:
+	$(MAKE) -f CMakeFiles/train_HOG.dir/build.make CMakeFiles/train_HOG.dir/train_HOG.cpp.o
+.PHONY : train_HOG.cpp.o
+
+train_HOG.i: train_HOG.cpp.i
+
+.PHONY : train_HOG.i
+
+# target to preprocess a source file
+train_HOG.cpp.i:
+	$(MAKE) -f CMakeFiles/train_HOG.dir/build.make CMakeFiles/train_HOG.dir/train_HOG.cpp.i
+.PHONY : train_HOG.cpp.i
+
+train_HOG.s: train_HOG.cpp.s
+
+.PHONY : train_HOG.s
+
+# target to generate assembly for a file
+train_HOG.cpp.s:
+	$(MAKE) -f CMakeFiles/train_HOG.dir/build.make CMakeFiles/train_HOG.dir/train_HOG.cpp.s
+.PHONY : train_HOG.cpp.s
+
 videos.o: videos.cpp.o
 
 .PHONY : videos.o
@@ -317,6 +357,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... train_HOG"
 	@echo "... videos"
 	@echo "... DisplayImage"
 	@echo "... rebuild_cache"
@@ -332,6 +373,9 @@ help:
 	@echo "... track.o"
 	@echo "... track.i"
 	@echo "... track.s"
+	@echo "... train_HOG.o"
+	@echo "... train_HOG.i"
+	@echo "... train_HOG.s"
 	@echo "... videos.o"
 	@echo "... videos.i"
 	@echo "... videos.s"

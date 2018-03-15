@@ -1,6 +1,11 @@
 [
 {
   "directory": "/home/jimcha/workspace/human_detection_ROSCV/wls",
+  "command": "/usr/bin/c++    -isystem /usr/local/include -isystem /usr/local/include/opencv    -o CMakeFiles/train_HOG.dir/train_HOG.cpp.o -c /home/jimcha/workspace/human_detection_ROSCV/wls/train_HOG.cpp",
+  "file": "/home/jimcha/workspace/human_detection_ROSCV/wls/train_HOG.cpp"
+},
+{
+  "directory": "/home/jimcha/workspace/human_detection_ROSCV/wls",
   "command": "/usr/bin/c++    -isystem /usr/local/include -isystem /usr/local/include/opencv    -o CMakeFiles/videos.dir/videos.cpp.o -c /home/jimcha/workspace/human_detection_ROSCV/wls/videos.cpp",
   "file": "/home/jimcha/workspace/human_detection_ROSCV/wls/videos.cpp"
 },
