@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
-#include <sstream>
 #include <ros/ros.h>
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/Image.h>
@@ -22,18 +21,13 @@
 #include <geometry_msgs/Vector3Stamped.h> //velocity
 #include <sensor_msgs/LaserScan.h> //obstacle distance & ultrasonic
 
-#include <sys/statvfs.h>
-#include <iostream>
-#include <cstring>
 
-#include <cstdlib> 
-
-using namespace std;
-using namespace cv;
+ using namespace cv;
 
 #define WIDTH 320
 #define HEIGHT 240
 #define IMAGE_SIZE (HEIGHT * WIDTH)
+
 
  ros::Publisher image_pubs[10];
  cv_bridge::CvImage images[10];
@@ -41,11 +35,7 @@ using namespace cv;
                     Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1)};
 
  char       key         = 0;
- bool       enable_sonars= false;
- bool       enable_cams = false;
- bool       store_images = false;
- std::string    path = "/media/ubuntu/USB";
-
+ bool       show_images = 0;
  DJI_lock   g_lock;
  DJI_event  g_event;
 
@@ -73,51 +63,6 @@ using namespace cv;
   return out << s;
 }
 
-//Checking available space in $path directory.
-bool storage_check()
-{
-    struct statvfs fiData;
-	char* storage_name;
-	storage_name = (char*)malloc(200 * sizeof(char));
-	if(storage_name == NULL){
-		//cerr << "Error..." << endl;
-		return 0;
-	}
-    
-    //strcpy(storage_name,"/media/ubuntu/FLIR_DATA1/"); 
-	//strcpy(storage_name,path.c_str());
-    //cout<<storage_name<<endl;
-    
-    //strcat(storage_name,"/stereo_footage/left_cam_");
-    //storage_name.append(3, '*');
-    //std::string name=storage_name;//"/stereo_footage/left_cam_";
-    //std::stringstream id_info,id_info2;
-    //id_info << 1;
-    //name=name + id_info.str();
-    //id_info2 << ros::Time::now().toNSec();
-    
-    //cout<<"final countdown "<<name<<endl;
-
-
-    return  false;
-    //Lets loopyloop through the argvs
-	if((statvfs(storage_name,&fiData)) < 0 ) {
-			cout << "\nFailed to stat:"  << endl;
-			return false;
-	} else {
-		//cout << "\nDisk: " <<  argv[i];
-/*			cout << "\nBlock size: "<< fiData.f_bsize;
-			cout << "\nTotal no blocks: "<< fiData.f_blocks;
-			cout << "\nFree blocks: "<< fiData.f_bfree;*/
-			
-			//if (fiData.f_bsize*fiData.f_bfree<3)
-			float free_space = (long long)(fiData.f_bfree)*(long long)fiData.f_bsize * pow(10,-9);
-			//cout << free_space << endl;	
-			if (free_space<0.1)	return false;
-	}	
-	return true;
-}
-
 int my_callback(int data_type, int data_len, char *content)
 {
   g_lock.enter();
@@ -126,32 +71,13 @@ int my_callback(int data_type, int data_len, char *content)
   if (e_image == data_type && NULL != content)
   {        
     image_data* data = (image_data*)content;
-    
+    printf("hey");
     for (int i = 0; i < 5; ++i)
     {
       int j = 2*i;
       if(data->m_greyscale_image_left[i]){
         memcpy(greyscales[j].data, data->m_greyscale_image_left[i], IMAGE_SIZE);
 		greyscales[j].copyTo(images[j].image);
-
-	  if(storage_check){
-			vector<int> compression_params;
-			compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
-			compression_params.push_back(9);
-//			strcpy(storage_name,"stereo_footage/left_cam_")
-            std::string name=path;//"/media/ubuntu/FLIR_DATA1/stereo_footage/left_cam_";
-			std::stringstream id_info,id_info2;
-			id_info << i+1;
-			name=name + id_info.str();
-			id_info2 << ros::Time::now().toNSec();
-			//std::cout <<  ros::Time::now().toSec() <<std::endl;
-			name=name + "_" + id_info2.str() +".png" ;
-			//std::string timestamp= ;
-			//std::string name = a+".png";
-			imwrite(name, images[j].image, compression_params);
-	  }
-
-
         images[j].header.stamp  = ros::Time::now();
         images[j].encoding    = sensor_msgs::image_encodings::MONO8;
         image_pubs[j].publish(images[j].toImageMsg());
@@ -159,24 +85,6 @@ int my_callback(int data_type, int data_len, char *content)
       if(data->m_greyscale_image_right[i]){
         memcpy(greyscales[j+1].data, data->m_greyscale_image_right[i], IMAGE_SIZE);
 		greyscales[j+1].copyTo(images[j+1].image);
-
-	  if(storage_check){
-			vector<int> compression_params;
-			compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
-			compression_params.push_back(9); //                                         0-9 the higher the value is the biggest the compression check with lower vallue 3:default )((*)(
-  //          strcpy(storage_name,"/stereo_footage/right_cam_");
-			std::string name=path;//"/media/ubuntu/FLIR_DATA1/stereo_footage/right_cam_";
-			std::stringstream id_info,id_info2;
-			id_info << i+1;
-			name=name + id_info.str();
-			id_info2 << ros::Time::now().toNSec();
-			//std::cout <<  ros::Time::now().toSec() <<std::endl;
-			name=name + "_" + id_info2.str() +".png" ;
-			//std::string timestamp= ;
-			//std::string name = a+".png";
-			imwrite(name, images[j+1].image, compression_params);
-	  }
-
         images[j+1].header.stamp = ros::Time::now();
         images[j+1].encoding = sensor_msgs::image_encodings::MONO8;
         image_pubs[j+1].publish(images[j+1].toImageMsg());
@@ -196,52 +104,17 @@ int my_callback(int data_type, int data_len, char *content)
 #define RETURN_IF_ERR(err_code) { if( err_code ){ release_transfer(); \
 std::cout<<"Error: "<<(e_sdk_err_code)err_code<<" at "<<__LINE__<<","<<__FILE__<<std::endl; return -1;}}
 
-void print_help(){
-    printf("Execute like 'rosrun guidance allCameras -cam -son -store /media/ubuntu/USB' \nThis program publish all the cameras in topics (-cam) and sonar info in separate topics (-son) \n press 'q' to quit.\n");
-    return;
-}
-
 int main(int argc, char** argv)
 {
-  //printf("the argc %d",argc);
-storage_check(); 
- if(argc>=2){
-     for(int i=1;i<argc;i++){
-        if(!strcmp(argv[i], "-h")){
-            print_help();
-            i=999;
-            return 0;
-        }else if(!strcmp(argv[i], "-cam")){
-            printf("Enabling Camera topics.\n");
-            enable_cams=true;        
-        }else if(!strcmp(argv[i], "-son")){
-             printf("Enabling Sonar topics.\n");
-             enable_sonars=true;
-        }else if(!strcmp(argv[i], "-store")){
-            store_images=true;
-            if(argc!=i+1){
-                if (argv[i+1][0]=='/'){
-                    printf("Saving in directory %s",argv[++i]); //to bypass the directory parameter
-                    path = argv[i];
-               }else{
-                    printf("Invalid storing path!\n");
-                    return 0;
-                } 
-           }
-        }else{
-            printf("Unknown parameter/s!\n");
-            return 0;
-        }
-     }
+  if (argc < 2) {
+    show_images = true;
+  }
+  if(argc>=2 && !strcmp(argv[1], "h")){
+    printf("This program publish all the cameras in topics \n from /guidance/cameras/0/left to /guidance/cameras/4/right\n"
+           "press 'q' to quit.");
+    return 0;
   }
 
-  if(!enable_sonars&&!enable_cams){
-    printf("Please enable sonars' or cameras' topics. Add argument -son or -cam. ");
-  }
-
-
-  printf("the program ended\n");
-  return 0;
   /* initialize ros */
   ros::init(argc, argv, "GuidanceCamerasOnly");
   ros::NodeHandle my_node;
@@ -286,7 +159,6 @@ storage_check();
   err_code = get_stereo_cali(cali);
   RETURN_IF_ERR(err_code);
   std::cout<<"cu\tcv\tfocal\tbaseline\n";
-  
   for (int i=0; i<5; i++)
   {
     std::cout<<cali[i].cu<<"\t"<<cali[i].cv<<"\t"<<cali[i].focal<<"\t"<<cali[i].baseline<<std::endl;
@@ -348,3 +220,4 @@ return 0;
 }
 
 /* vim: set et fenc=utf-8 ff=unix sts=0 sw=4 ts=4 : */
+

@@ -9,8 +9,10 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   message_generation
 )
-find_package(OpenCV 2 REQUIRED core highgui)
 
+#set(OpenCV_DIR "/home/ubuntu/opencv/build")
+find_package(OpenCV 2 REQUIRED core highgui)
+#message( FATAL_ERROR ${OpenCV_DIR})
 add_message_files(
   FILES
   sonar_info.msg
@@ -61,6 +63,12 @@ add_executable(allCameras
 	src/DJI_utility.cpp
 	)
 
+add_executable(allCamerasSimple 
+  src/FullCameraSimpleNode.cpp
+      src/DJI_utility.cpp
+        )
+
+
 add_executable(node 
 	src/node.cpp
 	src/DJI_utility.cpp
@@ -73,4 +81,7 @@ add_executable(guidanceNodeCalibration
   src/GuidanceNodeCalibration.cpp
   src/DJI_utility.cpp)
 
+add_executable(test_yaml
+  src/test_yaml.cpp
+  src/DJI_utility.cpp)
 #  vim: set et fenc=utf-8 ff=unix sts=0 sw=2 ts=2 :
