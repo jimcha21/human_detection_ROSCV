@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/home/jimcha/workspace/human_detection_ROSCV/wls",
+  "command": "/usr/bin/c++    -isystem /usr/local/include -isystem /usr/local/include/opencv    -o CMakeFiles/train_HOG.dir/train_HOG.cpp.o -c /home/jimcha/workspace/human_detection_ROSCV/wls/train_HOG.cpp",
+  "file": "/home/jimcha/workspace/human_detection_ROSCV/wls/train_HOG.cpp"
+},
+{
+  "directory": "/home/jimcha/workspace/human_detection_ROSCV/wls",
+  "command": "/usr/bin/c++    -isystem /usr/local/include -isystem /usr/local/include/opencv    -o CMakeFiles/videos.dir/videos.cpp.o -c /home/jimcha/workspace/human_detection_ROSCV/wls/videos.cpp",
+  "file": "/home/jimcha/workspace/human_detection_ROSCV/wls/videos.cpp"
+},
+{
+  "directory": "/home/jimcha/workspace/human_detection_ROSCV/wls",
+  "command": "/usr/bin/c++    -isystem /usr/local/include -isystem /usr/local/include/opencv    -o CMakeFiles/DisplayImage.dir/DisplayImage.cpp.o -c /home/jimcha/workspace/human_detection_ROSCV/wls/DisplayImage.cpp",
+  "file": "/home/jimcha/workspace/human_detection_ROSCV/wls/DisplayImage.cpp"
+},
+{
+  "directory": "/home/jimcha/workspace/human_detection_ROSCV/wls",
+  "command": "/usr/bin/c++    -isystem /usr/local/include -isystem /usr/local/include/opencv    -o CMakeFiles/disparity.dir/disparity_filters.cpp.o -c /home/jimcha/workspace/human_detection_ROSCV/wls/disparity_filters.cpp",
+  "file": "/home/jimcha/workspace/human_detection_ROSCV/wls/disparity_filters.cpp"
+},
+{
+  "directory": "/home/jimcha/workspace/human_detection_ROSCV/wls",
+  "command": "/usr/bin/c++    -isystem /usr/local/include -isystem /usr/local/include/opencv    -o CMakeFiles/wls.dir/wls.cpp.o -c /home/jimcha/workspace/human_detection_ROSCV/wls/wls.cpp",
+  "file": "/home/jimcha/workspace/human_detection_ROSCV/wls/wls.cpp"
+},
+{
+  "directory": "/home/jimcha/workspace/human_detection_ROSCV/wls",
+  "command": "/usr/bin/c++    -isystem /usr/local/include -isystem /usr/local/include/opencv    -o CMakeFiles/track.dir/track.cpp.o -c /home/jimcha/workspace/human_detection_ROSCV/wls/track.cpp",
+  "file": "/home/jimcha/workspace/human_detection_ROSCV/wls/track.cpp"
+}
+]
