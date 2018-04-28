@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 #set(OpenCV_DIR "/home/ubuntu/opencv/build")
 find_package(OpenCV 2 REQUIRED core highgui)
-#message( FATAL_ERROR ${OpenCV_DIR})
+#message( FATAL_ERROR ${OpenCV_VERSION})
 add_message_files(
   FILES
   sonar_info.msg
@@ -58,8 +58,8 @@ add_executable(guidanceNode
   src/GuidanceNode.cpp
   src/DJI_utility.cpp)
 
-add_executable(allCameras 
-	src/FullCameras.cpp
+add_executable(FullCamerasSonars_save
+  src/FullCamerasSonars_save.cpp
 	src/DJI_utility.cpp
 	)
 
@@ -67,7 +67,6 @@ add_executable(allCamerasSimple
   src/FullCameraSimpleNode.cpp
       src/DJI_utility.cpp
         )
-
 
 add_executable(node 
 	src/node.cpp

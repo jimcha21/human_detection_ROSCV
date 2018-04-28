@@ -35,19 +35,23 @@ using namespace cv;
 #define HEIGHT 240
 #define IMAGE_SIZE (HEIGHT * WIDTH)
 
+ros::Publisher image_pubs[10]; 
+ros::Publisher ultrasonic_pub;
+cv_bridge::CvImage images[10];
+Mat greyscales[10] {Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),
+Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1)};
 
- ros::Publisher image_pubs[10];
- cv_bridge::CvImage images[10];
- Mat greyscales[10] {Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),
-                    Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1)};
+char       key         = 0;
+bool       enable_sonars= false;
+bool       enable_cams = false;
+bool       store_images = false;
+std::string    path = "/media/ubuntu/USB"; //default path
 
- char       key         = 0;
- bool       show_images = 0;
- DJI_lock   g_lock;
- DJI_event  g_event;
+DJI_lock   g_lock;
+DJI_event  g_event;
 
- std::ostream& operator<<(std::ostream& out, const e_sdk_err_code value){
-   const char* s = 0;
+std::ostream& operator<<(std::ostream& out, const e_sdk_err_code value){
+const char* s = 0;
    static char str[100]={0};
 #define PROCESS_VAL(p) case(p): s = #p; break;
    switch(value){
@@ -70,20 +74,16 @@ using namespace cv;
   return out << s;
 }
 
+//Checking available space in $path directory.
 bool storage_check()
 {
     struct statvfs fiData;
-	char* storage_name;
-	storage_name = (char*)malloc(200 * sizeof(char));
-	if(storage_name == NULL){
+    if(path.c_str() == NULL){
 		//cerr << "Error..." << endl;
 		return 0;
 	}
-	strcpy(storage_name,"/media/ubuntu/FLIR_DATA1/"); 
-	//cout<<storage_name<<endl;
-	
-    //Lets loopyloop through the argvs
-	if((statvfs(storage_name,&fiData)) < 0 ) {
+    
+    if((statvfs(path.c_str(),&fiData)) < 0 ) {
 			cout << "\nFailed to stat:"  << endl;
 			return false;
 	} else {
@@ -94,7 +94,7 @@ bool storage_check()
 			
 			//if (fiData.f_bsize*fiData.f_bfree<3)
 			float free_space = (long long)(fiData.f_bfree)*(long long)fiData.f_bsize * pow(10,-9);
-			//cout << free_space << endl;	
+			//cout << free_space in gigs << endl; 	
 			if (free_space<0.1)	return false;
 	}	
 	return true;
@@ -105,7 +105,7 @@ int my_callback(int data_type, int data_len, char *content)
   g_lock.enter();
 
     /* image data */
-  if (e_image == data_type && NULL != content)
+  if (e_image == data_type && NULL != content && enable_cams)
   {        
     image_data* data = (image_data*)content;
     
@@ -120,7 +120,8 @@ int my_callback(int data_type, int data_len, char *content)
 			vector<int> compression_params;
 			compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
 			compression_params.push_back(9);
-			std::string name="/media/ubuntu/FLIR_DATA1/stereo_footage/left_cam_";
+//			strcpy(storage_name,"stereo_footage/left_cam_")
+            std::string name=path;//"/media/ubuntu/FLIR_DATA1/stereo_footage/left_cam_";
 			std::stringstream id_info,id_info2;
 			id_info << i+1;
 			name=name + id_info.str();
@@ -144,8 +145,9 @@ int my_callback(int data_type, int data_len, char *content)
 	  if(storage_check){
 			vector<int> compression_params;
 			compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
-			compression_params.push_back(9);
-			std::string name="/media/ubuntu/FLIR_DATA1/stereo_footage/right_cam_";
+			compression_params.push_back(9); //                                         0-9 the higher the value is the biggest the compression check with lower vallue 3:default )((*)(
+  //          strcpy(storage_name,"/stereo_footage/right_cam_");
+			std::string name=path;//"/media/ubuntu/FLIR_DATA1/stereo_footage/right_cam_";
 			std::stringstream id_info,id_info2;
 			id_info << i+1;
 			name=name + id_info.str();
@@ -165,6 +167,31 @@ int my_callback(int data_type, int data_len, char *content)
 
   }
 
+      /* ultrasonic */
+    if ( e_ultrasonic == data_type && NULL != content && enable_sonars)
+    {
+        ultrasonic_data *ultrasonic = (ultrasonic_data*)content;
+        /*if (verbosity > 1) {
+            printf( "frame index: %d, stamp: %d\n", ultrasonic->frame_index, ultrasonic->time_stamp );
+            for ( int d = 0; d < 5; ++d )
+            {
+                printf( "ultrasonic distance: %f, reliability: %d\n", ultrasonic->ultrasonic[d] * 0.001f, (int)ultrasonic->reliability[d] );
+            }
+        }*/
+  
+    // publish ultrasonic data
+    sensor_msgs::LaserScan g_ul;
+    g_ul.ranges.resize(5);
+    g_ul.intensities.resize(5);
+    g_ul.header.frame_id = "guidance";
+    g_ul.header.stamp    = ros::Time::now();
+    for ( int d = 0; d < 5; ++d ){
+      g_ul.ranges[d] = 0.001f * ultrasonic->ultrasonic[d];
+      g_ul.intensities[d] = 1.0 * ultrasonic->reliability[d];
+    }
+    ultrasonic_pub.publish(g_ul);
+  }
+
   key = waitKey(1);
 
   g_lock.leave();
@@ -176,19 +203,56 @@ int my_callback(int data_type, int data_len, char *content)
 #define RETURN_IF_ERR(err_code) { if( err_code ){ release_transfer(); \
 std::cout<<"Error: "<<(e_sdk_err_code)err_code<<" at "<<__LINE__<<","<<__FILE__<<std::endl; return -1;}}
 
+
+
+void print_help(){
+    printf("Execute like 'rosrun guidance allCameras -cam -son -store /media/ubuntu/USB' \nThis program publish all the cameras in topics (-cam) and sonar info in separate topics (-son) \n press 'q' to quit.\n");
+    return;
+}
+
 int main(int argc, char** argv)
 {
-  if (argc < 2) {
-    show_images = true;
-  }
-  if(argc>=2 && !strcmp(argv[1], "h")){
-    printf("This program publish all the cameras in topics \n from /guidance/cameras/0/left to /guidance/cameras/4/right\n"
-           "press 'q' to quit.");
-    return 0;
+  //printf("the argc %d",argc);
+  if(argc>=2){
+     for(int i=1;i<argc;i++){
+        if(!strcmp(argv[i], "-h")){
+            print_help();
+            i=999;
+            return 0;
+        }else if(!strcmp(argv[i], "-cam")){
+            printf("Enabling Camera topics.\n");
+            enable_cams=true;        
+        }else if(!strcmp(argv[i], "-son")){
+             printf("Enabling Sonar topics.\n");
+             enable_sonars=true;
+        }else if(!strcmp(argv[i], "-store")){
+            store_images=true;
+            if(argc!=i+1){
+                if (argv[i+1][0]=='/'){
+                    printf("Saving in directory %s",argv[++i]); //to bypass the directory parameter
+                    path = argv[i];
+                    storage_check();
+               }else{
+                    printf("Invalid storing path!(not starting with '/\')\n");
+                    return 0;
+                } 
+           }
+        }else{
+            printf("Unknown parameter/s!\n");
+            return 0;
+        }
+     }
   }
 
+  if(!enable_sonars&&!enable_cams){
+    printf("Please enable sonars' or cameras' topics. Add argument -son or -cam. ");
+  }
+
+
+  printf("the program ended\n");
+  return 0;
   /* initialize ros */
-  ros::init(argc, argv, "GuidanceCamerasOnly");
+  ros::init(argc, argv, "GuidanceCamerasAndSonarOnly");
   ros::NodeHandle my_node;
 
   image_pubs[0] = my_node.advertise<sensor_msgs::Image>("/guidance/0/left",1);
@@ -201,6 +265,7 @@ int main(int argc, char** argv)
   image_pubs[7] = my_node.advertise<sensor_msgs::Image>("/guidance/3/right",1);
   image_pubs[8] = my_node.advertise<sensor_msgs::Image>("/guidance/4/left",1);
   image_pubs[9] = my_node.advertise<sensor_msgs::Image>("/guidance/4/right",1);
+  ultrasonic_pub      = my_node.advertise<sensor_msgs::LaserScan>("/guidance/ultrasonic",1);
 
   images[0].header.frame_id = "guidanceDown";
   images[1].header.frame_id = "guidanceDown";
@@ -231,6 +296,7 @@ int main(int argc, char** argv)
   err_code = get_stereo_cali(cali);
   RETURN_IF_ERR(err_code);
   std::cout<<"cu\tcv\tfocal\tbaseline\n";
+  
   for (int i=0; i<5; i++)
   {
     std::cout<<cali[i].cu<<"\t"<<cali[i].cv<<"\t"<<cali[i].focal<<"\t"<<cali[i].baseline<<std::endl;
@@ -257,6 +323,10 @@ int main(int argc, char** argv)
   RETURN_IF_ERR(err_code);
   err_code = select_greyscale_image(e_vbus5, false);
   RETURN_IF_ERR(err_code);
+  
+  select_ultrasonic();
+  RETURN_IF_ERR(err_code);
+  
   /* start data transfer */
   err_code = set_sdk_event_handler(my_callback);
   RETURN_IF_ERR(err_code);
