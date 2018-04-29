@@ -18,6 +18,7 @@
 #include "DJI_guidance.h"
 #include "DJI_utility.h"
 
+#include <tf/transform_broadcaster.h>
 #include <geometry_msgs/TransformStamped.h> //IMU
 #include <geometry_msgs/Vector3Stamped.h> //velocity
 #include <sensor_msgs/LaserScan.h> //obstacle distance & ultrasonic
@@ -35,6 +36,9 @@ using namespace cv;
 #define WIDTH 320
 #define HEIGHT 240
 #define IMAGE_SIZE (HEIGHT * WIDTH)
+
+static tf::TransformBroadcaster br;
+tf::Transform transform;
 
 ros::Publisher image_pubs[10]; 
 ros::Publisher range_pubs[5];
@@ -120,7 +124,7 @@ int my_callback(int data_type, int data_len, char *content)
         memcpy(greyscales[j].data, data->m_greyscale_image_left[i], IMAGE_SIZE);
 		    greyscales[j].copyTo(images[j].image);
 
-        if(storage_check()){
+        if(store_images && storage_check()){
             vector<int> compression_params;
             compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
             compression_params.push_back(9);
@@ -145,7 +149,7 @@ int my_callback(int data_type, int data_len, char *content)
         memcpy(greyscales[j+1].data, data->m_greyscale_image_right[i], IMAGE_SIZE);
 		    greyscales[j+1].copyTo(images[j+1].image);
 
-        if(storage_check()){
+        if(store_images && storage_check()){
             vector<int> compression_params;
             compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
             compression_params.push_back(9); //                                         0-9 the higher the value is the biggest the compression check with lower vallue 3:default )((*)(
