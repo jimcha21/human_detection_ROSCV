@@ -116,48 +116,45 @@ int my_callback(int data_type, int data_len, char *content)
         memcpy(greyscales[j].data, data->m_greyscale_image_left[i], IMAGE_SIZE);
 		greyscales[j].copyTo(images[j].image);
 
-	  if(storage_check){
-			vector<int> compression_params;
-			compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
-			compression_params.push_back(9);
-//			strcpy(storage_name,"stereo_footage/left_cam_")
+        if(storage_check()){
+            vector<int> compression_params;
+            compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+            compression_params.push_back(9);
+
             std::string name=path;//"/media/ubuntu/FLIR_DATA1/stereo_footage/left_cam_";
-			std::stringstream id_info,id_info2;
-			id_info << i+1;
-			name=name + id_info.str();
-			id_info2 << ros::Time::now().toNSec();
-			//std::cout <<  ros::Time::now().toSec() <<std::endl;
-			name=name + "_" + id_info2.str() +".png" ;
-			//std::string timestamp= ;
-			//std::string name = a+".png";
-			imwrite(name, images[j].image, compression_params);
-	  }
+            std::stringstream id_info,id_info2;
+            id_info << i+1;
+            name=name + id_info.str();
+            id_info2 << ros::Time::now().toNSec();
+            //std::cout <<  ros::Time::now().toSec() <<std::endl;
+            name=name + "_" + id_info2.str() +".png" ;
+            imwrite(name, images[j].image, compression_params);
+        }
 
 
         images[j].header.stamp  = ros::Time::now();
         images[j].encoding    = sensor_msgs::image_encodings::MONO8;
         image_pubs[j].publish(images[j].toImageMsg());
       }
+   
       if(data->m_greyscale_image_right[i]){
         memcpy(greyscales[j+1].data, data->m_greyscale_image_right[i], IMAGE_SIZE);
 		greyscales[j+1].copyTo(images[j+1].image);
 
-	  if(storage_check){
-			vector<int> compression_params;
-			compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
-			compression_params.push_back(9); //                                         0-9 the higher the value is the biggest the compression check with lower vallue 3:default )((*)(
-  //          strcpy(storage_name,"/stereo_footage/right_cam_");
-			std::string name=path;//"/media/ubuntu/FLIR_DATA1/stereo_footage/right_cam_";
-			std::stringstream id_info,id_info2;
-			id_info << i+1;
-			name=name + id_info.str();
-			id_info2 << ros::Time::now().toNSec();
-			//std::cout <<  ros::Time::now().toSec() <<std::endl;
-			name=name + "_" + id_info2.str() +".png" ;
-			//std::string timestamp= ;
-			//std::string name = a+".png";
-			imwrite(name, images[j+1].image, compression_params);
-	  }
+        if(storage_check()){
+            vector<int> compression_params;
+            compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+            compression_params.push_back(9); //                                         0-9 the higher the value is the biggest the compression check with lower vallue 3:default )((*)(
+
+            std::string name=path;//"/media/ubuntu/FLIR_DATA1/stereo_footage/right_cam_";
+            std::stringstream id_info,id_info2;
+            id_info << i+1;
+            name=name + id_info.str();
+            id_info2 << ros::Time::now().toNSec();
+            //std::cout <<  ros::Time::now().toSec() <<std::endl;
+            name=name + "_" + id_info2.str() +".png" ;
+            imwrite(name, images[j+1].image, compression_params);
+        }
 
         images[j+1].header.stamp = ros::Time::now();
         images[j+1].encoding = sensor_msgs::image_encodings::MONO8;
@@ -178,19 +175,19 @@ int my_callback(int data_type, int data_len, char *content)
                 printf( "ultrasonic distance: %f, reliability: %d\n", ultrasonic->ultrasonic[d] * 0.001f, (int)ultrasonic->reliability[d] );
             }
         }*/
-  
-    // publish ultrasonic data
-    sensor_msgs::LaserScan g_ul;
-    g_ul.ranges.resize(5);
-    g_ul.intensities.resize(5);
-    g_ul.header.frame_id = "guidance";
-    g_ul.header.stamp    = ros::Time::now();
-    for ( int d = 0; d < 5; ++d ){
-      g_ul.ranges[d] = 0.001f * ultrasonic->ultrasonic[d];
-      g_ul.intensities[d] = 1.0 * ultrasonic->reliability[d];
+
+        // publish ultrasonic data
+        sensor_msgs::LaserScan g_ul;
+        g_ul.ranges.resize(5);
+        g_ul.intensities.resize(5);
+        g_ul.header.frame_id = "guidance";
+        g_ul.header.stamp    = ros::Time::now();
+        for ( int d = 0; d < 5; ++d ){
+          g_ul.ranges[d] = 0.001f * ultrasonic->ultrasonic[d];
+          g_ul.intensities[d] = 1.0 * ultrasonic->reliability[d];
+        }
+        ultrasonic_pub.publish(g_ul);
     }
-    ultrasonic_pub.publish(g_ul);
-  }
 
   key = waitKey(1);
 
@@ -202,8 +199,6 @@ int my_callback(int data_type, int data_len, char *content)
 
 #define RETURN_IF_ERR(err_code) { if( err_code ){ release_transfer(); \
 std::cout<<"Error: "<<(e_sdk_err_code)err_code<<" at "<<__LINE__<<","<<__FILE__<<std::endl; return -1;}}
-
-
 
 void print_help(){
     printf("Execute like 'rosrun guidance allCameras -cam -son -store /media/ubuntu/USB' \nThis program publish all the cameras in topics (-cam) and sonar info in separate topics (-son) \n press 'q' to quit.\n");
