@@ -58,12 +58,12 @@ add_executable(guidanceNode
   src/GuidanceNode.cpp
   src/DJI_utility.cpp)
 
-add_executable(FullCamerasSonars_save
-  src/FullCamerasSonars_save.cpp
+add_executable(allCamerasSonars_save
+  src/allCamerasSonars_save.cpp
 	src/DJI_utility.cpp
 	)
 
-add_executable(allCamerasSimple 
+add_executable(FullCameraSimpleNode 
   src/FullCameraSimpleNode.cpp
       src/DJI_utility.cpp
         )
