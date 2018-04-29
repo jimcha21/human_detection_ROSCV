@@ -21,6 +21,7 @@
 #include <geometry_msgs/TransformStamped.h> //IMU
 #include <geometry_msgs/Vector3Stamped.h> //velocity
 #include <sensor_msgs/LaserScan.h> //obstacle distance & ultrasonic
+#include <sensor_msgs/Range.h>
 
 #include <sys/statvfs.h>
 #include <iostream>
@@ -36,8 +37,11 @@ using namespace cv;
 #define IMAGE_SIZE (HEIGHT * WIDTH)
 
 ros::Publisher image_pubs[10]; 
+ros::Publisher range_pubs[5];
 ros::Publisher ultrasonic_pub;
 cv_bridge::CvImage images[10];
+sensor_msgs::Range ranges[5];
+
 Mat greyscales[10] {Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),
 Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1),Mat(HEIGHT, WIDTH, CV_8UC1)};
 
@@ -114,7 +118,7 @@ int my_callback(int data_type, int data_len, char *content)
       int j = 2*i;
       if(data->m_greyscale_image_left[i]){
         memcpy(greyscales[j].data, data->m_greyscale_image_left[i], IMAGE_SIZE);
-		greyscales[j].copyTo(images[j].image);
+		    greyscales[j].copyTo(images[j].image);
 
         if(storage_check()){
             vector<int> compression_params;
@@ -139,7 +143,7 @@ int my_callback(int data_type, int data_len, char *content)
    
       if(data->m_greyscale_image_right[i]){
         memcpy(greyscales[j+1].data, data->m_greyscale_image_right[i], IMAGE_SIZE);
-		greyscales[j+1].copyTo(images[j+1].image);
+		    greyscales[j+1].copyTo(images[j+1].image);
 
         if(storage_check()){
             vector<int> compression_params;
@@ -176,17 +180,17 @@ int my_callback(int data_type, int data_len, char *content)
             }
         }*/
 
-        // publish ultrasonic data
-        sensor_msgs::LaserScan g_ul;
-        g_ul.ranges.resize(5);
-        g_ul.intensities.resize(5);
-        g_ul.header.frame_id = "guidance";
-        g_ul.header.stamp    = ros::Time::now();
         for ( int d = 0; d < 5; ++d ){
-          g_ul.ranges[d] = 0.001f * ultrasonic->ultrasonic[d];
-          g_ul.intensities[d] = 1.0 * ultrasonic->reliability[d];
+          // publish ultrasonic data
+          ranges[d].header.stamp = ros::Time::now();
+          ranges[d].radiation_type = 0; //ULTRASOUND=0 , INFRARED=1 
+          ranges[d].field_of_view = 1; //CHeck dis also - check manual
+          ranges[d].min_range = 0.2; ranges[d].max_range = 20; //not the correct values probably - PLEASE CHECK
+          ranges[d].range = 0.001f * ultrasonic->ultrasonic[d];
+          
+          range_pubs[d].publish(ranges[d]);
         }
-        ultrasonic_pub.publish(g_ul);
+
     }
 
   key = waitKey(1);
@@ -243,35 +247,48 @@ int main(int argc, char** argv)
     printf("Please enable sonars' or cameras' topics. Add argument -son or -cam. ");
   }
 
-
+  //REMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESE
   printf("the program ended\n");
   return 0;
+
+
   /* initialize ros */
   ros::init(argc, argv, "GuidanceCamerasAndSonarOnly");
   ros::NodeHandle my_node;
 
-  image_pubs[0] = my_node.advertise<sensor_msgs::Image>("/guidance/0/left",1);
-  image_pubs[1] = my_node.advertise<sensor_msgs::Image>("/guidance/0/right",1);
-  image_pubs[2] = my_node.advertise<sensor_msgs::Image>("/guidance/1/left",1);
-  image_pubs[3] = my_node.advertise<sensor_msgs::Image>("/guidance/1/right",1);
-  image_pubs[4] = my_node.advertise<sensor_msgs::Image>("/guidance/2/left",1);
-  image_pubs[5] = my_node.advertise<sensor_msgs::Image>("/guidance/2/right",1);
-  image_pubs[6] = my_node.advertise<sensor_msgs::Image>("/guidance/3/left",1);
-  image_pubs[7] = my_node.advertise<sensor_msgs::Image>("/guidance/3/right",1);
-  image_pubs[8] = my_node.advertise<sensor_msgs::Image>("/guidance/4/left",1);
-  image_pubs[9] = my_node.advertise<sensor_msgs::Image>("/guidance/4/right",1);
-  ultrasonic_pub      = my_node.advertise<sensor_msgs::LaserScan>("/guidance/ultrasonic",1);
+  image_pubs[0] = my_node.advertise<sensor_msgs::Image>("/guidance/down/left",1);
+  image_pubs[1] = my_node.advertise<sensor_msgs::Image>("/guidance/down/right",1);
+  image_pubs[2] = my_node.advertise<sensor_msgs::Image>("/guidance/front/left",1);
+  image_pubs[3] = my_node.advertise<sensor_msgs::Image>("/guidance/front/right",1);
+  image_pubs[4] = my_node.advertise<sensor_msgs::Image>("/guidance/right/left",1);
+  image_pubs[5] = my_node.advertise<sensor_msgs::Image>("/guidance/right/right",1);
+  image_pubs[6] = my_node.advertise<sensor_msgs::Image>("/guidance/rear/left",1);
+  image_pubs[7] = my_node.advertise<sensor_msgs::Image>("/guidance/rear/right",1);
+  image_pubs[8] = my_node.advertise<sensor_msgs::Image>("/guidance/left/left",1);
+  image_pubs[9] = my_node.advertise<sensor_msgs::Image>("/guidance/left/right",1);
+ 
+  range_pubs[0] = my_node.advertise<sensor_msgs::Range>("/guidance/ultrasonic/down",1);
+  range_pubs[1] = my_node.advertise<sensor_msgs::Range>("/guidance/ultrasonic/front",1);
+  range_pubs[2] = my_node.advertise<sensor_msgs::Range>("/guidance/ultrasonic/right",1);
+  range_pubs[3] = my_node.advertise<sensor_msgs::Range>("/guidance/ultrasonic/rear",1);
+  range_pubs[4] = my_node.advertise<sensor_msgs::Range>("/guidance/ultrasonic/left",1);
 
-  images[0].header.frame_id = "guidanceDown";
-  images[1].header.frame_id = "guidanceDown";
-  images[2].header.frame_id = "guidanceFront";
-  images[3].header.frame_id = "guidanceFront";
-  images[4].header.frame_id = "guidanceRight";
-  images[5].header.frame_id = "guidanceRight";
-  images[6].header.frame_id = "guidanceRear";
-  images[7].header.frame_id = "guidanceRear";
-  images[8].header.frame_id = "guidanceLeft";
-  images[9].header.frame_id = "guidanceLeft";
+  images[0].header.frame_id = "guidanceDown_link";
+  images[1].header.frame_id = "guidanceDown_link";
+  images[2].header.frame_id = "guidanceFront_link";
+  images[3].header.frame_id = "guidanceFront_link";
+  images[4].header.frame_id = "guidanceRight_link";
+  images[5].header.frame_id = "guidanceRight_link";
+  images[6].header.frame_id = "guidanceRear_link";
+  images[7].header.frame_id = "guidanceRear_link";
+  images[8].header.frame_id = "guidanceLeft_link";
+  images[9].header.frame_id = "guidanceLeft_link";
+
+  ranges[0].header.frame_id = "ultrasonicDown_link";
+  ranges[1].header.frame_id = "ultrasonicFront_link";
+  ranges[2].header.frame_id = "ultrasonicRight_link";
+  ranges[3].header.frame_id = "ultrasonicRear_link";
+  ranges[4].header.frame_id = "ultrasonicLeft_link";
 
   /* initialize guidance */
   reset_config();
