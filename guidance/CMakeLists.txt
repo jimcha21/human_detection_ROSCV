@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   geometry_msgs
   message_generation
+  tf
 )
 
 #set(OpenCV_DIR "/home/ubuntu/opencv/build")
