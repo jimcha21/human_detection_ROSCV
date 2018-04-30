@@ -37,8 +37,24 @@ using namespace cv;
 #define HEIGHT 240
 #define IMAGE_SIZE (HEIGHT * WIDTH)
 
+struct pose_info {
+  tf::Vector3 position;
+  tf::Vector3 rotation;
+} ;
+
 static tf::TransformBroadcaster br;
 tf::Transform transform;
+
+float guidancesensor_positions[5][3] = {   {0,0,-0.04995},
+                                  {0,0,-0.04995},
+                                  {0,0,-0.04995},
+                                  {0,0,-0.04995},
+                                  {0,0,-0.04995}  };
+
+tf::Vector3 left_camera_pos = tf::Vector3(0,0,0);
+tf::Vector3 right_camera_pos = tf::Vector3(0,0,0);
+tf::Vector3 left_sonar_pos = tf::Vector3(0,0,0);
+tf::Vector3 right_sonar_pos = tf::Vector3(0,0,0);
 
 ros::Publisher image_pubs[10]; 
 ros::Publisher range_pubs[5];
