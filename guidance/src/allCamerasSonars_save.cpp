@@ -33,6 +33,8 @@
 using namespace std;
 using namespace cv;
 
+#define SONAR_TF 0
+#define CAMERA_TF 1
 #define WIDTH 320
 #define HEIGHT 240
 #define IMAGE_SIZE (HEIGHT * WIDTH)
@@ -53,14 +55,12 @@ double guidancesensor_positions[5][3] = {{0,0,-0.044},
                                   {-0.008275,-0.0698,-0.027}};
 //maybe import the below guidance sensors' info from a yaml file ~
 double guidancesensor_rotations[5][3] = {{1.57,0,-1.57},
-                                  {-1.570,0,0},
-                                  {0,0,0},
-                                  {1.570,0,0},
-                                  {3.141,0,0}};
+                                  {-1.57,0,0},
+                                  {3.141,0,0},
+                                  {1.57,0,0},
+                                  {0,0,0}};
 								  
 tf_info leftCamera_pose,rightCamera_pose,sonar_pose;	
-/*static tf::TransformBroadcaster br;
-tf::Transform transform;*/
 
 //ROS params																	
 ros::Publisher image_pubs[10]; 
@@ -105,6 +105,20 @@ const char* s = 0;
   return out << s;
 }
 
+//returns in string the sensor id
+string _whichSensorIsThis(int _id){
+	if(_id==0)
+		return string("Down");
+	else if(_id==1)
+		return string("Front");
+	else if(_id==2)
+		return string("Right");
+	else if(_id==3)
+		return string("Rear");
+	else // if(_id==4)
+		return string("Left");	
+}
+
 //Checking available space in $path directory.
 bool storage_check()
 {
@@ -129,6 +143,48 @@ bool storage_check()
 			if (free_space<0.1)	return false;
 	}	
 	return true;
+}
+
+bool publish_tf_(int sensor_location_,int sensor_type_){
+	
+	static tf::TransformBroadcaster br;
+  tf::Transform transform;
+  tf::Quaternion q;
+
+	transform.setOrigin(tf::Vector3(leftCamera_pose.position));
+	q.setRPY(leftCamera_pose.rotation.getX(),leftCamera_pose.rotation.getY(),leftCamera_pose.rotation.getZ());
+	q.normalize();
+	transform.setRotation(q);
+	br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, "guidanceDown_leftcamera_link"));	
+	
+	switch(sensor_type_){
+		case SONAR_TF: {
+				//posting tf for sonar sensor
+				transform.setOrigin(tf::Vector3(sonar_pose.position));
+				q.setRPY(sonar_pose.rotation.getX(),sonar_pose.rotation.getY(),sonar_pose.rotation.getZ());
+				q.normalize();
+				transform.setRotation(q);  
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, ranges[sensor_location_].header.frame_id));
+			}
+		case CAMERA_TF: {	 
+				//posting tf for the left camera
+				transform.setOrigin(tf::Vector3(leftCamera_pose.position));
+				q.setRPY(leftCamera_pose.rotation.getX(),leftCamera_pose.rotation.getY(),leftCamera_pose.rotation.getZ());
+				q.normalize();
+				transform.setRotation(q);
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, images[sensor_location_].header.frame_id));
+
+				//and the right camera
+				transform.setOrigin(tf::Vector3(rightCamera_pose.position));
+				q.setRPY(rightCamera_pose.rotation.getX(),rightCamera_pose.rotation.getY(),rightCamera_pose.rotation.getZ());
+				q.normalize();
+				transform.setRotation(q);
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, images[sensor_location_+1].header.frame_id));			
+			}			
+	}
+
+	return true;
+
 }
 
 int my_callback(int data_type, int data_len, char *content)
@@ -215,6 +271,8 @@ int my_callback(int data_type, int data_len, char *content)
           ranges[d].min_range = 0; ranges[d].max_range = 20; //not the correct values probably - PLEASE CHECK
           ranges[d].range = 0.001f * ultrasonic->ultrasonic[d];
           
+					 // publish tf (sonar)
+					publish_tf_(d,SONAR_TF);
           range_pubs[d].publish(ranges[d]);
         }
 
@@ -287,33 +345,34 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "GuidanceCamerasAndSonarOnly");
   ros::NodeHandle my_node;
 
-  image_pubs[0] = my_node.advertise<sensor_msgs::Image>("/guidance/down/left",1);
-  image_pubs[1] = my_node.advertise<sensor_msgs::Image>("/guidance/down/right",1);
-  image_pubs[2] = my_node.advertise<sensor_msgs::Image>("/guidance/front/left",1);
-  image_pubs[3] = my_node.advertise<sensor_msgs::Image>("/guidance/front/right",1);
-  image_pubs[4] = my_node.advertise<sensor_msgs::Image>("/guidance/right/left",1);
-  image_pubs[5] = my_node.advertise<sensor_msgs::Image>("/guidance/right/right",1);
-  image_pubs[6] = my_node.advertise<sensor_msgs::Image>("/guidance/rear/left",1);
-  image_pubs[7] = my_node.advertise<sensor_msgs::Image>("/guidance/rear/right",1);
-  image_pubs[8] = my_node.advertise<sensor_msgs::Image>("/guidance/left/left",1);
-  image_pubs[9] = my_node.advertise<sensor_msgs::Image>("/guidance/left/right",1);
+  image_pubs[0] = my_node.advertise<sensor_msgs::Image>("/guidance/down/left_camera",1);
+  image_pubs[1] = my_node.advertise<sensor_msgs::Image>("/guidance/down/right_camera",1);
+  image_pubs[2] = my_node.advertise<sensor_msgs::Image>("/guidance/front/left_camera",1);
+  image_pubs[3] = my_node.advertise<sensor_msgs::Image>("/guidance/front/right_camera",1);
+  image_pubs[4] = my_node.advertise<sensor_msgs::Image>("/guidance/right/left_camera",1);
+  image_pubs[5] = my_node.advertise<sensor_msgs::Image>("/guidance/right/right_camera",1);
+  image_pubs[6] = my_node.advertise<sensor_msgs::Image>("/guidance/rear/left_camera",1);
+  image_pubs[7] = my_node.advertise<sensor_msgs::Image>("/guidance/rear/right_camera",1);
+  image_pubs[8] = my_node.advertise<sensor_msgs::Image>("/guidance/left/left_camera",1);
+  image_pubs[9] = my_node.advertise<sensor_msgs::Image>("/guidance/left/rightimages[0].header.frame_id_camera",1);
  
-  range_pubs[0] = my_node.advertise<sensor_msgs::Range>("/guidance/ultrasonic/down",1);
-  range_pubs[1] = my_node.advertise<sensor_msgs::Range>("/guidance/ultrasonic/front",1);
-  range_pubs[2] = my_node.advertise<sensor_msgs::Range>("/guidance/ultrasonic/right",1);
-  range_pubs[3] = my_node.advertise<sensor_msgs::Range>("/guidance/ultrasonic/rear",1);
-  range_pubs[4] = my_node.advertise<sensor_msgs::Range>("/guidance/ultrasonic/left",1);
+  range_pubs[0] = my_node.advertise<sensor_msgs::Range>("/guidance/down/ultrasonic",1);
+  range_pubs[1] = my_node.advertise<sensor_msgs::Range>("/guidance/front/ultrasonic",1);
+  range_pubs[2] = my_node.advertise<sensor_msgs::Range>("/guidance/right/ultrasonic",1);
+  range_pubs[3] = my_node.advertise<sensor_msgs::Range>("/guidance/rear/ultrasonic",1);
+  range_pubs[4] = my_node.advertise<sensor_msgs::Range>("/guidance/left/ultrasonic",1);
 
-  images[0].header.frame_id = "guidanceDown_link";
-  images[1].header.frame_id = "guidanceDown_link";
-  images[2].header.frame_id = "guidanceFront_link";
-  images[3].header.frame_id = "guidanceFront_link";
-  images[4].header.frame_id = "guidanceRight_link";
-  images[5].header.frame_id = "guidanceRight_link";
-  images[6].header.frame_id = "guidanceRear_link";
-  images[7].header.frame_id = "guidanceRear_link";
-  images[8].header.frame_id = "guidanceLeft_link";
-  images[9].header.frame_id = "guidanceLeft_link";
+	//frame names
+  images[0].header.frame_id = "guidanceDown_leftcamera_link";
+  images[1].header.frame_id = "guidanceDown_rightcamera_link";
+  images[2].header.frame_id = "guidanceFront_leftcamera_link";
+  images[3].header.frame_id = "guidanceFront_rightcamera_link";
+  images[4].header.frame_id = "guidanceRight_leftcamera_link";
+  images[5].header.frame_id = "guidanceRight_rightcamera_link";
+  images[6].header.frame_id = "guidanceRear_leftcamera_link";
+  images[7].header.frame_id = "guidanceRear_rightcamera_link";
+  images[8].header.frame_id = "guidanceLeft_leftcamera_link";
+  images[9].header.frame_id = "guidanceLeft_rightcamera_link";
 
   ranges[0].header.frame_id = "ultrasonicDown_link";
   ranges[1].header.frame_id = "ultrasonicFront_link";
