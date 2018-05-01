@@ -39,20 +39,28 @@ using namespace cv;
 
 struct tf_info {
   tf::Vector3 position;
-  tf::Vector3 orientation;
+  tf::Vector3 rotation;
 };
 
-//maybe import the below guidance sensors' info from a yaml file ~
-//positions in reference with base_link
-float guidancesensor_positions[5][3] = {   {0,0,-0.04995},
-                                  {4,5,6},
-                                  {4,5,6},
-                                  {4,5,6},
-                                  {7,8,9}  };
+//scale parameter for transformin sizes from cm in rviz units 
+double _p =0.008325; // units in rviz which is 1cm in real world
 
+//positions in reference with base_link
+double guidancesensor_positions[5][3] = {{0,0,-0.044},
+                                  {0.06,0,-0.027},
+                                  {-0.008275,0.08,-0.027},
+                                  {-0.0898,0,-0.027},
+                                  {-0.008275,-0.0698,-0.027}};
+//maybe import the below guidance sensors' info from a yaml file ~
+double guidancesensor_rotations[5][3] = {{1.57,0,-1.57},
+                                  {-1.570,0,0},
+                                  {0,0,0},
+                                  {1.570,0,0},
+                                  {3.141,0,0}};
+								  
 tf_info leftCamera_pose,rightCamera_pose,sonar_pose;	
-static tf::TransformBroadcaster br;
-tf::Transform transform;
+/*static tf::TransformBroadcaster br;
+tf::Transform transform;*/
 
 //ROS params																	
 ros::Publisher image_pubs[10]; 
@@ -204,7 +212,7 @@ int my_callback(int data_type, int data_len, char *content)
           ranges[d].header.stamp = ros::Time::now();
           ranges[d].radiation_type = 0; //ULTRASOUND=0 , INFRARED=1 
           ranges[d].field_of_view = 1; //CHeck dis also - check manual
-          ranges[d].min_range = 0.2; ranges[d].max_range = 20; //not the correct values probably - PLEASE CHECK
+          ranges[d].min_range = 0; ranges[d].max_range = 20; //not the correct values probably - PLEASE CHECK
           ranges[d].range = 0.001f * ultrasonic->ultrasonic[d];
           
           range_pubs[d].publish(ranges[d]);
@@ -266,10 +274,14 @@ int main(int argc, char** argv)
     printf("Please enable sonars' or cameras' topics. Add argument -son or -cam. ");
   }
 
-  //REMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESE
-  printf("the program ended\n");
-  return 0;
+	leftCamera_pose.position=tf::Vector3(7.33*_p,0.01,0); leftCamera_pose.rotation=tf::Vector3(0,0,0);
+	rightCamera_pose.position=tf::Vector3(-7.33*_p,0.01,0); rightCamera_pose.rotation=tf::Vector3(0,0,0);
+	sonar_pose.position=tf::Vector3(0,0.01,0); sonar_pose.rotation=tf::Vector3(0,0,0);
 
+  //REMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESE
+/*  printf("the program ended\n");
+  return 0;
+*/
 
   /* initialize ros */
   ros::init(argc, argv, "GuidanceCamerasAndSonarOnly");
