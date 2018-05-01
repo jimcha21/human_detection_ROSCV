@@ -169,6 +169,7 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 				q.normalize();
 				transform.setRotation(q);  
 				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(ranges[sensor_location_].header.frame_id)));
+				break;
 		}
 		case CAMERA_TF: {	 
 				//posting tf for the left camera
@@ -183,6 +184,7 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 				q.normalize();
 				transform.setRotation(q);
 				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(images[sensor_location_+1].header.frame_id)));	
+				break;
 			}			
 	}
 
@@ -190,9 +192,11 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 
 }
 
-void letspost(const ros::TimerEvent& event){
-	cout<<"geia"<<endl;
-	publish_tf_(0,SONAR_TF);
+void postTf_sch_(const ros::TimerEvent& event){
+	for(int i=0;i<5;i++){
+		publish_tf_(i,SONAR_TF);
+		publish_tf_(i*2,CAMERA_TF);
+	}	
 }
 
 int my_callback(int data_type, int data_len, char *content)
@@ -340,6 +344,7 @@ int main(int argc, char** argv)
 
   if(!enable_sonars&&!enable_cams){
     printf("Please enable sonars' or cameras' topics. Add argument -son or -cam. ");
+		return 0;
   }
 
 	leftCamera_pose.position=tf::Vector3(7.33*_p,0.01,0); leftCamera_pose.rotation=tf::Vector3(0,0,0);
@@ -387,8 +392,6 @@ int main(int argc, char** argv)
 
 //REMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESE
 /*	publish_tf_(1,SONAR_TF);
-publish_tf_(3,CAMERA_TF);
-	publish_tf_(5,SONAR_TF);
   printf("the program ended\n");
   return 0;*/
 
@@ -447,13 +450,13 @@ publish_tf_(3,CAMERA_TF);
   err_code = start_transfer();
   RETURN_IF_ERR(err_code);
 
-  std::cout << "start_transfer" << std::endl;
+  std::cout << "start_transfer" << std::endl;	
+	ros::Timer timer = my_node.createTimer(ros::Duration(10), postTf_sch_); //Posting tf info in fixed time - 10Hz
 
   while (ros::ok())
   {
-		
-		ros::Timer timer = my_node.createTimer(ros::Duration(0.1),letspost);
-    g_event.wait_event();		
+    g_event.wait_event();
+
     ros::spinOnce();
     if (key > 0){
      if (key == 'q'){

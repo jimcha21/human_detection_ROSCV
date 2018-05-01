@@ -90,6 +90,11 @@ void poseCallback3(const ros::TimerEvent& event){
 	
 	}
 
+	void poseCallback4(const ros::TimerEvent& event){
+	cout<<"geia4"<<endl;
+	
+	}
+	
 void poseCallback(/*const ros::TimerEvent& event*/){
  
   cout<<"posting tf info"<<endl;
@@ -129,12 +134,13 @@ sonar_pose.position=tf::Vector3(0,0.01,0); sonar_pose.rotation=tf::Vector3(0,0,0
   //ros::Subscriber sub = node.subscribe(turtle_name+"/pose", 10, &poseCallback);
 
   ros::Rate loop_rate(1);
+	
+		ros::Timer timer1 = node.createTimer(ros::Duration(1), poseCallback3);
+		ros::Timer timer13 = node.createTimer(ros::Duration(2), poseCallback4);
   while(ros::ok())
-  {
-    ros::Timer timer1 = node.createTimer(ros::Duration(1), poseCallback3);
-    
+  {    
     //poseCallback();
-		
+		cout<<"me lene kosnatantino"<<endl;
     ros::spinOnce();
 
     loop_rate.sleep();
