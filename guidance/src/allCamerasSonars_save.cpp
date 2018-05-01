@@ -149,14 +149,18 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 	
 	static tf::TransformBroadcaster br;
   tf::Transform transform;
-  tf::Quaternion q;
-
+  tf::Quaternion q;	
+	string _parentTf = string("guidance")+_whichSensorIsThis(sensor_location_)+string("_link");
+	
+	//posting guidance sensor tf
 	transform.setOrigin(tf::Vector3(leftCamera_pose.position));
 	q.setRPY(leftCamera_pose.rotation.getX(),leftCamera_pose.rotation.getY(),leftCamera_pose.rotation.getZ());
 	q.normalize();
 	transform.setRotation(q);
-	br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, "guidanceDown_leftcamera_link"));	
+	//base_link frame is above all M100 sensors..
+	br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "base_link", _parentTf));	
 	
+	//and then the child tf
 	switch(sensor_type_){
 		case SONAR_TF: {
 				//posting tf for sonar sensor
@@ -164,27 +168,31 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 				q.setRPY(sonar_pose.rotation.getX(),sonar_pose.rotation.getY(),sonar_pose.rotation.getZ());
 				q.normalize();
 				transform.setRotation(q);  
-				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, ranges[sensor_location_].header.frame_id));
-			}
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(ranges[sensor_location_].header.frame_id)));
+		}
 		case CAMERA_TF: {	 
 				//posting tf for the left camera
 				transform.setOrigin(tf::Vector3(leftCamera_pose.position));
 				q.setRPY(leftCamera_pose.rotation.getX(),leftCamera_pose.rotation.getY(),leftCamera_pose.rotation.getZ());
 				q.normalize();
 				transform.setRotation(q);
-				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, images[sensor_location_].header.frame_id));
-
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(images[sensor_location_].header.frame_id)));
 				//and the right camera
 				transform.setOrigin(tf::Vector3(rightCamera_pose.position));
 				q.setRPY(rightCamera_pose.rotation.getX(),rightCamera_pose.rotation.getY(),rightCamera_pose.rotation.getZ());
 				q.normalize();
 				transform.setRotation(q);
-				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, images[sensor_location_+1].header.frame_id));			
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(images[sensor_location_+1].header.frame_id)));	
 			}			
 	}
 
 	return true;
 
+}
+
+void letspost(const ros::TimerEvent& event){
+	cout<<"geia"<<endl;
+	publish_tf_(0,SONAR_TF);
 }
 
 int my_callback(int data_type, int data_len, char *content)
@@ -198,8 +206,10 @@ int my_callback(int data_type, int data_len, char *content)
     
     for (int i = 0; i < 5; ++i)
     {
-      int j = 2*i;
-      if(data->m_greyscale_image_left[i]){
+			int j = 2*i;
+			//publish_tf_(j,CAMERA_TF); // publish tf (sonar)
+			
+			if(data->m_greyscale_image_left[i]){
         memcpy(greyscales[j].data, data->m_greyscale_image_left[i], IMAGE_SIZE);
 		    greyscales[j].copyTo(images[j].image);
 
@@ -272,7 +282,7 @@ int my_callback(int data_type, int data_len, char *content)
           ranges[d].range = 0.001f * ultrasonic->ultrasonic[d];
           
 					 // publish tf (sonar)
-					publish_tf_(d,SONAR_TF);
+					//publish_tf_(d,SONAR_TF);
           range_pubs[d].publish(ranges[d]);
         }
 
@@ -336,15 +346,10 @@ int main(int argc, char** argv)
 	rightCamera_pose.position=tf::Vector3(-7.33*_p,0.01,0); rightCamera_pose.rotation=tf::Vector3(0,0,0);
 	sonar_pose.position=tf::Vector3(0,0.01,0); sonar_pose.rotation=tf::Vector3(0,0,0);
 
-  //REMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESE
-/*  printf("the program ended\n");
-  return 0;
-*/
-
   /* initialize ros */
   ros::init(argc, argv, "GuidanceCamerasAndSonarOnly");
   ros::NodeHandle my_node;
-
+	
   image_pubs[0] = my_node.advertise<sensor_msgs::Image>("/guidance/down/left_camera",1);
   image_pubs[1] = my_node.advertise<sensor_msgs::Image>("/guidance/down/right_camera",1);
   image_pubs[2] = my_node.advertise<sensor_msgs::Image>("/guidance/front/left_camera",1);
@@ -354,7 +359,7 @@ int main(int argc, char** argv)
   image_pubs[6] = my_node.advertise<sensor_msgs::Image>("/guidance/rear/left_camera",1);
   image_pubs[7] = my_node.advertise<sensor_msgs::Image>("/guidance/rear/right_camera",1);
   image_pubs[8] = my_node.advertise<sensor_msgs::Image>("/guidance/left/left_camera",1);
-  image_pubs[9] = my_node.advertise<sensor_msgs::Image>("/guidance/left/rightimages[0].header.frame_id_camera",1);
+  image_pubs[9] = my_node.advertise<sensor_msgs::Image>("/guidance/left/right_camera",1);
  
   range_pubs[0] = my_node.advertise<sensor_msgs::Range>("/guidance/down/ultrasonic",1);
   range_pubs[1] = my_node.advertise<sensor_msgs::Range>("/guidance/front/ultrasonic",1);
@@ -379,6 +384,13 @@ int main(int argc, char** argv)
   ranges[2].header.frame_id = "ultrasonicRight_link";
   ranges[3].header.frame_id = "ultrasonicRear_link";
   ranges[4].header.frame_id = "ultrasonicLeft_link";
+
+//REMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESE
+/*	publish_tf_(1,SONAR_TF);
+publish_tf_(3,CAMERA_TF);
+	publish_tf_(5,SONAR_TF);
+  printf("the program ended\n");
+  return 0;*/
 
   /* initialize guidance */
   reset_config();
@@ -439,7 +451,9 @@ int main(int argc, char** argv)
 
   while (ros::ok())
   {
-    g_event.wait_event();
+		
+		ros::Timer timer = my_node.createTimer(ros::Duration(0.1),letspost);
+    g_event.wait_event();		
     ros::spinOnce();
     if (key > 0){
      if (key == 'q'){

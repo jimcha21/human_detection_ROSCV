@@ -64,6 +64,11 @@ add_executable(allCamerasSonars_save
 	src/DJI_utility.cpp
 	)
 
+	add_executable(fordelete
+  src/fordelete.cpp
+	src/DJI_utility.cpp
+	)
+	
 add_executable(FullCameraSimpleNode 
   src/FullCameraSimpleNode.cpp
       src/DJI_utility.cpp
