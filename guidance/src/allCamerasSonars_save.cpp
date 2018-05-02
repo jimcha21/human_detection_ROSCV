@@ -106,16 +106,20 @@ const char* s = 0;
 }
 
 //returns in string the sensor id
-string _whichSensorIsThis(int _id){
-	if(_id==0)
+string _whichSensorIsThis(int _id,int _type){
+	tmp_id_=_id;
+  if(_type==CAMERA_TF)
+    tmp_id_=_id/2;
+
+  if(tmp_id_=0)
 		return string("Down");
-	else if(_id==1)
+	else if(tmp_id_==1)
 		return string("Front");
-	else if(_id==2)
+	else if(tmp_id_==2)
 		return string("Right");
-	else if(_id==3)
+	else if(tmp_id_==3)
 		return string("Rear");
-	else // if(_id==4)
+	else // if(tmp_id_==4)
 		return string("Left");	
 }
 
@@ -150,7 +154,7 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 	static tf::TransformBroadcaster br;
   tf::Transform transform;
   tf::Quaternion q;	
-	string _parentTf = string("guidance")+_whichSensorIsThis(sensor_location_)+string("_link");
+	string _parentTf = string("guidance")+_whichSensorIsThis(sensor_location_,sensor_type_)+string("_link");
 	
 	//posting guidance sensor tf
 	transform.setOrigin(tf::Vector3(leftCamera_pose.position));
