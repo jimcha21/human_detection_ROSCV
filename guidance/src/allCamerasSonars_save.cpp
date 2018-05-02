@@ -451,7 +451,7 @@ int main(int argc, char** argv)
   RETURN_IF_ERR(err_code);
 
   std::cout << "start_transfer" << std::endl;	
-	ros::Timer timer = my_node.createTimer(ros::Duration(10), postTf_sch_); //Posting tf info in fixed time - 10Hz
+	ros::Timer timer = my_node.createTimer(ros::Duration(1), postTf_sch_); //Posting tf info in fixed time - 10Hz
 
   while (ros::ok())
   {
