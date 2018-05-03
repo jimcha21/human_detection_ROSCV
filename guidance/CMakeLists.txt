@@ -68,6 +68,11 @@ add_executable(FullCameraSimpleNode
   src/FullCameraSimpleNode.cpp
       src/DJI_utility.cpp
         )
+				
+add_executable(tf_publisher 
+src/tf_publisher.cpp
+		src/DJI_utility.cpp
+			)
 		
 add_executable(node 
 	src/node.cpp

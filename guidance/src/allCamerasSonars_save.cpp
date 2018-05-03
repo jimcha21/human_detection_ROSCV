@@ -46,13 +46,36 @@ struct tf_info {
 
 //scale parameter for transformin sizes from cm in rviz units 
 double _p =0.008325; // units in rviz which is 1cm in real world
+double offset_z =-0.027;
+double frontSensordist_x = 7*_p;
+double downSensordist_z = -1.46*_p + offset_z;
+double rearSensordist_x = -10.8*_p;
+double rightSensordist_y = -8.5*_p;
+double leftSensordist_y = -rightSensordist_y;
+	
+/*<arg name="cmtorviz" value="0.008325" />  <!-- 1cm -> 0.008325 units in rviz -->
+<arg name="offset_z" value="-0.027" />
+<arg name="frontSensordist_x" value="$(eval 7*arg('cmtorviz'))"/>
+<arg name="downSensordist_z"  value="$(eval -1.46*arg('cmtorviz') + arg('offset_z'))"/>
+<arg name="rearSensordist_x"  value="$(eval -10.8*arg('cmtorviz'))"/>
+<arg name="rightSensordist_y" value="$(eval -8.5*arg('cmtorviz'))"/>
+<arg name="leftSensordist_y"  value="$(eval 8.5*arg('cmtorviz'))"/>
+*/
 
 //positions in reference with base_link
-double guidancesensor_positions[5][3] = {{0,0,-0.044},
+/*double guidancesensor_positions[5][3] = {{0,0,-0.044},
                                   {0.06,0,-0.027},
                                   {-0.008275,0.08,-0.027},
                                   {-0.0898,0,-0.027},
-                                  {-0.008275,-0.0698,-0.027}};
+                                  {-0.008275,-0.0698,-0.027}};*/
+
+double guidancesensor_positions[5][3] = {{0,0,downSensordist_z},
+                                  {frontSensordist_x,0,offset_z},
+                                  {-0.008275,rightSensordist_y,offset_z},
+                                  {rearSensordist_x,0,offset_z},
+                                  {-0.008275,leftSensordist_y,offset_z}};
+																
+																	
 //maybe import the below guidance sensors' info from a yaml file ~
 double guidancesensor_rotations[5][3] = {{1.57,0,-1.57},
                                   {-1.57,0,0},
@@ -107,7 +130,7 @@ const char* s = 0;
 
 //returns in string the sensor id
 string _whichSensorIsThis(int _id,int _type){
-	tmp_id_=_id;
+  int tmp_id_=_id;
   if(_type==CAMERA_TF)
     tmp_id_=_id/2;
 
