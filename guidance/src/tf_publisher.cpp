@@ -4,6 +4,7 @@
 #include <sensor_msgs/Temperature.h>
 #include <sensor_msgs/Range.h>
 
+#include <cv_bridge/cv_bridge.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
@@ -23,6 +24,10 @@ double downSensordist_z = -1.46*_p + offset_z;
 double rearSensordist_x = -10.8*_p;
 double rightSensordist_y = -8.5*_p;
 double leftSensordist_y = -rightSensordist_y;
+
+cv_bridge::CvImage images[10];
+sensor_msgs::Range ranges[5];
+	
 
 struct tf_info {
   tf::Vector3 position;
@@ -45,7 +50,24 @@ double guidancesensor_rotations[5][3] = {{1.57,0,-1.57},
 
 tf_info leftCamera_pose,rightCamera_pose,sonar_pose;
 
+string _whichSensorIsThis(int _id,int _type){
+  int tmp_id_=_id;
+  if(_type==CAMERA_TF)
+    tmp_id_=_id/2;
 
+  if(tmp_id_==0)
+		return string("Down");
+	else if(tmp_id_==1)
+		return string("Front");
+	else if(tmp_id_==2)
+		return string("Right");
+	else if(tmp_id_==3)
+		return string("Rear");
+	else // if(tmp_id_==4)
+		return string("Left");	
+}
+
+																	
 bool publish_tf_(int sensor_location_,int sensor_type_){
 	
 	static tf::TransformBroadcaster br;
@@ -92,22 +114,6 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 	return true;
 
 }
-string _whichSensorIsThis(int _id,int _type){
-  int tmp_id_=_id;
-  if(_type==CAMERA_TF)
-    tmp_id_=_id/2;
-
-  if(tmp_id_=0)
-		return string("Down");
-	else if(tmp_id_==1)
-		return string("Front");
-	else if(tmp_id_==2)
-		return string("Right");
-	else if(tmp_id_==3)
-		return string("Rear");
-	else // if(tmp_id_==4)
-		return string("Left");	
-}
 
 void poseCallback(/*const ros::TimerEvent& event*/){
  
@@ -131,6 +137,25 @@ rightCamera_pose.position=tf::Vector3(-7.33*_p,0.01,0); rightCamera_pose.rotatio
 sonar_pose.position=tf::Vector3(0,0.01,0); sonar_pose.rotation=tf::Vector3(0,0,0);
 
 
+images[0].header.frame_id = "guidanceDown_leftcamera_link";
+images[1].header.frame_id = "guidanceDown_rightcamera_link";
+images[2].header.frame_id = "guidanceFront_leftcamera_link";
+images[3].header.frame_id = "guidanceFront_rightcamera_link";
+images[4].header.frame_id = "guidanceRight_leftcamera_link";
+images[5].header.frame_id = "guidanceRight_rightcamera_link";
+images[6].header.frame_id = "guidanceRear_leftcamera_link";
+images[7].header.frame_id = "guidanceRear_rightcamera_link";
+images[8].header.frame_id = "guidanceLeft_leftcamera_link";
+images[9].header.frame_id = "guidanceLeft_rightcamera_link";
+
+ranges[0].header.frame_id = "ultrasonicDown_link";
+ranges[1].header.frame_id = "ultrasonicFront_link";
+ranges[2].header.frame_id = "ultrasonicRight_link";
+ranges[3].header.frame_id = "ultrasonicRear_link";
+ranges[4].header.frame_id = "ultrasonicLeft_link";
+
+
+	
   ros::NodeHandle node;
   //ros::Subscriber sub = node.subscribe(turtle_name+"/pose", 10, &poseCallback);
 

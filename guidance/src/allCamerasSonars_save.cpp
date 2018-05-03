@@ -52,7 +52,8 @@ double downSensordist_z = -1.46*_p + offset_z;
 double rearSensordist_x = -10.8*_p;
 double rightSensordist_y = -8.5*_p;
 double leftSensordist_y = -rightSensordist_y;
-	
+double camerafromcenter = 7.53*_p;	
+
 /*<arg name="cmtorviz" value="0.008325" />  <!-- 1cm -> 0.008325 units in rviz -->
 <arg name="offset_z" value="-0.027" />
 <arg name="frontSensordist_x" value="$(eval 7*arg('cmtorviz'))"/>
@@ -134,7 +135,7 @@ string _whichSensorIsThis(int _id,int _type){
   if(_type==CAMERA_TF)
     tmp_id_=_id/2;
 
-  if(tmp_id_=0)
+  if(tmp_id_==0)
 		return string("Down");
 	else if(tmp_id_==1)
 		return string("Front");
@@ -374,8 +375,8 @@ int main(int argc, char** argv)
 		return 0;
   }
 
-	leftCamera_pose.position=tf::Vector3(7.33*_p,0.01,0); leftCamera_pose.rotation=tf::Vector3(0,0,0);
-	rightCamera_pose.position=tf::Vector3(-7.33*_p,0.01,0); rightCamera_pose.rotation=tf::Vector3(0,0,0);
+	leftCamera_pose.position=tf::Vector3(camerafromcenter*_p,0.01,0); leftCamera_pose.rotation=tf::Vector3(0,0,0);
+	rightCamera_pose.position=tf::Vector3(-camerafromcenter*_p,0.01,0); rightCamera_pose.rotation=tf::Vector3(0,0,0);
 	sonar_pose.position=tf::Vector3(0,0.01,0); sonar_pose.rotation=tf::Vector3(0,0,0);
 
   /* initialize ros */
@@ -480,7 +481,7 @@ int main(int argc, char** argv)
   std::cout << "start_transfer" << std::endl;	
 	ros::Timer timer = my_node.createTimer(ros::Duration(1), postTf_sch_); //Posting tf info in fixed time - 10Hz
 
-  while (ros::ok())
+	while (ros::ok())
   {
     g_event.wait_event();
 
