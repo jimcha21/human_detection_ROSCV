@@ -157,16 +157,16 @@ int main(int argc, char** argv){
 	sonar_pose.position=tf::Vector3(0.01,0,0); sonar_pose.rotation=tf::Vector3(0,0,0);
 
 
-images[0].header.frame_id = "guidanceDown_leftcamera_link";
-images[1].header.frame_id = "guidanceDown_rightcamera_link";
-images[2].header.frame_id = "guidanceFront_leftcamera_link";
-images[3].header.frame_id = "guidanceFront_rightcamera_link";
-images[4].header.frame_id = "guidanceRight_leftcamera_link";
-images[5].header.frame_id = "guidanceRight_rightcamera_link";
-images[6].header.frame_id = "guidanceRear_leftcamera_link";
-images[7].header.frame_id = "guidanceRear_rightcamera_link";
-images[8].header.frame_id = "guidanceLeft_leftcamera_link";
-images[9].header.frame_id = "guidanceLeft_rightcamera_link";
+images[0].header.frame_id = "guidanceDown_leftcamera_frame";
+images[1].header.frame_id = "guidanceDown_rightcamera_frame";
+images[2].header.frame_id = "guidanceFront_leftcamera_frame";
+images[3].header.frame_id = "guidanceFront_rightcamera_frame";
+images[4].header.frame_id = "guidanceRight_leftcamera_frame";
+images[5].header.frame_id = "guidanceRight_rightcamera_frame";
+images[6].header.frame_id = "guidanceRear_leftcamera_frame";
+images[7].header.frame_id = "guidanceRear_rightcamera_frame";
+images[8].header.frame_id = "guidanceLeft_leftcamera_frame";
+images[9].header.frame_id = "guidanceLeft_rightcamera_frame";
 
 ranges[0].header.frame_id = "ultrasonicDown_link";
 ranges[1].header.frame_id = "ultrasonicFront_link";
