@@ -17,13 +17,14 @@
 using namespace cv;
 using namespace std;
 
-double _p =0.008325;
+double _p =0.008325; // units in rviz which is 1cm in real world
 double offset_z =-0.027;
 double frontSensordist_x = 7*_p;
 double downSensordist_z = -1.46*_p + offset_z;
 double rearSensordist_x = -10.8*_p;
 double rightSensordist_y = -8.5*_p;
 double leftSensordist_y = -rightSensordist_y;
+double camerafromcenter = 7.53*_p;	
 
 cv_bridge::CvImage images[10];
 sensor_msgs::Range ranges[5];
@@ -41,19 +42,19 @@ double guidancesensor_positions[5][3] = {{0,0,downSensordist_z},
                                   {-0.008275,rightSensordist_y,offset_z},
                                   {rearSensordist_x,0,offset_z},
                                   {-0.008275,leftSensordist_y,offset_z}};
-															
-double guidancesensor_rotations[5][3] = {{1.57,0,-1.57},
-                                  {-1.570,0,0},
+																																														
+double guidancesensor_rotations[5][3] = {{0,1.57,0},
                                   {0,0,0},
-                                  {1.570,0,0},
-                                  {3.141,0,0}};
+                                  {-1.57,0,0},
+                                  {3.14,0,0},
+                                  {1.57,0,0}};
 
 tf_info leftCamera_pose,rightCamera_pose,sonar_pose;
 
 string _whichSensorIsThis(int _id,int _type){
   int tmp_id_=_id;
-  if(_type==CAMERA_TF)
-    tmp_id_=_id/2;
+  //if(_type==CAMERA_TF)
+  //  tmp_id_=_id/2;
 
   if(tmp_id_==0)
 		return string("Down");
@@ -76,8 +77,8 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 	string _parentTf = string("guidance")+_whichSensorIsThis(sensor_location_,sensor_type_)+string("_link");
 	
 	//posting guidance sensor tf
-	transform.setOrigin(tf::Vector3(leftCamera_pose.position));
-	q.setRPY(leftCamera_pose.rotation.getX(),leftCamera_pose.rotation.getY(),leftCamera_pose.rotation.getZ());
+	transform.setOrigin(tf::Vector3(guidancesensor_positions[sensor_location_][0],guidancesensor_positions[sensor_location_][1],guidancesensor_positions[sensor_location_][2]));
+	q.setRPY(guidancesensor_rotations[sensor_location_][2],guidancesensor_rotations[sensor_location_][1],guidancesensor_rotations[sensor_location_][0]);
 	q.normalize();
 	transform.setRotation(q);
 	//base_link frame is above all M100 sensors..
@@ -92,21 +93,39 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 				q.normalize();
 				transform.setRotation(q);  
 				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(ranges[sensor_location_].header.frame_id)));
-				break;
+			break;
 		}
 		case CAMERA_TF: {	 
-				//posting tf for the left camera
+				
+			  string opticalframe_name_ = string("guidance")+_whichSensorIsThis(sensor_location_,sensor_type_); 
+				
+		   	//posting tf for the left camera
 				transform.setOrigin(tf::Vector3(leftCamera_pose.position));
 				q.setRPY(leftCamera_pose.rotation.getX(),leftCamera_pose.rotation.getY(),leftCamera_pose.rotation.getZ());
 				q.normalize();
 				transform.setRotation(q);
-				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(images[sensor_location_].header.frame_id)));
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(images[sensor_location_*2].header.frame_id)));
+				
+				//and its optical frame 
+			  transform.setOrigin(tf::Vector3(0,0,0));
+				q.setRPY(0,1.57,3.14);
+				transform.setRotation(q);
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), string(images[sensor_location_*2].header.frame_id), opticalframe_name_+string("_leftcamera_opticalframe")));
+			
+
 				//and the right camera
 				transform.setOrigin(tf::Vector3(rightCamera_pose.position));
 				q.setRPY(rightCamera_pose.rotation.getX(),rightCamera_pose.rotation.getY(),rightCamera_pose.rotation.getZ());
 				q.normalize();
 				transform.setRotation(q);
-				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(images[sensor_location_+1].header.frame_id)));	
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(images[(sensor_location_*2)+1].header.frame_id)));	
+				
+				//and its optical frame 
+			  transform.setOrigin(tf::Vector3(0,0,0));
+				q.setRPY(0,1.57,3.14);
+				transform.setRotation(q);
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), string(images[(sensor_location_*2)+1].header.frame_id), opticalframe_name_+string("_rightcamera_opticalframe")));
+			
 				break;
 			}			
 	}
@@ -120,7 +139,7 @@ void poseCallback(/*const ros::TimerEvent& event*/){
   cout<<"posting tf info"<<endl;
 	for(int i=0;i<5;i++){
 		publish_tf_(i,SONAR_TF);
-		publish_tf_(i*2,CAMERA_TF);
+		publish_tf_(i,CAMERA_TF);
 	}	
     
 }
@@ -131,10 +150,11 @@ int main(int argc, char** argv){
   //cout<<guidancesensor_positions[0][0]<<endl;
   // 149870000.000
   // 39920000.000
-
-leftCamera_pose.position=tf::Vector3(7.33*_p,0.01,0); leftCamera_pose.rotation=tf::Vector3(0,0,0);
-rightCamera_pose.position=tf::Vector3(-7.33*_p,0.01,0); rightCamera_pose.rotation=tf::Vector3(0,0,0);
-sonar_pose.position=tf::Vector3(0,0.01,0); sonar_pose.rotation=tf::Vector3(0,0,0);
+	
+	
+	leftCamera_pose.position=tf::Vector3(0.01,camerafromcenter,0); leftCamera_pose.rotation=tf::Vector3(0,0,0);
+	rightCamera_pose.position=tf::Vector3(0.01,-camerafromcenter,0); rightCamera_pose.rotation=tf::Vector3(0,0,0);
+	sonar_pose.position=tf::Vector3(0.01,0,0); sonar_pose.rotation=tf::Vector3(0,0,0);
 
 
 images[0].header.frame_id = "guidanceDown_leftcamera_link";

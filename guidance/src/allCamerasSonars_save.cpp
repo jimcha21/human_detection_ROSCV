@@ -78,11 +78,11 @@ double guidancesensor_positions[5][3] = {{0,0,downSensordist_z},
 																
 																	
 //maybe import the below guidance sensors' info from a yaml file ~
-double guidancesensor_rotations[5][3] = {{1.57,0,-1.57},
+double guidancesensor_rotations[5][3] = {{0,1.57,0},
+                                  {0,0,0},
                                   {-1.57,0,0},
-                                  {3.141,0,0},
-                                  {1.57,0,0},
-                                  {0,0,0}};
+                                  {3.14,0,0},
+                                  {1.57,0,0}};
 								  
 tf_info leftCamera_pose,rightCamera_pose,sonar_pose;	
 
@@ -132,8 +132,8 @@ const char* s = 0;
 //returns in string the sensor id
 string _whichSensorIsThis(int _id,int _type){
   int tmp_id_=_id;
-  if(_type==CAMERA_TF)
-    tmp_id_=_id/2;
+  //if(_type==CAMERA_TF)
+  //  tmp_id_=_id/2;
 
   if(tmp_id_==0)
 		return string("Down");
@@ -146,6 +146,7 @@ string _whichSensorIsThis(int _id,int _type){
 	else // if(tmp_id_==4)
 		return string("Left");	
 }
+
 
 //Checking available space in $path directory.
 bool storage_check()
@@ -181,8 +182,8 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 	string _parentTf = string("guidance")+_whichSensorIsThis(sensor_location_,sensor_type_)+string("_link");
 	
 	//posting guidance sensor tf
-	transform.setOrigin(tf::Vector3(leftCamera_pose.position));
-	q.setRPY(leftCamera_pose.rotation.getX(),leftCamera_pose.rotation.getY(),leftCamera_pose.rotation.getZ());
+	transform.setOrigin(tf::Vector3(guidancesensor_positions[sensor_location_][0],guidancesensor_positions[sensor_location_][1],guidancesensor_positions[sensor_location_][2]));
+	q.setRPY(guidancesensor_rotations[sensor_location_][2],guidancesensor_rotations[sensor_location_][1],guidancesensor_rotations[sensor_location_][0]);
 	q.normalize();
 	transform.setRotation(q);
 	//base_link frame is above all M100 sensors..
@@ -197,34 +198,42 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 				q.normalize();
 				transform.setRotation(q);  
 				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(ranges[sensor_location_].header.frame_id)));
-				break;
+			  break;
 		}
 		case CAMERA_TF: {	 
-				//posting tf for the left camera
+			  string opticalframe_name_ = string("guidance")+_whichSensorIsThis(sensor_location_,sensor_type_); 
+				
+		   	//posting tf for the left camera
 				transform.setOrigin(tf::Vector3(leftCamera_pose.position));
 				q.setRPY(leftCamera_pose.rotation.getX(),leftCamera_pose.rotation.getY(),leftCamera_pose.rotation.getZ());
 				q.normalize();
 				transform.setRotation(q);
-				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(images[sensor_location_].header.frame_id)));
-					
-				//and its optical frame
-				//		
-		      	        q.setRPY(1.57,3.14,0);
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(images[sensor_location_*2].header.frame_id)));
+				
+				//and its optical frame 
+			  transform.setOrigin(tf::Vector3(0,0,0));
+				q.setRPY(0,1.57,3.14);
 				transform.setRotation(q);
-			        br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, "mpeee"));
-																       
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), string(images[sensor_location_*2].header.frame_id), opticalframe_name_+string("_leftcamera_opticalframe")));
+			
 
 				//and the right camera
 				transform.setOrigin(tf::Vector3(rightCamera_pose.position));
 				q.setRPY(rightCamera_pose.rotation.getX(),rightCamera_pose.rotation.getY(),rightCamera_pose.rotation.getZ());
 				q.normalize();
 				transform.setRotation(q);
-				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(images[sensor_location_+1].header.frame_id)));	
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(images[(sensor_location_*2)+1].header.frame_id)));	
 				
-               			break;
-         }			
+				//and its optical frame 
+			  transform.setOrigin(tf::Vector3(0,0,0));
+				q.setRPY(0,1.57,3.14);
+				transform.setRotation(q);
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), string(images[(sensor_location_*2)+1].header.frame_id), opticalframe_name_+string("_rightcamera_opticalframe")));
+			
+				break;
+		}			
 	}
-//cout<<"posted"<<endl;
+	
 	return true;
 
 }
@@ -232,7 +241,7 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 void postTf_sch_(const ros::TimerEvent& event){
 	for(int i=0;i<5;i++){
 		publish_tf_(i,SONAR_TF);
-		publish_tf_(i*2,CAMERA_TF);
+		publish_tf_(i,CAMERA_TF);
 	}	
 }
 
@@ -384,9 +393,9 @@ int main(int argc, char** argv)
 		return 0;
   }
 
-	leftCamera_pose.position=tf::Vector3(camerafromcenter*_p,0.01,0); leftCamera_pose.rotation=tf::Vector3(0,0,0);
-	rightCamera_pose.position=tf::Vector3(-camerafromcenter*_p,0.01,0); rightCamera_pose.rotation=tf::Vector3(0,0,0);
-	sonar_pose.position=tf::Vector3(0,0.01,0); sonar_pose.rotation=tf::Vector3(0,0,0);
+	leftCamera_pose.position=tf::Vector3(0.01,camerafromcenter,0); leftCamera_pose.rotation=tf::Vector3(0,0,0);
+	rightCamera_pose.position=tf::Vector3(0.01,-camerafromcenter,0); rightCamera_pose.rotation=tf::Vector3(0,0,0);
+	sonar_pose.position=tf::Vector3(0.01,0,0); sonar_pose.rotation=tf::Vector3(0,0,0);
 
   /* initialize ros */
   ros::init(argc, argv, "GuidanceCamerasAndSonarOnly");
