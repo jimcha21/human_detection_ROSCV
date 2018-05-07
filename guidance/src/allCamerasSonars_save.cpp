@@ -383,16 +383,16 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "GuidanceCamerasAndSonarOnly");
   ros::NodeHandle my_node;
 	
-  image_pubs[0] = my_node.advertise<sensor_msgs::Image>("/guidance/down/left_camera",1);
-  image_pubs[1] = my_node.advertise<sensor_msgs::Image>("/guidance/down/right_camera",1);
-  image_pubs[2] = my_node.advertise<sensor_msgs::Image>("/guidance/front/left_camera",1);
-  image_pubs[3] = my_node.advertise<sensor_msgs::Image>("/guidance/front/right_camera",1);
-  image_pubs[4] = my_node.advertise<sensor_msgs::Image>("/guidance/right/left_camera",1);
-  image_pubs[5] = my_node.advertise<sensor_msgs::Image>("/guidance/right/right_camera",1);
-  image_pubs[6] = my_node.advertise<sensor_msgs::Image>("/guidance/rear/left_camera",1);
-  image_pubs[7] = my_node.advertise<sensor_msgs::Image>("/guidance/rear/right_camera",1);
-  image_pubs[8] = my_node.advertise<sensor_msgs::Image>("/guidance/left/left_camera",1);
-  image_pubs[9] = my_node.advertise<sensor_msgs::Image>("/guidance/left/right_camera",1);
+  image_pubs[0] = my_node.advertise<sensor_msgs::Image>("/guidance/down/left_camera/image_raw",1);
+  image_pubs[1] = my_node.advertise<sensor_msgs::Image>("/guidance/down/right_camera/image_raw",1);
+  image_pubs[2] = my_node.advertise<sensor_msgs::Image>("/guidance/front/left_camera/image_raw",1);
+  image_pubs[3] = my_node.advertise<sensor_msgs::Image>("/guidance/front/right_camera/image_raw",1);
+  image_pubs[4] = my_node.advertise<sensor_msgs::Image>("/guidance/right/left_camera/image_raw",1);
+  image_pubs[5] = my_node.advertise<sensor_msgs::Image>("/guidance/right/right_camera/image_raw",1);
+  image_pubs[6] = my_node.advertise<sensor_msgs::Image>("/guidance/rear/left_camera/image_raw",1);
+  image_pubs[7] = my_node.advertise<sensor_msgs::Image>("/guidance/rear/right_camera/image_raw",1);
+  image_pubs[8] = my_node.advertise<sensor_msgs::Image>("/guidance/left/left_camera/image_raw",1);
+  image_pubs[9] = my_node.advertise<sensor_msgs::Image>("/guidance/left/right_camera/image_raw",1);
  
   range_pubs[0] = my_node.advertise<sensor_msgs::Range>("/guidance/down/ultrasonic",1);
   range_pubs[1] = my_node.advertise<sensor_msgs::Range>("/guidance/front/ultrasonic",1);
