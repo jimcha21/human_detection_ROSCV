@@ -206,16 +206,25 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 				q.normalize();
 				transform.setRotation(q);
 				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(images[sensor_location_].header.frame_id)));
+					
+				//and its optical frame
+				//		
+		      	        q.setRPY(1.57,3.14,0);
+				transform.setRotation(q);
+			        br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, "mpeee"));
+																       
+
 				//and the right camera
 				transform.setOrigin(tf::Vector3(rightCamera_pose.position));
 				q.setRPY(rightCamera_pose.rotation.getX(),rightCamera_pose.rotation.getY(),rightCamera_pose.rotation.getZ());
 				q.normalize();
 				transform.setRotation(q);
 				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(images[sensor_location_+1].header.frame_id)));	
-				break;
-			}			
+				
+               			break;
+         }			
 	}
-
+//cout<<"posted"<<endl;
 	return true;
 
 }
@@ -419,9 +428,12 @@ int main(int argc, char** argv)
   ranges[4].header.frame_id = "ultrasonicLeft_link";
 
 //REMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESEREMOVE THEEESE
-/*	publish_tf_(1,SONAR_TF);
+  /*publish_tf_(1,SONAR_TF);
+  publish_tf_(1,CAMERA_TF);
+  //postTf_sch_();
   printf("the program ended\n");
-  return 0;*/
+  return 0;
+  */
 
   /* initialize guidance */
   reset_config();
@@ -479,7 +491,7 @@ int main(int argc, char** argv)
   RETURN_IF_ERR(err_code);
 
   std::cout << "start_transfer" << std::endl;	
-	ros::Timer timer = my_node.createTimer(ros::Duration(1), postTf_sch_); //Posting tf info in fixed time - 10Hz
+  ros::Timer timer = my_node.createTimer(ros::Duration(1), postTf_sch_); //Posting tf info in fixed time - 10Hz
 
 	while (ros::ok())
   {
