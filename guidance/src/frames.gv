@@ -1,0 +1,36 @@
+digraph G {
+"base_link" -> "guidanceDown_link"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 20.401 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceDown_link" -> "ultrasonicDown_link"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceDown_link" -> "guidanceDown_leftcamera_frame"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceDown_leftcamera_frame" -> "guidanceDown_leftcamera_opticalframe"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceDown_link" -> "guidanceDown_rightcamera_frame"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceDown_rightcamera_frame" -> "guidanceDown_rightcamera_opticalframe"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"base_link" -> "guidanceFront_link"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 20.402 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceFront_link" -> "ultrasonicFront_link"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceFront_link" -> "guidanceFront_leftcamera_frame"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceFront_leftcamera_frame" -> "guidanceFront_leftcamera_opticalframe"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceFront_link" -> "guidanceFront_rightcamera_frame"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceFront_rightcamera_frame" -> "guidanceFront_rightcamera_opticalframe"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"base_link" -> "guidanceRight_link"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 20.402 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceRight_link" -> "ultrasonicRight_link"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceRight_link" -> "guidanceRight_leftcamera_opticalframe"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceRight_link" -> "guidanceRight_rightcamera_frame"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceRight_rightcamera_frame" -> "guidanceRight_rightcamera_opticalframe"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"base_link" -> "guidanceRear_link"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 20.402 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceRear_link" -> "ultrasonicRear_link"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceRear_link" -> "guidanceRear_leftcamera_frame"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceRear_leftcamera_frame" -> "guidanceRear_leftcamera_opticalframe"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceRear_link" -> "guidanceRear_rightcamera_frame"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceRear_rightcamera_frame" -> "guidanceRear_rightcamera_opticalframe"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"base_link" -> "guidanceLeft_link"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 20.402 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceLeft_link" -> "ultrasonicLeft_link"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.902 sec\n"];
+"guidanceLeft_link" -> "guidanceLeft_leftcamera_frame"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.901 sec\n"];
+"guidanceLeft_leftcamera_frame" -> "guidanceLeft_leftcamera_opticalframe"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.901 sec\n"];
+"guidanceLeft_link" -> "guidanceLeft_rightcamera_frame"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.901 sec\n"];
+"guidanceLeft_rightcamera_frame" -> "guidanceLeft_rightcamera_opticalframe"[label="Broadcaster: /GuidanceCamerasAndSonarOnly\nAverage rate: 10.201 Hz\nMost recent transform: 1525788002.585 ( 0.042 sec old)\nBuffer length: 4.901 sec\n"];
+"base_link" -> "laser"[label="Broadcaster: /static_transform_publisher\nAverage rate: 10.196 Hz\nMost recent transform: 1525788002.604 ( 0.023 sec old)\nBuffer length: 4.806 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1525788002.627"[ shape=plaintext ] ;
+ }->"base_link";
+}

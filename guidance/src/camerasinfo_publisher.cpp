@@ -17,12 +17,12 @@ int main(int argc, char **argv)
 	ros::Publisher pub_d_r = n.advertise<sensor_msgs::CameraInfo >("/guidance/down/right_camera/camera_info", 1);
 	ros::Publisher pub_f_l = n.advertise<sensor_msgs::CameraInfo >("/guidance/front/left_camera/camera_info", 1);
   ros::Publisher pub_f_r = n.advertise<sensor_msgs::CameraInfo >("/guidance/front/right_camera/camera_info", 1);
-  ros::Publisher pub_l_l = n.advertise<sensor_msgs::CameraInfo >("/guidance/left/left_camera/camera_info", 1);
-  ros::Publisher pub_l_r = n.advertise<sensor_msgs::CameraInfo >("/guidance/left/right_camera/camera_info", 1);	
+  ros::Publisher pub_g_l = n.advertise<sensor_msgs::CameraInfo >("/guidance/right/left_camera/camera_info", 1);
+  ros::Publisher pub_g_r = n.advertise<sensor_msgs::CameraInfo >("/guidance/right/right_camera/camera_info", 1);	
   ros::Publisher pub_r_l = n.advertise<sensor_msgs::CameraInfo >("/guidance/rear/left_camera/camera_info", 1);
   ros::Publisher pub_r_r = n.advertise<sensor_msgs::CameraInfo >("/guidance/rear/right_camera/camera_info", 1);
-  ros::Publisher pub_g_l = n.advertise<sensor_msgs::CameraInfo >("/guidance/right/left_camera/camera_info", 1);
-  ros::Publisher pub_g_r = n.advertise<sensor_msgs::CameraInfo >("/guidance/right/right_camera/camera_info", 1);
+  ros::Publisher pub_l_l = n.advertise<sensor_msgs::CameraInfo >("/guidance/left/left_camera/camera_info", 1);
+  ros::Publisher pub_l_r = n.advertise<sensor_msgs::CameraInfo >("/guidance/left/right_camera/camera_info", 1);
 	
 	//initializgf cameras info -  todo make it read from yaml file intriextri
 	sensor_msgs::CameraInfo leftCamera_info_,rightCamera_info_;
@@ -54,18 +54,27 @@ int main(int argc, char **argv)
   {
 		cout<<"posting"<<endl;
 		
-		pub_d_l.publish(leftCamera_info_);
-		pub_f_l.publish(leftCamera_info_);
-		pub_l_l.publish(leftCamera_info_);
-		pub_r_l.publish(leftCamera_info_);
-		pub_g_l.publish(leftCamera_info_);
+		leftCamera_info_.header.frame_id="guidanceDown_leftcamera_opticalframe";
+		pub_d_l.publish(leftCamera_info_);		
+		leftCamera_info_.header.frame_id="guidanceFront_leftcamera_opticalframe";
+		pub_f_l.publish(leftCamera_info_);		
+		leftCamera_info_.header.frame_id="guidanceRight_leftcamera_opticalframe";
+		pub_g_l.publish(leftCamera_info_);		
+		leftCamera_info_.header.frame_id="guidanceRear_leftcamera_opticalframe";
+		pub_r_l.publish(leftCamera_info_);		
+		leftCamera_info_.header.frame_id="guidanceLeft_leftcamera_opticalframe";
+		pub_l_l.publish(leftCamera_info_);		
 		
+		rightCamera_info_.header.frame_id="guidanceDown_rightcamera_opticalframe";
 		pub_d_r.publish(rightCamera_info_);
+		rightCamera_info_.header.frame_id="guidanceFront_rightcamera_opticalframe";
 		pub_f_r.publish(rightCamera_info_);
+		rightCamera_info_.header.frame_id="guidanceLeft_rightcamera_opticalframe";
 		pub_l_r.publish(rightCamera_info_);
+		rightCamera_info_.header.frame_id="guidanceRear_rightcamera_opticalframe";
 		pub_r_r.publish(rightCamera_info_);
-		pub_g_r.publish(rightCamera_info_);
-		
+		rightCamera_info_.header.frame_id="guidanceRight_rightcamera_opticalframe";
+		pub_g_r.publish(rightCamera_info_);		
 		
     ros::spinOnce();
     loop_rate.sleep();

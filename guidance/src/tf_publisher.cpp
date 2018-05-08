@@ -108,7 +108,7 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 				
 				//and its optical frame 
 			  transform.setOrigin(tf::Vector3(0,0,0));
-				q.setRPY(0,1.57,3.14);
+				q.setRPY(0,-1.57,0);
 				transform.setRotation(q);
 				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), string(images[sensor_location_*2].header.frame_id), opticalframe_name_+string("_leftcamera_opticalframe")));
 			
@@ -122,7 +122,7 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 				
 				//and its optical frame 
 			  transform.setOrigin(tf::Vector3(0,0,0));
-				q.setRPY(0,1.57,3.14);
+				q.setRPY(0,-1.57,0);
 				transform.setRotation(q);
 				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), string(images[(sensor_location_*2)+1].header.frame_id), opticalframe_name_+string("_rightcamera_opticalframe")));
 			
