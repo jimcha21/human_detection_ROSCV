@@ -239,6 +239,7 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 }
 
 void postTf_sch_(const ros::TimerEvent& event){
+	cout<<"posting tf frames..."<<endl;
 	for(int i=0;i<5;i++){
 		publish_tf_(i,SONAR_TF);
 		publish_tf_(i,CAMERA_TF);
@@ -389,7 +390,7 @@ int main(int argc, char** argv)
   }
 
   if(!enable_sonars&&!enable_cams){
-    printf("Please enable sonars' or cameras' topics. Add argument -son or -cam. ");
+    printf("Please enable sonars' or cameras' topics. Add argument -son or -cam.\n");
 		return 0;
   }
 
@@ -500,7 +501,7 @@ int main(int argc, char** argv)
   RETURN_IF_ERR(err_code);
 
   std::cout << "start_transfer" << std::endl;	
-  ros::Timer timer = my_node.createTimer(ros::Duration(10), postTf_sch_); //Posting tf info in fixed time - 10Hz
+  ros::Timer timer = my_node.createTimer(ros::Duration(0.1), postTf_sch_); //Posting tf info in fixed time - 10Hz
 
 	while (ros::ok())
   {
