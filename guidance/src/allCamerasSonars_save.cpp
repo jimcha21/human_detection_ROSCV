@@ -53,7 +53,7 @@ double rearSensordist_x = -10.8*_p;
 double rightSensordist_y = -8.5*_p;
 double leftSensordist_y = -rightSensordist_y;
 double camerafromcenter = 7.53*_p;	
-
+	
 /*<arg name="cmtorviz" value="0.008325" />  <!-- 1cm -> 0.008325 units in rviz -->
 <arg name="offset_z" value="-0.027" />
 <arg name="frontSensordist_x" value="$(eval 7*arg('cmtorviz'))"/>
@@ -90,6 +90,7 @@ tf_info leftCamera_pose,rightCamera_pose,sonar_pose;
 ros::Publisher image_pubs[10]; 
 ros::Publisher range_pubs[5];
 ros::Publisher ultrasonic_pub;
+vector<string> cameraFrame_names;
 cv_bridge::CvImage images[10];
 sensor_msgs::Range ranges[5];
 
@@ -201,34 +202,32 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 			  break;
 		}
 		case CAMERA_TF: {	 
-			  string opticalframe_name_ = string("guidance")+_whichSensorIsThis(sensor_location_,sensor_type_); 
-				
+
 		   	//posting tf for the left camera
 				transform.setOrigin(tf::Vector3(leftCamera_pose.position));
 				q.setRPY(leftCamera_pose.rotation.getX(),leftCamera_pose.rotation.getY(),leftCamera_pose.rotation.getZ());
 				q.normalize();
 				transform.setRotation(q);
-				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(images[sensor_location_*2].header.frame_id)));
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(cameraFrame_names[sensor_location_*2])+string("frame")));
 				
 				//and its optical frame 
 			  transform.setOrigin(tf::Vector3(0,0,0));
-				q.setRPY(0,-1.57,0);
+				q.setRPY(-1.57,0,-1.57);
 				transform.setRotation(q);
-				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), string(images[sensor_location_*2].header.frame_id), opticalframe_name_+string("_leftcamera_opticalframe")));
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), string(cameraFrame_names[sensor_location_*2])+string("frame"), string(cameraFrame_names[sensor_location_*2])+string("opticalframe")));
 			
-
 				//and the right camera
 				transform.setOrigin(tf::Vector3(rightCamera_pose.position));
 				q.setRPY(rightCamera_pose.rotation.getX(),rightCamera_pose.rotation.getY(),rightCamera_pose.rotation.getZ());
 				q.normalize();
 				transform.setRotation(q);
-				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(images[(sensor_location_*2)+1].header.frame_id)));	
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _parentTf, string(cameraFrame_names[sensor_location_*2+1])+string("frame")));	
 				
-				//and its optical frame 
+				//and its optical frame cameraFrame_names
 			  transform.setOrigin(tf::Vector3(0,0,0));
-				q.setRPY(0,-1.57,0);
+				q.setRPY(-1.57,0,-1.57);
 				transform.setRotation(q);
-				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), string(images[(sensor_location_*2)+1].header.frame_id), opticalframe_name_+string("_rightcamera_opticalframe")));
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), string(cameraFrame_names[sensor_location_*2+1])+string("frame"),string(cameraFrame_names[sensor_location_*2+1])+string("opticalframe")));
 			
 				break;
 		}			
@@ -279,7 +278,7 @@ int my_callback(int data_type, int data_len, char *content)
             imwrite(name, images[j].image, compression_params);
         }
 
-
+				images[j].header.frame_id = string(cameraFrame_names[j])+string("opticalframe");
         images[j].header.stamp  = ros::Time::now();
         images[j].encoding    = sensor_msgs::image_encodings::MONO8;
         image_pubs[j].publish(images[j].toImageMsg());
@@ -303,7 +302,8 @@ int my_callback(int data_type, int data_len, char *content)
             name=name + "_" + id_info2.str() +".png" ;
             imwrite(name, images[j+1].image, compression_params);
         }
-
+				
+				images[j+1].header.frame_id = string(cameraFrame_names[j+1])+string("opticalframe");
         images[j+1].header.stamp = ros::Time::now();
         images[j+1].encoding = sensor_msgs::image_encodings::MONO8;
         image_pubs[j+1].publish(images[j+1].toImageMsg());
@@ -420,16 +420,16 @@ int main(int argc, char** argv)
   range_pubs[4] = my_node.advertise<sensor_msgs::Range>("/guidance/left/ultrasonic",1);
 
 	//frame names
-  images[0].header.frame_id = "guidanceDown_leftcamera_frame";
-  images[1].header.frame_id = "guidanceDown_rightcamera_frame";
-  images[2].header.frame_id = "guidanceFront_leftcamera_frame";
-  images[3].header.frame_id = "guidanceFront_rightcamera_frame";
-  images[4].header.frame_id = "guidanceRight_leftcamera_frame";
-  images[5].header.frame_id = "guidanceRight_rightcamera_frame";
-  images[6].header.frame_id = "guidanceRear_leftcamera_frame";
-  images[7].header.frame_id = "guidanceRear_rightcamera_frame";
-  images[8].header.frame_id = "guidanceLeft_leftcamera_frame";
-  images[9].header.frame_id = "guidanceLeft_rightcamera_frame";
+	cameraFrame_names.push_back("guidanceDown_leftcamera_");
+	cameraFrame_names.push_back("guidanceDown_rightcamera_");
+	cameraFrame_names.push_back("guidanceFront_leftcamera_");
+	cameraFrame_names.push_back("guidanceFront_rightcamera_");
+	cameraFrame_names.push_back("guidanceRight_leftcamera_");
+	cameraFrame_names.push_back("guidanceRight_rightcamera_");
+	cameraFrame_names.push_back("guidanceRear_leftcamera_");
+	cameraFrame_names.push_back("guidanceRear_rightcamera_");
+	cameraFrame_names.push_back("guidanceLeft_leftcamera_");
+	cameraFrame_names.push_back("guidanceLeft_rightcamera_");
 
   ranges[0].header.frame_id = "ultrasonicDown_link";
   ranges[1].header.frame_id = "ultrasonicFront_link";
@@ -518,7 +518,8 @@ int main(int argc, char** argv)
   }
 }
 
-	/* release data transfer */
+cameraFrame_names.clear();
+/* release data transfer */
 err_code = stop_transfer();
 RETURN_IF_ERR(err_code);
 	//make sure the ack packet from GUIDANCE is received

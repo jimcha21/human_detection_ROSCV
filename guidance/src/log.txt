@@ -1,3 +1,3 @@
 
-2018-04-08-17-08-56    enter TranslateFunc
-2018-04-08-17-08-56    start to read frames!
+2018-04-08-18-35-36    enter TranslateFunc
+2018-04-08-18-35-36    start to read frames!

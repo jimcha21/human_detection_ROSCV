@@ -79,6 +79,13 @@ add_executable(node
 	src/DJI_utility.cpp
 	)
 
+			
+add_executable(camerasinfo_publisher 
+	src/camerasinfo_publisher.cpp
+	src/DJI_utility.cpp
+	)
+
+	
 add_executable(guidanceNodeTest
   src/GuidanceNodeTest.cpp)
 

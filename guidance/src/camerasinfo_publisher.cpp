@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 	leftCamera_info_.height = rightCamera_info_.height = 240;
 	leftCamera_info_.width = rightCamera_info_.width = 320;
 	leftCamera_info_.distortion_model = rightCamera_info_.distortion_model = "plumb_bob";
-
+	
 	leftCamera_info_.D.push_back(-0.001980888066537227);
 	leftCamera_info_.D.push_back(-0.02147700025762941);
 	leftCamera_info_.D.push_back( 0.0006841015603197759);
@@ -53,6 +53,7 @@ int main(int argc, char **argv)
   while (ros::ok())
   {
 		cout<<"posting"<<endl;
+		//images[j].header.stamp  = ros::Time::now(); AADDD stamppppppppp pls
 		
 		leftCamera_info_.header.frame_id="guidanceDown_leftcamera_opticalframe";
 		pub_d_l.publish(leftCamera_info_);		
