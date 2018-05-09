@@ -4,15 +4,44 @@
 #include <iostream>
 #include <sstream>
 
+#include "sensor_msgs/SetCameraInfo.h"
+#include "camera_info_manager/camera_info_manager.h"
+
 using namespace std;
+
+sensor_msgs::CameraInfo c_info_l,c_info_r;
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "talker");
+  ros::init(argc, argv, "camerainfo_publisher");
 
   ros::NodeHandle n;
   ros::Rate loop_rate(10);
 
+	
+	camera_info_manager::CameraInfoManager c_info_man_l (n, "/guidance/rear/left_camera", "package://guidance/calibration_files/camera_params_left.yaml");
+//	camera_info_manager::CameraInfoManager c_info_man_r (n, "/guidance/rear/right_camera", "package://guidance/calibration_files/camera_params_right.yaml");
+
+			if(!c_info_man_l.loadCameraInfo ("package://guidance/calibration_files/camera_params_left.yaml")){
+				ROS_INFO("Calibration file missing. Camera not calibrated");
+				 }
+				 else
+				 {
+					c_info_l = c_info_man_l.getCameraInfo ();
+				ROS_INFO("Camera successfully calibrated");
+				 }
+				 
+				 
+				 /*
+			if(!c_info_man_r.loadCameraInfo ("package://guidance/calibration_files/camera_params_right.yaml")){
+				ROS_INFO("Calibration file missing. Camera not calibrated");
+				 }
+				 else
+				 {
+					c_info_r = c_info_man_r.getCameraInfo ();
+				ROS_INFO("Camera successfully calibrated");
+				 }*/
+	
 	ros::Publisher pub_d_l = n.advertise<sensor_msgs::CameraInfo >("/guidance/down/left_camera/camera_info", 1);
 	ros::Publisher pub_d_r = n.advertise<sensor_msgs::CameraInfo >("/guidance/down/right_camera/camera_info", 1);
 	ros::Publisher pub_f_l = n.advertise<sensor_msgs::CameraInfo >("/guidance/front/left_camera/camera_info", 1);

@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   geometry_msgs
   message_generation
+	camera_info_manager
   tf
 )
 
@@ -79,6 +80,20 @@ add_executable(node
 	src/DJI_utility.cpp
 	)
 
+add_executable(calibratesingle_camera 
+    src/calibratesingle_camera.cpp
+    src/DJI_utility.cpp
+ )
+			
+add_executable(a 
+	src/a.cpp
+	src/DJI_utility.cpp
+	)
+	
+	add_executable(bb 
+	src/b.cpp
+	src/DJI_utility.cpp
+	)
 			
 add_executable(camerasinfo_publisher 
 	src/camerasinfo_publisher.cpp
