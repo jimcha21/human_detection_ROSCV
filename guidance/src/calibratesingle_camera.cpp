@@ -2,6 +2,7 @@
 #include <sstream>
 #include <time.h>
 #include <stdio.h>
+#include <rοs/ros.h>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -51,6 +52,7 @@ public:
                   << "Input" << input
            << "}";
     }
+    
     void read(const FileNode& node)                          //Read serialization for this class
     {
         node["BoardSize_Width" ] >> boardSize.width;
@@ -70,6 +72,7 @@ public:
         node["Input_Delay"] >> delay;
         interprate();
     }
+
     void interprate()
     {
         goodInput = true;
@@ -180,6 +183,7 @@ public:
         else
             return true;
     }
+
 public:
     Size boardSize;            // The size of the board -> Number of items by width and height
     Pattern calibrationPattern;// One of the Chessboard, circles, or asymmetric circle pattern
@@ -227,6 +231,9 @@ bool runCalibrationAndSave(Settings& s, Size imageSize, Mat&  cameraMatrix, Mat&
 
 int main(int argc, char* argv[])
 {
+    ros::init(argc, argv, "calibratesingle_camera");
+    ros::NodeHandle my_node;
+
     help();
     Settings s;
     const string inputSettingsFile = argc > 1 ? argv[1] : "default.xml";
@@ -258,7 +265,7 @@ int main(int argc, char* argv[])
       Mat view;
       bool blinkOutput = false;
 
-      view = s.nextImage();
+      view = imageforprocess; /*s.nextImage();*/
 
       cout<<"imagePoints.size()="<<imagePoints.size()<<endl;
       //-----  If no more image, or got enough, then stop calibration and show result -------------
