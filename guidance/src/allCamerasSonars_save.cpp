@@ -281,6 +281,10 @@ int my_callback(int data_type, int data_len, char *content)
 				images[j].header.frame_id = string(cameraFrame_names[j])+string("opticalframe");
         images[j].header.stamp  = ros::Time::now();
         images[j].encoding    = sensor_msgs::image_encodings::MONO8;
+				if(j==6){
+					imshow("rear left",images[j].image);
+					waitKey(3);
+				}
         image_pubs[j].publish(images[j].toImageMsg());
       }
    
@@ -306,6 +310,10 @@ int my_callback(int data_type, int data_len, char *content)
 				images[j+1].header.frame_id = string(cameraFrame_names[j+1])+string("opticalframe");
         images[j+1].header.stamp = ros::Time::now();
         images[j+1].encoding = sensor_msgs::image_encodings::MONO8;
+				if(j+1==7){
+						imshow("rear right",images[j+1].image);
+					  waitKey(3);
+					}
         image_pubs[j+1].publish(images[j+1].toImageMsg());
       }
     }
