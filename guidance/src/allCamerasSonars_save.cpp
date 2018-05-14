@@ -53,7 +53,8 @@ double rearSensordist_x = -10.8*_p;
 double rightSensordist_y = -8.5*_p;
 double leftSensordist_y = -rightSensordist_y;
 double camerafromcenter = 7.53*_p;	
-	
+bool preview_image=false; //for imshows
+
 /*<arg name="cmtorviz" value="0.008325" />  <!-- 1cm -> 0.008325 units in rviz -->
 <arg name="offset_z" value="-0.027" />
 <arg name="frontSensordist_x" value="$(eval 7*arg('cmtorviz'))"/>
@@ -281,7 +282,7 @@ int my_callback(int data_type, int data_len, char *content)
 				images[j].header.frame_id = string(cameraFrame_names[j])+string("opticalframe");
         images[j].header.stamp  = ros::Time::now();
         images[j].encoding    = sensor_msgs::image_encodings::MONO8;
-				if(j==6){
+				if(j==2&&preview_image){
 					imshow("rear left",images[j].image);
 					waitKey(3);
 				}
@@ -310,7 +311,7 @@ int my_callback(int data_type, int data_len, char *content)
 				images[j+1].header.frame_id = string(cameraFrame_names[j+1])+string("opticalframe");
         images[j+1].header.stamp = ros::Time::now();
         images[j+1].encoding = sensor_msgs::image_encodings::MONO8;
-				if(j+1==7){
+				if(j+1==3&&preview_image){
 						imshow("rear right",images[j+1].image);
 					  waitKey(3);
 					}
