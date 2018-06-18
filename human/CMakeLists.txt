@@ -50,11 +50,11 @@ target_link_libraries(gpu_similarity ${catkin_LIBRARIES} )
 add_executable(multi_sm src/multi_sm.cpp)
 target_link_libraries(multi_sm ${catkin_LIBRARIES} )
 
-add_executable(hog src/hog.cpp)
-target_link_libraries(hog ${catkin_LIBRARIES} )
+#add_executable(hog src/hog.cpp)
+#target_link_libraries(hog ${catkin_LIBRARIES} )
 
-add_executable(svm_trainer src/svm_trainer.cpp)
-target_link_libraries(svm_trainer ${catkin_LIBRARIES} )
+#add_executable(svm_trainer src/svm_trainer.cpp)
+#target_link_libraries(svm_trainer ${catkin_LIBRARIES} )
 
 add_executable(talker src/talker.cpp)
 target_link_libraries(talker ${catkin_LIBRARIES})

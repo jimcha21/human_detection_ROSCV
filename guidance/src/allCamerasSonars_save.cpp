@@ -1,4 +1,5 @@
 /*
+*
  * GuidanceNode.cpp
  *
  *  Created on: Apr 29, 2015
@@ -282,10 +283,9 @@ int my_callback(int data_type, int data_len, char *content)
 				images[j].header.frame_id = string(cameraFrame_names[j])+string("opticalframe");
         images[j].header.stamp  = ros::Time::now();
         images[j].encoding    = sensor_msgs::image_encodings::MONO8;
-				if(j==6&&preview_image){
-					cout<<"syhowignb"<<endl;
-					imshow("rear left",images[j].image);
-					waitKey(3);
+				if(preview_image){
+					imshow(images[j].header.frame_id+" left",images[j].image);
+					waitKey(1);
 				}
         image_pubs[j].publish(images[j].toImageMsg());
       }
@@ -312,9 +312,9 @@ int my_callback(int data_type, int data_len, char *content)
 				images[j+1].header.frame_id = string(cameraFrame_names[j+1])+string("opticalframe");
         images[j+1].header.stamp = ros::Time::now();
         images[j+1].encoding = sensor_msgs::image_encodings::MONO8;
-				if(j+1==7&&preview_image){
-						imshow("rear right",images[j+1].image);
-					  waitKey(3);
+				if(preview_image){
+						imshow(images[j].header.frame_id+" right",images[j+1].image);
+						waitKey(1);
 					}
         image_pubs[j+1].publish(images[j+1].toImageMsg());
       }
@@ -511,7 +511,7 @@ int main(int argc, char** argv)
   RETURN_IF_ERR(err_code);
 
   std::cout << "start_transfer" << std::endl;	
-  ros::Timer timer = my_node.createTimer(ros::Duration(0.1), postTf_sch_); //Posting tf info in fixed time - 10Hz
+  //ros::Timer timer = my_node.createTimer(ros::Duration(0.1), postTf_sch_); //Posting tf info in fixed time - 10Hz
 
 	while (ros::ok())
   {
