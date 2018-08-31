@@ -54,7 +54,7 @@ double rearSensordist_x = -10.8*_p;
 double rightSensordist_y = -8.5*_p;
 double leftSensordist_y = -rightSensordist_y;
 double camerafromcenter = 7.53*_p;	
-bool preview_image=true; //for imshows
+bool preview_image=false; //for imshows
 
 /*<arg name="cmtorviz" value="0.008325" />  <!-- 1cm -> 0.008325 units in rviz -->
 <arg name="offset_z" value="-0.027" />
