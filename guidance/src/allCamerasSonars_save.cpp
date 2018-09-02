@@ -190,7 +190,7 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 	q.normalize();
 	transform.setRotation(q);
 	//base_link frame is above all M100 sensors..
-	br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "base_link", _parentTf));	
+	br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "M100_base_link", _parentTf));	
 	
 	//and then the child tf
 	switch(sensor_type_){
