@@ -1,0 +1,1416 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>body {
+  max-width: 980px;
+  border: 1px solid #ddd;
+  outline: 1300px solid #fff;
+  margin: 16px auto;
+}
+
+body .markdown-body
+{
+  padding: 45px;
+}
+
+@font-face {
+  font-family: fontawesome-mini;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+
+@font-face {
+  font-family: octicons-anchor;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+
+.markdown-body {
+  font-family: sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  color: #333333;
+  overflow: hidden;
+  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-body a {
+  background: transparent;
+}
+
+.markdown-body a:active,
+.markdown-body a:hover {
+  outline: 0;
+}
+
+.markdown-body b,
+.markdown-body strong {
+  font-weight: bold;
+}
+
+.markdown-body mark {
+  background: #ff0;
+  color: #000;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body sub,
+.markdown-body sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+.markdown-body sup {
+  top: -0.5em;
+}
+.markdown-body sub {
+  bottom: -0.25em;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.markdown-body img {
+  border: 0;
+}
+
+.markdown-body hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+
+.markdown-body pre {
+  overflow: auto;
+}
+
+.markdown-body code,
+.markdown-body kbd,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+.markdown-body input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+.markdown-body html input[disabled] {
+  cursor: default;
+}
+
+.markdown-body input {
+  line-height: normal;
+}
+
+.markdown-body input[type="checkbox"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.markdown-body td,
+.markdown-body th {
+  padding: 0;
+}
+
+.markdown-body .codehilitetable {
+  border: 0;
+  border-spacing: 0;
+}
+
+.markdown-body .codehilitetable tr {
+  border: 0;
+}
+
+.markdown-body .codehilitetable pre,
+.markdown-body .codehilitetable div.codehilite {
+  margin: 0;
+}
+
+.markdown-body .linenos,
+.markdown-body .code,
+.markdown-body .codehilitetable td {
+  border: 0;
+  padding: 0;
+}
+
+.markdown-body td:not(.linenos) .linenodiv {
+  padding: 0 !important;
+}
+
+.markdown-body .code {
+  width: 100%;
+}
+
+.markdown-body .linenos div pre,
+.markdown-body .linenodiv pre,
+.markdown-body .linenodiv {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-left-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.markdown-body .code div pre,
+.markdown-body .code div {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-right-radius: 3px;
+  -webkit-border-bottom-right-radius: 3px;
+  -moz-border-radius-topright: 3px;
+  -moz-border-radius-bottomright: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.markdown-body * {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body input {
+  font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  line-height: 1.4;
+}
+
+.markdown-body a {
+  color: #4183c4;
+  text-decoration: none;
+}
+
+.markdown-body a:hover,
+.markdown-body a:focus,
+.markdown-body a:active {
+  text-decoration: underline;
+}
+
+.markdown-body hr {
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.markdown-body hr:before,
+.markdown-body hr:after {
+  display: table;
+  content: " ";
+}
+
+.markdown-body hr:after {
+  clear: both;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  line-height: 1.1;
+}
+
+.markdown-body h1 {
+  font-size: 30px;
+}
+
+.markdown-body h2 {
+  font-size: 21px;
+}
+
+.markdown-body h3 {
+  font-size: 16px;
+}
+
+.markdown-body h4 {
+  font-size: 14px;
+}
+
+.markdown-body h5 {
+  font-size: 12px;
+}
+
+.markdown-body h6 {
+  font-size: 11px;
+}
+
+.markdown-body blockquote {
+  margin: 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body ol ol,
+.markdown-body ul ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-body ul ul ol,
+.markdown-body ul ol ol,
+.markdown-body ol ul ol,
+.markdown-body ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body dd {
+  margin-left: 0;
+}
+
+.markdown-body code,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body kbd {
+  background-color: #e7e7e7;
+  background-image: -moz-linear-gradient(#fefefe, #e7e7e7);
+  background-image: -webkit-linear-gradient(#fefefe, #e7e7e7);
+  background-image: linear-gradient(#fefefe, #e7e7e7);
+  background-repeat: repeat-x;
+  border-radius: 2px;
+  border: 1px solid #cfcfcf;
+  color: #000;
+  padding: 3px 5px;
+  line-height: 10px;
+  font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  display: inline-block;
+}
+
+.markdown-body>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body .headeranchor-link {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  padding-right: 6px;
+  padding-left: 30px;
+  margin-left: -30px;
+}
+
+.markdown-body .headeranchor-link:focus {
+  outline: none;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  position: relative;
+  margin-top: 1em;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.markdown-body h1 .headeranchor,
+.markdown-body h2 .headeranchor,
+.markdown-body h3 .headeranchor,
+.markdown-body h4 .headeranchor,
+.markdown-body h5 .headeranchor,
+.markdown-body h6 .headeranchor {
+  display: none;
+  color: #000;
+  vertical-align: middle;
+}
+
+.markdown-body h1:hover .headeranchor-link,
+.markdown-body h2:hover .headeranchor-link,
+.markdown-body h3:hover .headeranchor-link,
+.markdown-body h4:hover .headeranchor-link,
+.markdown-body h5:hover .headeranchor-link,
+.markdown-body h6:hover .headeranchor-link {
+  height: 1em;
+  padding-left: 8px;
+  margin-left: -30px;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .headeranchor-link .headeranchor,
+.markdown-body h2:hover .headeranchor-link .headeranchor,
+.markdown-body h3:hover .headeranchor-link .headeranchor,
+.markdown-body h4:hover .headeranchor-link .headeranchor,
+.markdown-body h5:hover .headeranchor-link .headeranchor,
+.markdown-body h6:hover .headeranchor-link .headeranchor {
+  display: inline-block;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+
+.markdown-body h4 {
+  font-size: 1.25em;
+}
+
+.markdown-body h5 {
+  font-size: 1em;
+}
+
+.markdown-body h6 {
+  font-size: 1em;
+  color: #777;
+}
+
+.markdown-body p,
+.markdown-body blockquote,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body dl,
+.markdown-body table,
+.markdown-body pre,
+.markdown-body .admonition {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body hr {
+  height: 4px;
+  padding: 0;
+  margin: 16px 0;
+  background-color: #e7e7e7;
+  border: 0 none;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+}
+
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ol,
+.markdown-body ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li>p {
+  margin-top: 16px;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body blockquote {
+  padding: 0 15px;
+  color: #777;
+  border-left: 4px solid #ddd;
+}
+
+.markdown-body blockquote>:first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+
+.markdown-body table th {
+  font-weight: bold;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.markdown-body table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body code,
+.markdown-body samp {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 3px;
+}
+
+.markdown-body code:before,
+.markdown-body code:after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+
+.markdown-body pre>code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .codehilite {
+  margin-bottom: 16px;
+}
+
+.markdown-body .codehilite pre,
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+
+.markdown-body .codehilite pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre code {
+  display: inline;
+  max-width: initial;
+  padding: 0;
+  margin: 0;
+  overflow: initial;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.markdown-body pre code:before,
+.markdown-body pre code:after {
+  content: normal;
+}
+
+/* Admonition */
+.markdown-body .admonition {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  position: relative;
+  border-radius: 3px;
+  border: 1px solid #e0e0e0;
+  border-left: 6px solid #333;
+  padding: 10px 10px 10px 30px;
+}
+
+.markdown-body .admonition table {
+  color: #333;
+}
+
+.markdown-body .admonition p {
+  padding: 0;
+}
+
+.markdown-body .admonition-title {
+  font-weight: bold;
+  margin: 0;
+}
+
+.markdown-body .admonition>.admonition-title {
+  color: #333;
+}
+
+.markdown-body .attention>.admonition-title {
+  color: #a6d796;
+}
+
+.markdown-body .caution>.admonition-title {
+  color: #d7a796;
+}
+
+.markdown-body .hint>.admonition-title {
+  color: #96c6d7;
+}
+
+.markdown-body .danger>.admonition-title {
+  color: #c25f77;
+}
+
+.markdown-body .question>.admonition-title {
+  color: #96a6d7;
+}
+
+.markdown-body .note>.admonition-title {
+  color: #d7c896;
+}
+
+.markdown-body .admonition:before,
+.markdown-body .attention:before,
+.markdown-body .caution:before,
+.markdown-body .hint:before,
+.markdown-body .danger:before,
+.markdown-body .question:before,
+.markdown-body .note:before {
+  font: normal normal 16px fontawesome-mini;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  line-height: 1.5;
+  color: #333;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+.markdown-body .admonition:before {
+  content: "\f056\00a0";
+  color: 333;
+}
+
+.markdown-body .attention:before {
+  content: "\f058\00a0";
+  color: #a6d796;
+}
+
+.markdown-body .caution:before {
+  content: "\f06a\00a0";
+  color: #d7a796;
+}
+
+.markdown-body .hint:before {
+  content: "\f05a\00a0";
+  color: #96c6d7;
+}
+
+.markdown-body .danger:before {
+  content: "\f057\00a0";
+  color: #c25f77;
+}
+
+.markdown-body .question:before {
+  content: "\f059\00a0";
+  color: #96a6d7;
+}
+
+.markdown-body .note:before {
+  content: "\f040\00a0";
+  color: #d7c896;
+}
+
+.markdown-body .admonition::after {
+  content: normal;
+}
+
+.markdown-body .attention {
+  border-left: 6px solid #a6d796;
+}
+
+.markdown-body .caution {
+  border-left: 6px solid #d7a796;
+}
+
+.markdown-body .hint {
+  border-left: 6px solid #96c6d7;
+}
+
+.markdown-body .danger {
+  border-left: 6px solid #c25f77;
+}
+
+.markdown-body .question {
+  border-left: 6px solid #96a6d7;
+}
+
+.markdown-body .note {
+  border-left: 6px solid #d7c896;
+}
+
+.markdown-body .admonition>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body .admonition>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* progress bar*/
+.markdown-body .progress {
+  display: block;
+  width: 300px;
+  margin: 10px 0;
+  height: 24px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #ededed;
+  position: relative;
+  box-shadow: inset -1px 1px 3px rgba(0, 0, 0, .1);
+}
+
+.markdown-body .progress-label {
+  position: absolute;
+  text-align: center;
+  font-weight: bold;
+  width: 100%; margin: 0;
+  line-height: 24px;
+  color: #333;
+  text-shadow: 1px 1px 0 #fefefe, -1px -1px 0 #fefefe, -1px 1px 0 #fefefe, 1px -1px 0 #fefefe, 0 1px 0 #fefefe, 0 -1px 0 #fefefe, 1px 0 0 #fefefe, -1px 0 0 #fefefe, 1px 1px 2px #000;
+  -webkit-font-smoothing: antialiased !important;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.markdown-body .progress-bar {
+  height: 24px;
+  float: left;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #96c6d7;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(0, 0, 0, .1);
+  background-size: 30px 30px;
+  background-image: -webkit-linear-gradient(
+    135deg, rgba(255, 255, 255, .4) 27%,
+    transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%,
+    transparent 77%, transparent
+  );
+  background-image: -moz-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -ms-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -o-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+}
+
+.markdown-body .progress-100plus .progress-bar {
+  background-color: #a6d796;
+}
+
+.markdown-body .progress-80plus .progress-bar {
+  background-color: #c6d796;
+}
+
+.markdown-body .progress-60plus .progress-bar {
+  background-color: #d7c896;
+}
+
+.markdown-body .progress-40plus .progress-bar {
+  background-color: #d7a796;
+}
+
+.markdown-body .progress-20plus .progress-bar {
+  background-color: #d796a6;
+}
+
+.markdown-body .progress-0plus .progress-bar {
+  background-color: #c25f77;
+}
+
+.markdown-body .candystripe-animate .progress-bar{
+  -webkit-animation: animate-stripes 3s linear infinite;
+  -moz-animation: animate-stripes 3s linear infinite;
+  animation: animate-stripes 3s linear infinite;
+}
+
+@-webkit-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+@-moz-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+@keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+.markdown-body .gloss .progress-bar {
+  box-shadow:
+    inset 0 4px 12px rgba(255, 255, 255, .7),
+    inset 0 -12px 0 rgba(0, 0, 0, .05);
+}
+
+/* Multimarkdown Critic Blocks */
+.markdown-body .critic_mark {
+  background: #ff0;
+}
+
+.markdown-body .critic_delete {
+  color: #c82829;
+  text-decoration: line-through;
+}
+
+.markdown-body .critic_insert {
+  color: #718c00 ;
+  text-decoration: underline;
+}
+
+.markdown-body .critic_comment {
+  color: #8e908c;
+  font-style: italic;
+}
+
+.markdown-body .headeranchor {
+  font: normal normal 16px octicons-anchor;
+  line-height: 1;
+  display: inline-block;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.headeranchor:before {
+  content: '\f05c';
+}
+
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-body .task-list-item+.task-list-item {
+  margin-top: 3px;
+}
+
+.markdown-body .task-list-item input {
+  margin: 0 4px 0.25em -20px;
+  vertical-align: middle;
+}
+
+/* Media */
+@media only screen and (min-width: 480px) {
+  .markdown-body {
+    font-size:14px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .markdown-body {
+    font-size:16px;
+  }
+}
+
+@media print {
+  .markdown-body * {
+    background: transparent !important;
+    color: black !important;
+    filter:none !important;
+    -ms-filter: none !important;
+  }
+
+  .markdown-body {
+    font-size:12pt;
+    max-width:100%;
+    outline:none;
+    border: 0;
+  }
+
+  .markdown-body a,
+  .markdown-body a:visited {
+    text-decoration: underline;
+  }
+
+  .markdown-body .headeranchor-link {
+    display: none;
+  }
+
+  .markdown-body a[href]:after {
+    content: " (" attr(href) ")";
+  }
+
+  .markdown-body abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+
+  .markdown-body .ir a:after,
+  .markdown-body a[href^="javascript:"]:after,
+  .markdown-body a[href^="#"]:after {
+    content: "";
+  }
+
+  .markdown-body pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .markdown-body pre,
+  .markdown-body blockquote {
+    border: 1px solid #999;
+    padding-right: 1em;
+    page-break-inside: avoid;
+  }
+
+  .markdown-body .progress,
+  .markdown-body .progress-bar {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  .markdown-body .progress {
+    border: 1px solid #ddd;
+  }
+
+  .markdown-body .progress-bar {
+    height: 22px;
+    border-right: 1px solid #ddd;
+  }
+
+  .markdown-body tr,
+  .markdown-body img {
+    page-break-inside: avoid;
+  }
+
+  .markdown-body img {
+    max-width: 100% !important;
+  }
+
+  .markdown-body p,
+  .markdown-body h2,
+  .markdown-body h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .markdown-body h2,
+  .markdown-body h3 {
+    page-break-after: avoid;
+  }
+}
+</style><title>mini_mono_left_camera</title></head><body><article class="markdown-body"><?xml version="1.0"?>
+<opencv_storage>
+<calibration_Time>"Πεμ 26 Απρ 2018 01:32:58 μμ EEST"</calibration_Time>
+<nrOfFrames>13</nrOfFrames>
+<image_Width>640</image_Width>
+<image_Height>480</image_Height>
+<board_Width>8</board_Width>
+<board_Height>6</board_Height>
+<square_Size>10.</square_Size>
+<FixAspectRatio>1.</FixAspectRatio>
+<!-- flags:  +fix_aspectRatio +fix_principal_point -->
+<flagValue>6</flagValue>
+<Camera_Matrix type_id="opencv-matrix">
+  <rows>3</rows>
+  <cols>3</cols>
+  <dt>d</dt>
+  <data>
+    5.4219654780405597e+02 0. 320. 0. 5.4219654780405597e+02 240. 0. 0.
+    1.</data></Camera_Matrix>
+<Distortion_Coefficients type_id="opencv-matrix">
+  <rows>5</rows>
+  <cols>1</cols>
+  <dt>d</dt>
+  <data>
+    -4.7028208446324431e-02 3.9961997374828373e-01
+    -9.6064092092610440e-03 -1.0122209168582424e-03
+    -7.2420919170908382e-01</data></Distortion_Coefficients>
+<Avg_Reprojection_Error>2.7844005821616441e-01</Avg_Reprojection_Error>
+<Per_View_Reprojection_Errors type_id="opencv-matrix">
+  <rows>13</rows>
+  <cols>1</cols>
+  <dt>f</dt>
+  <data>
+    1.66097879e-01 2.78624296e-01 2.76445597e-01 2.35590875e-01
+    2.39236534e-01 3.29674929e-01 3.08473647e-01 2.05224767e-01
+    1.93042994e-01 3.08711112e-01 3.22607309e-01 3.02749097e-01
+    3.73144090e-01</data></Per_View_Reprojection_Errors>
+<!-- a set of 6-tuples (rotation vector + translation vector) for each view -->
+<Extrinsic_Parameters type_id="opencv-matrix">
+  <rows>13</rows>
+  <cols>6</cols>
+  <dt>d</dt>
+  <data>
+    -1.4293023435399094e-01 1.8036612656545462e-01
+    5.3178045339902273e-02 2.0713279117341401e+01
+    -4.3565379352986476e+01 2.6998854399630829e+02
+    -1.2045728069949363e-02 1.8221053379109253e-01
+    -3.0899375473949942e-02 -3.2911100532589224e+01
+    -4.7902764682601671e+01 1.9837657078685305e+02
+    -4.3102599006613826e-02 2.3895692241645332e-02
+    3.7427825855268781e-01 1.1035413742477756e+01
+    -4.7345739170921917e+01 1.9871629442175836e+02
+    -3.3690910695539072e-01 -2.6856473645105561e-02
+    5.0514302910912512e-01 -7.0633919274358545e+00
+    -4.5404714790653401e+01 1.9723116402677289e+02
+    -4.0749637790387061e-01 3.3569255747498572e-01
+    -5.6886118700613963e-01 2.0916539698839632e+01
+    -5.3017732301414302e+00 2.3126885207525461e+02
+    -3.6892795284237256e-01 2.8344124884184568e-01
+    -5.0795171640074277e-01 -2.4024876653342343e+01
+    -1.1636868457098476e+01 1.8225825359803289e+02
+    -3.3879399740031252e-01 1.3675345428529814e-01
+    -6.3357021857832874e-01 -1.4572742469726997e+01
+    -1.3541105292634390e+01 1.8224525233284382e+02
+    -2.7156718637632954e-01 3.3067529191331546e-02
+    5.1474981139977893e-01 -1.7924015020765256e+00
+    -3.8153303910192584e+01 1.8878739747345406e+02
+    -7.6505309711679639e-02 1.7712689853600061e-01
+    1.1146080391684574e+00 3.2710559153557817e+01
+    -5.0060913905673573e+01 1.7840572218754971e+02
+    -3.2054318450082997e-01 4.5141661498667168e-01
+    1.4570496461693117e+00 6.6870900680222320e+01
+    -5.1971154152923887e+01 1.9767086747198456e+02
+    -3.1538103268431855e-01 4.9937557328433890e-01
+    1.4065000468479230e+00 4.5744915436151544e+01
+    -5.6473854850758322e+01 1.7416279695182499e+02
+    -9.2993491585890806e-02 1.3071781901511828e-02
+    1.5216790358213856e+00 5.7906870020958173e+01
+    -1.7810042737074451e+01 1.6769330214111488e+02
+    -1.4286700883397854e-01 6.6377454973609556e-02
+    2.0788113800137120e-01 4.2087818425429182e+00
+    -4.8216778069807248e+01 1.5616005294631901e+02</data></Extrinsic_Parameters>
+<Image_points type_id="opencv-matrix">
+  <rows>13</rows>
+  <cols>48</cols>
+  <dt>"2f"</dt>
+  <data>
+    3.61512268e+02 1.52446930e+02 3.81591400e+02 1.52225235e+02
+    4.02086487e+02 1.52627090e+02 4.23128052e+02 1.52796921e+02
+    4.43881165e+02 1.52966324e+02 4.65492859e+02 1.52604736e+02
+    4.87023071e+02 1.52936279e+02 5.08953918e+02 1.53009613e+02
+    3.60590881e+02 1.71856308e+02 3.80731964e+02 1.72245773e+02
+    4.01314056e+02 1.72519363e+02 4.21870880e+02 1.72893219e+02
+    4.43269989e+02 1.72966553e+02 4.64431488e+02 1.73443756e+02
+    4.86313324e+02 1.73473083e+02 5.08202759e+02 1.73906204e+02
+    3.59361389e+02 1.91644760e+02 3.79682190e+02 1.92097977e+02
+    4.00319336e+02 1.92513840e+02 4.21344696e+02 1.92964478e+02
+    4.42236511e+02 1.93616028e+02 4.63771698e+02 1.93815826e+02
+    4.85606049e+02 1.94445435e+02 5.07740295e+02 1.94555542e+02
+    3.58221954e+02 2.11544739e+02 3.78812103e+02 2.12106354e+02
+    3.99300262e+02 2.12666748e+02 4.20342987e+02 2.13343155e+02
+    4.41478363e+02 2.13913666e+02 4.63215393e+02 2.14553070e+02
+    4.85018158e+02 2.15079147e+02 5.07183472e+02 2.15858231e+02
+    3.56989655e+02 2.31710587e+02 3.77514587e+02 2.32346710e+02
+    3.98406799e+02 2.33118195e+02 4.19391541e+02 2.33868973e+02
+    4.40851288e+02 2.34641891e+02 4.62324493e+02 2.35224045e+02
+    4.84276062e+02 2.36279480e+02 5.06538666e+02 2.36800110e+02
+    3.55937256e+02 2.51980988e+02 3.76543671e+02 2.52773285e+02
+    3.97355194e+02 2.53723022e+02 4.18634003e+02 2.54490707e+02
+    4.39933258e+02 2.55271088e+02 4.61588837e+02 2.56341797e+02
+    4.83859711e+02 2.57043945e+02 5.06236603e+02 2.58004730e+02
+    2.29509506e+02 1.08432175e+02 2.55756454e+02 1.06104126e+02
+    2.82702850e+02 1.04021912e+02 3.10296387e+02 1.01829491e+02
+    3.38166046e+02 9.95461044e+01 3.66699982e+02 9.68710480e+01
+    3.95707062e+02 9.46690750e+01 4.25418457e+02 9.20896912e+01
+    2.30606415e+02 1.36021759e+02 2.56841583e+02 1.34162750e+02
+    2.83825256e+02 1.32195786e+02 3.11168091e+02 1.30304642e+02
+    3.39281830e+02 1.28297287e+02 3.67492767e+02 1.26420204e+02
+    3.96814514e+02 1.24300156e+02 4.25929749e+02 1.22290451e+02
+    2.31407547e+02 1.63482803e+02 2.57944000e+02 1.61967651e+02
+    2.84724609e+02 1.60334259e+02 3.12162689e+02 1.58550674e+02
+    3.40087158e+02 1.56971664e+02 3.68426788e+02 1.55082703e+02
+    3.97411285e+02 1.53530304e+02 4.26722900e+02 1.51717041e+02
+    2.32206375e+02 1.90804138e+02 2.58697876e+02 1.89489975e+02
+    2.85637390e+02 1.88156281e+02 3.12896912e+02 1.86817719e+02
+    3.41074432e+02 1.85354523e+02 3.69241913e+02 1.83945465e+02
+    3.98389435e+02 1.82473007e+02 4.27485138e+02 1.81148453e+02
+    2.32941666e+02 2.18291870e+02 2.59376404e+02 2.17057007e+02
+    2.86223511e+02 2.16051620e+02 3.13686279e+02 2.14706085e+02
+    3.41700409e+02 2.13549164e+02 3.70013611e+02 2.12308685e+02
+    3.99064941e+02 2.11365555e+02 4.28367279e+02 2.09998779e+02
+    2.33497818e+02 2.45562912e+02 2.59952454e+02 2.44630402e+02
+    2.86797272e+02 2.43696533e+02 3.14295990e+02 2.42875931e+02
+    3.42371796e+02 2.41933670e+02 3.70641541e+02 2.41086395e+02
+    3.99740540e+02 2.40107407e+02 4.29121857e+02 2.39078812e+02
+    3.49691742e+02 1.10283180e+02 3.75753235e+02 1.19762260e+02
+    4.01139801e+02 1.29651291e+02 4.26932953e+02 1.39697052e+02
+    4.52701416e+02 1.49561493e+02 4.78951782e+02 1.59332565e+02
+    5.04652863e+02 1.69315933e+02 5.30756104e+02 1.79245514e+02
+    3.40021362e+02 1.35571823e+02 3.65471436e+02 1.45666382e+02
+    3.91276978e+02 1.55301605e+02 4.17049225e+02 1.65271866e+02
+    4.42736298e+02 1.75100143e+02 4.68414612e+02 1.85118942e+02
+    4.94481628e+02 1.95156677e+02 5.20234680e+02 2.04936813e+02
+    3.29965454e+02 1.61131149e+02 3.55566742e+02 1.70944229e+02
+    3.81276550e+02 1.80967361e+02 4.07028961e+02 1.90825470e+02
+    4.32673889e+02 2.00881073e+02 4.58427460e+02 2.10648834e+02
+    4.84205963e+02 2.20843109e+02 5.09856873e+02 2.30545868e+02
+    3.20076599e+02 1.86591064e+02 3.45635254e+02 1.96457932e+02
+    3.71324219e+02 2.06495209e+02 3.97089813e+02 2.16518219e+02
+    4.22724731e+02 2.26449051e+02 4.48242371e+02 2.36485947e+02
+    4.74282654e+02 2.46432388e+02 4.99921356e+02 2.56402740e+02
+    3.09954956e+02 2.11978867e+02 3.35672363e+02 2.21978256e+02
+    3.61427795e+02 2.31876465e+02 3.87155182e+02 2.41999741e+02
+    4.12974701e+02 2.51935898e+02 4.38741150e+02 2.61952026e+02
+    4.64351685e+02 2.72036163e+02 4.90206390e+02 2.82063965e+02
+    2.99985382e+02 2.37667267e+02 3.25770599e+02 2.47483978e+02
+    3.51378723e+02 2.57644836e+02 3.77386658e+02 2.67568481e+02
+    4.03173767e+02 2.77836914e+02 4.28822845e+02 2.87648987e+02
+    4.54965088e+02 2.97758606e+02 4.80889404e+02 3.07720642e+02
+    3.00503998e+02 1.14570549e+02 3.24864502e+02 1.27266716e+02
+    3.48938354e+02 1.40489517e+02 3.73507446e+02 1.53788712e+02
+    3.97998993e+02 1.66751892e+02 4.23001282e+02 1.79571594e+02
+    4.47427063e+02 1.92813614e+02 4.72152771e+02 2.06159760e+02
+    2.86927063e+02 1.35749496e+02 3.11452423e+02 1.49017853e+02
+    3.36295044e+02 1.62274841e+02 3.61030945e+02 1.75516083e+02
+    3.85905731e+02 1.88857361e+02 4.10876312e+02 2.02291580e+02
+    4.36055084e+02 2.15760895e+02 4.60860016e+02 2.29225449e+02
+    2.72983795e+02 1.57405365e+02 2.97921204e+02 1.70929138e+02
+    3.23005585e+02 1.84431152e+02 3.48254089e+02 1.98091354e+02
+    3.73454712e+02 2.11763214e+02 3.98774078e+02 2.25437836e+02
+    4.24123230e+02 2.39371979e+02 4.49449097e+02 2.53005875e+02
+    2.58517700e+02 1.79733978e+02 2.83942932e+02 1.93477814e+02
+    3.09242065e+02 2.07418716e+02 3.35117096e+02 2.21358337e+02
+    3.60594635e+02 2.35397263e+02 3.86264038e+02 2.49335388e+02
+    4.12171478e+02 2.63290833e+02 4.37751617e+02 2.77425018e+02
+    2.43723022e+02 2.02844330e+02 2.69291412e+02 2.16982925e+02
+    2.95259125e+02 2.31092392e+02 3.21281097e+02 2.45242020e+02
+    3.47368988e+02 2.59741791e+02 3.73474640e+02 2.73844208e+02
+    3.99682892e+02 2.88233063e+02 4.25688751e+02 3.02666168e+02
+    2.28070679e+02 2.26802933e+02 2.54354355e+02 2.41401886e+02
+    2.80591644e+02 2.55757477e+02 3.07145935e+02 2.70205017e+02
+    3.33624847e+02 2.84703278e+02 3.60413727e+02 2.99189423e+02
+    3.87073273e+02 3.13828125e+02 4.13948364e+02 3.28170807e+02
+    3.69167084e+02 2.27528030e+02 3.87926941e+02 2.13394760e+02
+    4.07345703e+02 1.99516434e+02 4.27304443e+02 1.85149811e+02
+    4.47633270e+02 1.70524765e+02 4.68114868e+02 1.55247559e+02
+    4.89253693e+02 1.40158829e+02 5.10554871e+02 1.24535484e+02
+    3.80782959e+02 2.45624924e+02 4.00450592e+02 2.31601685e+02
+    4.20225769e+02 2.17497559e+02 4.40588379e+02 2.02978012e+02
+    4.61371918e+02 1.88137985e+02 4.82500153e+02 1.73095947e+02
+    5.04059570e+02 1.57643280e+02 5.26241028e+02 1.42113449e+02
+    3.93062225e+02 2.64478790e+02 4.13017029e+02 2.50422272e+02
+    4.33478027e+02 2.36148575e+02 4.54350372e+02 2.21509415e+02
+    4.75751709e+02 2.06547806e+02 4.97427063e+02 1.91299561e+02
+    5.19848694e+02 1.75943100e+02 5.42270447e+02 1.60061798e+02
+    4.05384216e+02 2.83901581e+02 4.26137695e+02 2.69768311e+02
+    4.47028442e+02 2.55460831e+02 4.68602051e+02 2.40626907e+02
+    4.90504059e+02 2.25610870e+02 5.13122681e+02 2.10264160e+02
+    5.35697083e+02 1.94470917e+02 5.59294312e+02 1.78513000e+02
+    4.18544861e+02 3.04232849e+02 4.39746063e+02 2.89913452e+02
+    4.61249481e+02 2.75458679e+02 4.83377075e+02 2.60514771e+02
+    5.06061798e+02 2.45308273e+02 5.28953796e+02 2.29725693e+02
+    5.52874146e+02 2.13994888e+02 5.76634216e+02 1.97893829e+02
+    4.31980408e+02 3.25194031e+02 4.53740753e+02 3.10882538e+02
+    4.75999451e+02 2.96285767e+02 4.98943329e+02 2.81215332e+02
+    5.22146606e+02 2.65748688e+02 5.46129395e+02 2.50068954e+02
+    5.70226257e+02 2.33855026e+02 5.95334717e+02 2.17367126e+02
+    2.48525497e+02 2.05463425e+02 2.72501251e+02 1.88929794e+02
+    2.97579254e+02 1.72781052e+02 3.23325134e+02 1.56255600e+02
+    3.49235596e+02 1.39519440e+02 3.75583984e+02 1.21417175e+02
+    4.02793549e+02 1.03912636e+02 4.30531799e+02 8.57144012e+01
+    2.59801880e+02 2.29294159e+02 2.84818115e+02 2.13243698e+02
+    3.10251404e+02 1.96697937e+02 3.36517059e+02 1.79998993e+02
+    3.63301239e+02 1.62800613e+02 3.90474274e+02 1.45459961e+02
+    4.18522919e+02 1.27375267e+02 4.46948822e+02 1.09211464e+02
+    2.71411224e+02 2.54339722e+02 2.97226654e+02 2.38169342e+02
+    3.23491882e+02 2.21672989e+02 3.50482239e+02 2.04627472e+02
+    3.78070251e+02 1.87533981e+02 4.06044495e+02 1.69837585e+02
+    4.34936676e+02 1.52029526e+02 4.64076080e+02 1.33575928e+02
+    2.83658752e+02 2.80583496e+02 3.10200745e+02 2.64233704e+02
+    3.37364746e+02 2.47689224e+02 3.64970459e+02 2.30603455e+02
+    3.93390961e+02 2.13180145e+02 4.22270660e+02 1.95511902e+02
+    4.51704834e+02 1.77127472e+02 4.82134186e+02 1.58685547e+02
+    2.96422089e+02 3.07624268e+02 3.23613190e+02 2.91544525e+02
+    3.51412262e+02 2.74667480e+02 3.80048431e+02 2.57605103e+02
+    4.09170074e+02 2.39923218e+02 4.38998322e+02 2.22039658e+02
+    4.69582428e+02 2.03662720e+02 5.00906219e+02 1.84813187e+02
+    3.09388153e+02 3.36267670e+02 3.37556885e+02 3.19787506e+02
+    3.66240417e+02 3.03038757e+02 3.95783142e+02 2.85539490e+02
+    4.25735199e+02 2.67705841e+02 4.56666687e+02 2.49582291e+02
+    4.88176147e+02 2.30879929e+02 5.20822815e+02 2.11633469e+02
+    2.76622589e+02 1.99686951e+02 3.00063416e+02 1.81293289e+02
+    3.24113037e+02 1.63424957e+02 3.48175781e+02 1.45364578e+02
+    3.72195801e+02 1.27004166e+02 3.96239319e+02 1.08086327e+02
+    4.20519623e+02 8.98238983e+01 4.44643402e+02 7.13269501e+01
+    2.92684387e+02 2.21884216e+02 3.16968262e+02 2.03494781e+02
+    3.41248016e+02 1.85078705e+02 3.65686890e+02 1.66620544e+02
+    3.90080383e+02 1.48000595e+02 4.14720856e+02 1.29384689e+02
+    4.39399933e+02 1.10526779e+02 4.64220642e+02 9.19350662e+01
+    3.09373932e+02 2.44746445e+02 3.34107239e+02 2.26164047e+02
+    3.59022675e+02 2.07451080e+02 3.83933502e+02 1.88654129e+02
+    4.08804413e+02 1.69803452e+02 4.33905792e+02 1.50926544e+02
+    4.59141876e+02 1.32043427e+02 4.84177460e+02 1.12994034e+02
+    3.26692505e+02 2.68693451e+02 3.52065216e+02 2.49670166e+02
+    3.77374115e+02 2.30783188e+02 4.02736481e+02 2.11522415e+02
+    4.28120819e+02 1.92432663e+02 4.53745331e+02 1.73102966e+02
+    4.79382599e+02 1.53540344e+02 5.05296051e+02 1.34284958e+02
+    3.44683136e+02 2.93480438e+02 3.70500275e+02 2.74106934e+02
+    3.96305328e+02 2.54680756e+02 4.22248840e+02 2.35168732e+02
+    4.48260010e+02 2.15514084e+02 4.74405426e+02 1.95873398e+02
+    5.00795349e+02 1.76231766e+02 5.27021606e+02 1.56392029e+02
+    3.63313385e+02 3.19115326e+02 3.89522369e+02 2.99376923e+02
+    4.15972473e+02 2.79681305e+02 4.42556091e+02 2.59603149e+02
+    4.69142212e+02 2.39558517e+02 4.96116241e+02 2.19412704e+02
+    5.23038330e+02 1.99050613e+02 5.50403015e+02 1.78419235e+02
+    3.14811188e+02 1.30098053e+02 3.40125549e+02 1.43120392e+02
+    3.65400543e+02 1.56905121e+02 3.91084320e+02 1.70768692e+02
+    4.17167999e+02 1.84461105e+02 4.43411407e+02 1.98005798e+02
+    4.69639465e+02 2.12028458e+02 4.96244995e+02 2.26303329e+02
+    3.00278229e+02 1.53020630e+02 3.25893433e+02 1.66811340e+02
+    3.51464264e+02 1.80595154e+02 3.77577728e+02 1.94512985e+02
+    4.03701508e+02 2.08584686e+02 4.30024872e+02 2.22703094e+02
+    4.56750061e+02 2.37051651e+02 4.83389465e+02 2.51377228e+02
+    2.85727570e+02 1.76604019e+02 3.11262909e+02 1.90636917e+02
+    3.37435516e+02 2.04695923e+02 3.63603027e+02 2.19052124e+02
+    3.89978271e+02 2.33394257e+02 4.16549896e+02 2.47841644e+02
+    4.43357178e+02 2.62553101e+02 4.70362091e+02 2.77202972e+02
+    2.70421173e+02 2.00811005e+02 2.96455139e+02 2.15097717e+02
+    3.22595551e+02 2.29386917e+02 3.49197235e+02 2.44201614e+02
+    3.76027893e+02 2.58838745e+02 4.02691711e+02 2.73654938e+02
+    4.29879517e+02 2.88532990e+02 4.57188354e+02 3.03417511e+02
+    2.54952148e+02 2.25593765e+02 2.81248474e+02 2.40235260e+02
+    3.07670776e+02 2.54977524e+02 3.34511810e+02 2.69705627e+02
+    3.61645203e+02 2.84780304e+02 3.88724030e+02 3.00012909e+02
+    4.16259796e+02 3.15260986e+02 4.43572510e+02 3.30393463e+02
+    2.38946915e+02 2.51128891e+02 2.65554260e+02 2.65873413e+02
+    2.92250610e+02 2.80989136e+02 3.19597900e+02 2.96262390e+02
+    3.46758301e+02 3.11534912e+02 3.74392609e+02 3.26839783e+02
+    4.02283691e+02 3.42444489e+02 4.30445343e+02 3.58026001e+02
+    4.19644165e+02 8.67387466e+01 4.33854919e+02 1.12316452e+02
+    4.47917450e+02 1.38834396e+02 4.62719025e+02 1.66068558e+02
+    4.77770569e+02 1.93242493e+02 4.93285065e+02 2.20933731e+02
+    5.08643433e+02 2.49376678e+02 5.24481750e+02 2.78492950e+02
+    3.92000183e+02 1.00713661e+02 4.05822754e+02 1.26551682e+02
+    4.19936920e+02 1.53035065e+02 4.34319702e+02 1.80017746e+02
+    4.49003571e+02 2.07347260e+02 4.63795319e+02 2.35206512e+02
+    4.79152679e+02 2.63885010e+02 4.94434540e+02 2.92687531e+02
+    3.64665100e+02 1.14325218e+02 3.78252502e+02 1.40503693e+02
+    3.92028381e+02 1.66754944e+02 4.06194427e+02 1.93821823e+02
+    4.20370544e+02 2.21405609e+02 4.35249664e+02 2.49361755e+02
+    4.49752625e+02 2.77868988e+02 4.65044922e+02 3.06854218e+02
+    3.37437042e+02 1.28102798e+02 3.50762115e+02 1.54043991e+02
+    3.64250000e+02 1.80704330e+02 3.78126190e+02 2.07694946e+02
+    3.92087250e+02 2.35372604e+02 4.06324585e+02 2.63407074e+02
+    4.20990601e+02 2.91995544e+02 4.35526459e+02 3.21032776e+02
+    3.10317627e+02 1.41526917e+02 3.23363342e+02 1.67716110e+02
+    3.36613861e+02 1.94190857e+02 3.50010315e+02 2.21487152e+02
+    3.63990601e+02 2.49096329e+02 3.77965027e+02 2.77388275e+02
+    3.91987610e+02 3.05962921e+02 4.06552338e+02 3.35060242e+02
+    2.83319305e+02 1.55099686e+02 2.95944885e+02 1.81146851e+02
+    3.08979523e+02 2.07757950e+02 3.22261963e+02 2.35160919e+02
+    3.35717682e+02 2.62816498e+02 3.49265625e+02 2.91102112e+02
+    3.63426880e+02 3.19950317e+02 3.77588013e+02 3.49165710e+02
+    5.03980133e+02 9.61399078e+01 5.09989349e+02 1.16810905e+02
+    5.16156006e+02 1.39188934e+02 5.22603333e+02 1.63149445e+02
+    5.29607605e+02 1.87423203e+02 5.37352905e+02 2.13030914e+02
+    5.44928406e+02 2.40513931e+02 5.53177368e+02 2.69679718e+02
+    4.76047424e+02 9.96813354e+01 4.81324921e+02 1.20655647e+02
+    4.86721588e+02 1.42858643e+02 4.92670807e+02 1.66349167e+02
+    4.98761780e+02 1.90903519e+02 5.05178101e+02 2.16633347e+02
+    5.12052368e+02 2.44313873e+02 5.19269104e+02 2.73011017e+02
+    4.48486725e+02 1.02657227e+02 4.52899200e+02 1.24069565e+02
+    4.57910645e+02 1.46155701e+02 4.62813995e+02 1.69581619e+02
+    4.68091827e+02 1.94155563e+02 4.73700256e+02 2.20430908e+02
+    4.79591461e+02 2.47685837e+02 4.85794556e+02 2.76725525e+02
+    4.21021454e+02 1.05755676e+02 4.24916687e+02 1.26940384e+02
+    4.28827423e+02 1.49380554e+02 4.33425446e+02 1.72790161e+02
+    4.37866852e+02 1.97566422e+02 4.42446838e+02 2.23359100e+02
+    4.47408112e+02 2.50920731e+02 4.52736969e+02 2.79739014e+02
+    3.94019165e+02 1.08697266e+02 3.97058746e+02 1.30103088e+02
+    4.00455170e+02 1.52142426e+02 4.03942993e+02 1.75810318e+02
+    4.07642883e+02 2.00455032e+02 4.11641052e+02 2.26504318e+02
+    4.15797791e+02 2.53982208e+02 4.20173950e+02 2.83155273e+02
+    3.66654266e+02 1.11665276e+02 3.69438293e+02 1.32714111e+02
+    3.71989044e+02 1.55202499e+02 3.75013702e+02 1.78633118e+02
+    3.77918396e+02 2.03307480e+02 3.81023590e+02 2.29033127e+02
+    3.84318420e+02 2.56662750e+02 3.87738739e+02 2.85133514e+02
+    4.62978912e+02 6.27332687e+01 4.69725159e+02 8.43660126e+01
+    4.77213409e+02 1.08508469e+02 4.84940125e+02 1.34397217e+02
+    4.93370911e+02 1.60883591e+02 5.02556274e+02 1.88769226e+02
+    5.12086914e+02 2.19648087e+02 5.22425903e+02 2.52663406e+02
+    4.31437500e+02 6.83855362e+01 4.37642670e+02 9.07551193e+01
+    4.43703888e+02 1.14667488e+02 4.50640137e+02 1.40075027e+02
+    4.57913513e+02 1.66733582e+02 4.65509369e+02 1.95196640e+02
+    4.73840790e+02 2.26088165e+02 4.82694885e+02 2.58761414e+02
+    4.00714386e+02 7.35745697e+01 4.05603333e+02 9.63953705e+01
+    4.11034546e+02 1.20253922e+02 4.16668671e+02 1.45682831e+02
+    4.22760376e+02 1.72397659e+02 4.29219147e+02 2.01403259e+02
+    4.36281189e+02 2.31953491e+02 4.43725037e+02 2.64858582e+02
+    3.69853851e+02 7.90185165e+01 3.74148224e+02 1.01584167e+02
+    3.78371796e+02 1.25757225e+02 3.83172211e+02 1.50989655e+02
+    3.88035278e+02 1.78239349e+02 3.93483002e+02 2.06889038e+02
+    3.99136658e+02 2.37913605e+02 4.05053162e+02 2.70607178e+02
+    3.39727936e+02 8.43922882e+01 3.42757507e+02 1.07011276e+02
+    3.46274689e+02 1.30758453e+02 3.49753906e+02 1.56474854e+02
+    3.53716309e+02 1.83573944e+02 3.57908691e+02 2.12387283e+02
+    3.62395874e+02 2.43402527e+02 3.67071167e+02 2.76416412e+02
+    3.09322296e+02 8.95634766e+01 3.11894135e+02 1.12255669e+02
+    3.14271454e+02 1.36323074e+02 3.16959381e+02 1.61758102e+02
+    3.19835327e+02 1.88636398e+02 3.22801819e+02 2.17373032e+02
+    3.25760925e+02 2.48327011e+02 3.29139252e+02 2.80906494e+02
+    5.07133942e+02 1.81686783e+02 5.09741577e+02 2.13949905e+02
+    5.11663361e+02 2.46139771e+02 5.13626465e+02 2.79160828e+02
+    5.15956787e+02 3.11681152e+02 5.18758911e+02 3.44694305e+02
+    5.20685852e+02 3.77723114e+02 5.23074097e+02 4.10813873e+02
+    4.75243652e+02 1.83416763e+02 4.77450928e+02 2.15558502e+02
+    4.79514526e+02 2.48008224e+02 4.81450928e+02 2.80721832e+02
+    4.83726685e+02 3.13490326e+02 4.85872070e+02 3.46342834e+02
+    4.88038574e+02 3.79738647e+02 4.90030701e+02 4.12497925e+02
+    4.43314209e+02 1.84584213e+02 4.45386597e+02 2.17104568e+02
+    4.47072784e+02 2.49526947e+02 4.49261047e+02 2.82451813e+02
+    4.51196960e+02 3.15205719e+02 4.53434875e+02 3.48168732e+02
+    4.55251465e+02 3.81385925e+02 4.57616089e+02 4.14625885e+02
+    4.11121674e+02 1.85914642e+02 4.13082703e+02 2.18574432e+02
+    4.14958618e+02 2.51236282e+02 4.17033112e+02 2.83916718e+02
+    4.18954407e+02 3.17130157e+02 4.20705017e+02 3.50084961e+02
+    4.22937378e+02 3.83437927e+02 4.24549652e+02 4.16669586e+02
+    3.78982239e+02 1.87498749e+02 3.80839417e+02 2.20210861e+02
+    3.82615021e+02 2.52791656e+02 3.84385345e+02 2.85793610e+02
+    3.86126160e+02 3.19113007e+02 3.88154724e+02 3.52207703e+02
+    3.89820679e+02 3.85468689e+02 3.91949524e+02 4.18858124e+02
+    3.46222778e+02 1.88812805e+02 3.48051636e+02 2.21464478e+02
+    3.49921387e+02 2.54534607e+02 3.51726135e+02 2.87750336e+02
+    3.53742065e+02 3.21095917e+02 3.55285919e+02 3.54397034e+02
+    3.57376831e+02 3.87808777e+02 3.59258301e+02 4.21653870e+02
+    3.34178680e+02 7.15803604e+01 3.68781403e+02 7.72299271e+01
+    4.03390350e+02 8.36803055e+01 4.38771545e+02 8.99596710e+01
+    4.74000122e+02 9.61519547e+01 5.10483826e+02 1.01871071e+02
+    5.46519287e+02 1.08490479e+02 5.83010376e+02 1.14944801e+02
+    3.27190674e+02 1.04705727e+02 3.61669189e+02 1.10961121e+02
+    3.96706543e+02 1.17214088e+02 4.31797943e+02 1.23783562e+02
+    4.67650574e+02 1.29958069e+02 5.03623566e+02 1.36570847e+02
+    5.40339417e+02 1.43034164e+02 5.76709473e+02 1.49785370e+02
+    3.19872742e+02 1.37984161e+02 3.54617249e+02 1.44484680e+02
+    3.89485657e+02 1.51013779e+02 4.25161896e+02 1.57787918e+02
+    4.60905396e+02 1.64500275e+02 4.97384064e+02 1.71040604e+02
+    5.33615662e+02 1.78181595e+02 5.70579529e+02 1.84781631e+02
+    3.12216034e+02 1.71576996e+02 3.47327179e+02 1.78519760e+02
+    3.82734894e+02 1.85305450e+02 4.18422516e+02 1.92126297e+02
+    4.54539032e+02 1.99333481e+02 4.90685913e+02 2.06262482e+02
+    5.27603577e+02 2.13106491e+02 5.64648315e+02 2.20455704e+02
+    3.04832764e+02 2.05977936e+02 3.40164825e+02 2.12837067e+02
+    3.75653595e+02 2.19878754e+02 4.11581116e+02 2.26973557e+02
+    4.47741547e+02 2.34263412e+02 4.84491943e+02 2.41458679e+02
+    5.21535950e+02 2.48826981e+02 5.58687866e+02 2.56117737e+02
+    2.97063873e+02 2.40660950e+02 3.32576263e+02 2.47740173e+02
+    3.68365601e+02 2.55180862e+02 4.04804810e+02 2.62446381e+02
+    4.41303436e+02 2.69635406e+02 4.78364777e+02 2.77337433e+02
+    5.15812012e+02 2.84535950e+02 5.53792725e+02 2.92391449e+02</data></Image_points>
+</opencv_storage></article></body></html>
