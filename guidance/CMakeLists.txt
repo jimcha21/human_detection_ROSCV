@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(guidance)
 
+set(yaml-cpp_DIR "/home/ubuntu/Documents/yaml-cpp/build")
+#message(FATAL_ERROR ${YAML_CPP_VERSION})
+#message(WARNING ${yaml-cpp_DIR})
+find_package(yaml-cpp REQUIRED)
+
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   cv_bridge
@@ -10,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
 	camera_info_manager
   tf
+	yaml-cpp	
 )
 
 #set(OpenCV_DIR "/home/ubuntu/opencv/build")
@@ -27,7 +33,8 @@ catkin_package(
 include_directories(
   ${OpenCV_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
-  include
+  ${YAML_CPP_INCLUDE_DIRS}
+	include
 )
 
 message("System is: " ${CMAKE_SYSTEM_PROCESSOR})
@@ -60,6 +67,27 @@ add_executable(guidanceNode
   src/GuidanceNode.cpp
   src/DJI_utility.cpp)
 
+add_executable(armarker_subscriber
+  nodes/armarker_subscriber.cpp
+	src/DJI_utility.cpp
+	)
+	
+add_executable(maptomarker_tf
+  nodes/maptomarker_tf.cpp
+  src/DJI_utility.cpp)
+
+	
+add_executable(camerainfo_publisher
+  nodes/camerainfo_publisher.cpp
+	src/DJI_utility.cpp
+)
+target_link_libraries(camerainfo_publisher 
+${catkin_LIBRARIES}
+${OpenCV_LIBS}
+${YAML_CPP_LIBRARIES}
+#[[/usr/lib/x86_64-linux-gnu/libyaml-cpp.so]]
+)
+	
 add_executable(allCamerasSonars_save
   src/allCamerasSonars_save.cpp
 	src/DJI_utility.cpp
@@ -90,10 +118,10 @@ add_executable(a
 	src/DJI_utility.cpp
 	)
 			
-add_executable(camerasinfo_publisher 
-	src/camerasinfo_publisher.cpp
-	src/DJI_utility.cpp
-	)
+#add_executable(camerasinfo_publisher 
+#	src/camerasinfo_publisher.cpp
+#	src/DJI_utility.cpp
+#	)
 
 	
 add_executable(guidanceNodeTest
