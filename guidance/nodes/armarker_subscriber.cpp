@@ -13,6 +13,7 @@ ar_track_alvar_msgs::AlvarMarker marker_;
 geometry_msgs::TransformStamped map_to_marker_tf;
 geometry_msgs::PoseStamped nao_pose_to_map_coord_;
 bool isMaponline = false;
+bool naopose_legit = false;
 
 void map_to_marker_tfcallback(const geometry_msgs::TransformStamped& msg)
 {
@@ -54,7 +55,7 @@ void markerCallback(const ar_track_alvar_msgs::AlvarMarkersPtr& msg)
   
   //updating tf tree for nao_pose under map coordinates.. disable it if fake_loc node is running - conflict in tree tf publishing 
   br.sendTransform(map_to_odom_tf);
-
+	naopose_legit = true;
   //std::cout<<"got marker "<<nao_pose_to_map_coord_.pose.position.x<<"got marker "<<nao_pose_to_map_coord_.pose.position.y<<"got marker "<<nao_pose_to_map_coord_.pose.position.z<<std::endl;
    
 }
@@ -73,7 +74,7 @@ int main(int argc, char **argv)
   while(n.ok()){
 
     // bypassing -nan values in nao pose initialization
-    if(nao_pose_to_map_coord_.pose.position.x!=nao_pose_to_map_coord_.pose.position.x){
+    if(nao_pose_to_map_coord_.pose.position.x!=nao_pose_to_map_coord_.pose.position.x && !naopose_legit){
       rate.sleep();
       ros::spinOnce();  
       continue;

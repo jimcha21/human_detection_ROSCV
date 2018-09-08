@@ -93,7 +93,7 @@ int main(int argc, char **argv)
 
   YAML::Node intrinsics_yml_front,extrinsics_yml_front,intrinsics_yml_right,extrinsics_yml_right,
     intrinsics_yml_left,extrinsics_yml_left,intrinsics_yml_rear,extrinsics_yml_rear,intrinsics_yml_down,extrinsics_yml_down;
-
+	
   //front cameras
   if(enable_front_camerainfo){
     try{
@@ -104,7 +104,6 @@ int main(int argc, char **argv)
     }
 
     front_leftcamera_caminf.header.frame_id = front_rightcamera_caminf.header.frame_id = "guidanceFront_link";
-    front_leftcamera_caminf.header.stamp = front_rightcamera_caminf.header.stamp = ros::Time::now();
     front_leftcamera_caminf.height = front_rightcamera_caminf.height = 240;
     front_leftcamera_caminf.width = front_rightcamera_caminf.width =320;
     front_leftcamera_caminf.distortion_model = front_rightcamera_caminf.distortion_model = "plumb_bob";   
@@ -130,7 +129,6 @@ int main(int argc, char **argv)
     }
 
     right_leftcamera_caminf.header.frame_id = right_rightcamera_caminf.header.frame_id = "guidanceRight_link";
-    right_leftcamera_caminf.header.stamp = right_rightcamera_caminf.header.stamp = ros::Time::now();
     right_leftcamera_caminf.height = right_rightcamera_caminf.height = 240;
     right_leftcamera_caminf.width = right_rightcamera_caminf.width =320;
     right_leftcamera_caminf.distortion_model = right_rightcamera_caminf.distortion_model = "plumb_bob";   
@@ -157,7 +155,6 @@ int main(int argc, char **argv)
     }
 
     left_leftcamera_caminf.header.frame_id = left_rightcamera_caminf.header.frame_id = "guidanceLeft_link";
-    left_leftcamera_caminf.header.stamp = left_rightcamera_caminf.header.stamp = ros::Time::now();
     left_leftcamera_caminf.height = left_rightcamera_caminf.height = 240;
     left_leftcamera_caminf.width = left_rightcamera_caminf.width =320;
     left_leftcamera_caminf.distortion_model = left_rightcamera_caminf.distortion_model = "plumb_bob";   
@@ -184,7 +181,6 @@ int main(int argc, char **argv)
       }
 
     down_leftcamera_caminf.header.frame_id = down_rightcamera_caminf.header.frame_id = "guidanceDown_link";
-    down_leftcamera_caminf.header.stamp = down_rightcamera_caminf.header.stamp = ros::Time::now();
     down_leftcamera_caminf.height = down_rightcamera_caminf.height = 240;
     down_leftcamera_caminf.width = down_rightcamera_caminf.width =320;
     down_leftcamera_caminf.distortion_model = down_rightcamera_caminf.distortion_model = "plumb_bob";   
@@ -210,7 +206,6 @@ int main(int argc, char **argv)
       cout<<"Error opening the files ["<<e.what()<<"]"<<endl;
     }
     rear_leftcamera_caminf.header.frame_id = rear_rightcamera_caminf.header.frame_id = "guidanceRear_link";
-    rear_leftcamera_caminf.header.stamp = rear_rightcamera_caminf.header.stamp = ros::Time::now();
     rear_leftcamera_caminf.height = rear_rightcamera_caminf.height = 240;
     rear_leftcamera_caminf.width = rear_rightcamera_caminf.width =320;
     rear_leftcamera_caminf.distortion_model = rear_rightcamera_caminf.distortion_model = "plumb_bob";   
@@ -233,23 +228,28 @@ int main(int argc, char **argv)
 
     //cout<<"sending camera info for front"<<endl;
     if(enable_front_camerainfo){
-      frontcmrinfo_pub_l.publish(front_leftcamera_caminf);
+      front_leftcamera_caminf.header.stamp = front_rightcamera_caminf.header.stamp = ros::Time::now();
+    	frontcmrinfo_pub_l.publish(front_leftcamera_caminf);
       frontcmrinfo_pub_r.publish(front_rightcamera_caminf);
     }
     if(enable_right_camerainfo){
-      rightcmrinfo_pub_l.publish(right_leftcamera_caminf);
+      right_leftcamera_caminf.header.stamp = right_rightcamera_caminf.header.stamp = ros::Time::now();
+			rightcmrinfo_pub_l.publish(right_leftcamera_caminf);
       rightcmrinfo_pub_r.publish(right_rightcamera_caminf);
     }
     if(enable_left_camerainfo){
-      leftcmrinfo_pub_l.publish(left_leftcamera_caminf);
+      left_leftcamera_caminf.header.stamp = left_rightcamera_caminf.header.stamp = ros::Time::now();
+    	leftcmrinfo_pub_l.publish(left_leftcamera_caminf);
       leftcmrinfo_pub_r.publish(left_rightcamera_caminf);
     }
     if(enable_rear_camerainfo){
+			rear_leftcamera_caminf.header.stamp = rear_rightcamera_caminf.header.stamp = ros::Time::now();
       rearcmrinfo_pub_l.publish(rear_leftcamera_caminf);
       rearcmrinfo_pub_r.publish(rear_rightcamera_caminf);
     }
     if(enable_down_camerainfo){
-      downcmrinfo_pub_l.publish(down_leftcamera_caminf);
+      down_leftcamera_caminf.header.stamp = down_rightcamera_caminf.header.stamp = ros::Time::now();
+    	downcmrinfo_pub_l.publish(down_leftcamera_caminf);
       downcmrinfo_pub_r.publish(down_rightcamera_caminf);
     }
 
