@@ -226,7 +226,7 @@ int main(int argc, char **argv)
     storeMatsfromYML(extrinsics_yml_rear[PROJECTIONMATRIX_RIGHT],&rear_rightcamera_caminf.P[0]);
   }
 
-  ros::Rate loop_rate(1000); //no need to rush
+  ros::Rate loop_rate(50); //no need to rush
 
   while (ros::ok())
   {
