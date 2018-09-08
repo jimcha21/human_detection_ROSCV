@@ -177,7 +177,7 @@ int main(int argc, char** argv){
   ros::NodeHandle node;
   //ros::Subscriber sub = node.subscribe(turtle_name+"/pose", 10, &poseCallback);
 
-  ros::Rate loop_rate(1);
+  ros::Rate loop_rate(10);
   while(ros::ok())
   {
     //ros::Timer timer1 = node.createTimer(ros::Duration(1), poseCallback);
