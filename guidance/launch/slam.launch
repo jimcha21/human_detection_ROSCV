@@ -2,27 +2,21 @@
 
 <launch>
 
-  <node pkg="guidance" type="maptomarker_tf" name="maptomarker_tf"/>
-  <node pkg="guidance" type="camerainfo_publisher" name="camerainfo_publisher"
-  args="front rear left right down"/>
-  <node pkg="guidance" type="armarker_subscriber" name="armarker_subscriber"/>
-
-
-<!--   <node pkg="guidance" type="armara" name="static_transform_publisher"
-    args=" 0.08 0 0.05 0 0 0 M100_base_link laser 100"/>
-
-  <node pkg="guidance" type="armara" name="static_transform_publisher"
-    args=" 0.08 0 0.05 0 0 0 M100_base_link laser 100"/>
- -->
-
-<!-- 
-camerainfo_publisher
-armarker_subscriber -->
-<!-- 
-  <arg name="geotiff_map_file_path" default="$(find hector_geotiff)/maps"/>
-
+  <node pkg="guidance" type="tf_publiser" name="tf_publiser"/>
   <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher"
     args=" 0.08 0 0.05 0 0 0 M100_base_link laser 100"/>
+
+
+  <node pkg="guidance" type="maptomarker_tf" name="maptomarker_tf"/>
+  <node pkg="guidance" type="armarker_subscriber" name="armarker_subscriber"/>
+
+  <node pkg="guidance" type="camerainfo_publisher" name="camerainfo_publisher"
+  args="front rear left right down"/>
+
+
+
+<!-- 
+  <arg name="geotiff_map_file_path" default="$(find hector_geotiff)/maps"/>
 
  <include file="$(find hector_mapping)/launch/mapping_default.launch">
     <arg name="tf_map_scanmatch_transform_frame_name" value="M100_base_link"/>
