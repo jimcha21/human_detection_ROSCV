@@ -24,10 +24,10 @@ void map_to_marker_tfcallback(const geometry_msgs::TransformStamped& msg)
 
 void markerCallback(const ar_track_alvar_msgs::AlvarMarkersPtr& msg)
 {
-  if(msg->markers.size()==0&&isMaponline)
+  if(msg->markers.size()==0||!isMaponline)
     return;
-
-  static tf2_ros::TransformBroadcaster br;
+	
+	static tf2_ros::TransformBroadcaster br;
   geometry_msgs::TransformStamped map_to_odom_tf;
   
   map_to_odom_tf.header.stamp = map_to_marker_tf.header.stamp;
