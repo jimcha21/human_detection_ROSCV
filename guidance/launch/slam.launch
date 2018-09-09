@@ -2,18 +2,29 @@
 
 <launch>
 
+<!-- TF  -->
+
   <node pkg="guidance" type="tf_publiser" name="tf_publiser"/>
   <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher"
     args=" 0.08 0 0.05 0 0 0 M100_base_link laser 100"/>
 
-
-  <node pkg="guidance" type="maptomarker_tf" name="maptomarker_tf"/>
-  <node pkg="guidance" type="armarker_subscriber" name="armarker_subscriber"/>
+<!-- Camera Info  -->
 
   <node pkg="guidance" type="camerainfo_publisher" name="camerainfo_publisher"
   args="front rear left right down"/>
 
+<!-- Nao Locator  -->
 
+  <node pkg="guidance" type="maptomarker_tf" name="maptomarker_tf"
+  args="ar_marker_1"/>
+  <node pkg="guidance" type="armarker_subscriber" name="armarker_subscriber"/>
+
+<!-- Hokuyo Lidar  -->
+
+  <node pkg="urg_node" type="urg_node" name="urg_node"
+    args=" _ip_address:='192.168.1.10' "/>
+
+<!-- Hector SLAM -->
 
 <!-- 
   <arg name="geotiff_map_file_path" default="$(find hector_geotiff)/maps"/>
@@ -54,11 +65,3 @@
   </node> 
  -->
 </launch>
-
-<!--
-<node pkg="tf" type="tf_remap" name="tf_remapper" output="screen">
-  <rosparam param="mappings">
-    [{old: a, new: /b},{old: /guidance/4/right, new: /guidanceLeft}]
-  </rosparam>
-</node>
- -->

@@ -76,6 +76,10 @@ add_executable(maptomarker_tf
   nodes/maptomarker_tf.cpp
   src/DJI_utility.cpp)
 
+add_executable(tf_publisher 
+  nodes/tf_publisher.cpp
+    src/DJI_utility.cpp
+      )
 	
 add_executable(camerainfo_publisher
   nodes/camerainfo_publisher.cpp
@@ -97,12 +101,7 @@ add_executable(FullCameraSimpleNode
   src/FullCameraSimpleNode.cpp
       src/DJI_utility.cpp
         )
-				
-add_executable(tf_publisher 
-src/tf_publisher.cpp
-		src/DJI_utility.cpp
-			)
-			
+					
 add_executable(node 
 	src/node.cpp
 	src/DJI_utility.cpp

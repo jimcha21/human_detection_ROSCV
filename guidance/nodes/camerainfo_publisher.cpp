@@ -12,7 +12,7 @@ sensor_msgs::CameraInfo right_leftcamera_caminf,right_rightcamera_caminf;
 sensor_msgs::CameraInfo left_leftcamera_caminf,left_rightcamera_caminf;
 sensor_msgs::CameraInfo rear_leftcamera_caminf,rear_rightcamera_caminf;
 sensor_msgs::CameraInfo down_leftcamera_caminf,down_rightcamera_caminf;
-string yml_directory = "/home/ubuntu/catkin_ws/src/human_detection/guidance/calibration_results";
+string yml_directory = "/home/ubuntu/catkin_ws/src/human_detection/guidance/calibration_files/calibration_results";
 bool enable_front_camerainfo,enable_rear_camerainfo,enable_down_camerainfo,enable_left_camerainfo,enable_right_camerainfo;
 
 static const char CAMERAMATRIX_LEFT[]           = "M1";

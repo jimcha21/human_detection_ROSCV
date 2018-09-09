@@ -72,8 +72,8 @@ string _whichSensorIsThis(int _id,int _type){
 bool publish_tf_(int sensor_location_,int sensor_type_){
 	
 	static tf::TransformBroadcaster br;
-  tf::Transform transform;
-  tf::Quaternion q;	
+	tf::Transform transform;
+	tf::Quaternion q;	
 	string _parentTf = string("guidance")+_whichSensorIsThis(sensor_location_,sensor_type_)+string("_link");
 	
 	//posting guidance sensor tf
@@ -136,7 +136,7 @@ bool publish_tf_(int sensor_location_,int sensor_type_){
 
 void poseCallback(/*const ros::TimerEvent& event*/){
  
-  cout<<"posting tf info"<<endl;
+  	//cout<<"posting tf info"<<endl;
 	for(int i=0;i<5;i++){
 		publish_tf_(i,SONAR_TF);
 		publish_tf_(i,CAMERA_TF);

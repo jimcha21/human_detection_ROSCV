@@ -1,12 +1,21 @@
 #include <ros/ros.h>
 #include <tf/transform_listener.h>
 #include <geometry_msgs/TransformStamped.h>
+#include <stdio.h>
 
+std::string marker_topic_="/ar_marker_1";
 
 int main(int argc, char** argv){
-  ros::init(argc, argv, "mapToM100_tflistener");
 
+  ros::init(argc, argv, "mapToM100_tflistener");
   ros::NodeHandle node;
+
+  if(argc==2){
+    marker_topic_=argv[1];
+    std::cout<<"Setting armarker topic name as "<< marker_topic_<<std::endl;
+  }
+  else 
+    std::cout<<"Setting armarker topic name as (default) "<< marker_topic_<<std::endl;
 
   ros::Publisher matrice_pose =
     node.advertise<geometry_msgs::TransformStamped>("/map_to_marker_tf", 10);
@@ -17,7 +26,7 @@ int main(int argc, char** argv){
   while (node.ok()){
     tf::StampedTransform transform;
     try{
-      listener.lookupTransform("/map", "/ar_marker_1",
+      listener.lookupTransform("/map", marker_topic_,
                                ros::Time(0), transform);
     }
     catch (tf::TransformException &ex) {
