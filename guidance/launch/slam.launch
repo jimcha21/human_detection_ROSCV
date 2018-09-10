@@ -6,7 +6,7 @@
 
   <node pkg="guidance" type="tf_publisher" name="tf_publisher"/>
   <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher"
-    args=" 0.08 0 0.05 0 0 0 M100_base_link laser 100"/>
+    args=" 0.08 0 0.05 0 0 0 M100_base_link laser 20"/>
 
 <!-- Camera Info  -->
 
@@ -16,7 +16,7 @@
 <!-- Nao Locator  -->
 
   <node pkg="guidance" type="maptomarker_tf" name="maptomarker_tf"
-  args="ar_marker_1"/>
+  args="ar_marker_4"/>
   <node pkg="guidance" type="armarker_subscriber" name="armarker_subscriber"/>
 
 <!-- Hokuyo Lidar  -->
@@ -47,7 +47,7 @@
 
 <!--            MARKER DETECTION                           -->
 
-    <arg name="marker_size" default="10" />
+    <arg name="marker_size" default="7" />
   <arg name="max_new_marker_error" default="0.08" />
   <arg name="max_track_error" default="0.2" />
   <arg name="cam_image_topic" default="/guidance/down/left_camera/image_raw" />

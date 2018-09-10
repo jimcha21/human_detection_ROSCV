@@ -177,14 +177,14 @@ int main(int argc, char** argv){
   ros::NodeHandle node;
   //ros::Subscriber sub = node.subscribe(turtle_name+"/pose", 10, &poseCallback);
 
-  ros::Rate loop_rate(20);
+  ros::Rate loop_rate(5);
   while(ros::ok())
   {
     //ros::Timer timer1 = node.createTimer(ros::Duration(1), poseCallback);
-    
+    cout<<"publishin"<<endl;
     poseCallback();
-    ros::spinOnce();
-
+    		
+//		ros::spinOnce();
     loop_rate.sleep();
   }
 
