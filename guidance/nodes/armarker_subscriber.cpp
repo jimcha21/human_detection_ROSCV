@@ -47,14 +47,14 @@ void markerCallback(const ar_track_alvar_msgs::AlvarMarkersPtr& msg)
   geometry_msgs::PoseStamped zero_pose_;
   zero_pose_.header.stamp = map_to_marker_tf.header.stamp;
   zero_pose_.header.frame_id = "map";
-  tf::Quaternion qq= tf::createQuaternionFromRPY(0, 0, 0).normalize();
+  tf::Quaternion qq= tf::createQuaternionFromRPY(0, 0, 1.5707).normalize(); //+90 degrees yaw to be in nao look orientation
   tf::quaternionTFToMsg(qq,zero_pose_.pose.orientation);
   
   tf2::doTransform(zero_pose_, nao_pose_to_map_coord_, map_to_odom_tf);
   //tf2::doTransform(msg->markers[0].pose, nao_pose_to_map_coord_, map_to_odom_tf);
   
   //updating tf tree for nao_pose under map coordinates.. disable it if fake_loc node is running - conflict in tree tf publishing 
-  br.sendTransform(map_to_odom_tf);
+ // br.sendTransform(map_to_odom_tf);
 	naopose_legit = true;
   //std::cout<<"got marker "<<nao_pose_to_map_coord_.pose.position.x<<"got marker "<<nao_pose_to_map_coord_.pose.position.y<<"got marker "<<nao_pose_to_map_coord_.pose.position.z<<std::endl;
    
