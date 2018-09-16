@@ -40,14 +40,14 @@ void markerCallback(const ar_track_alvar_msgs::AlvarMarkersPtr& msg)
   tf::Matrix3x3 m(q);
   tfScalar y,p,r;
   m.getEulerYPR(y,p,r);
-  q = tf::createQuaternionFromRPY(0,0,y+1.5707);
+  q = tf::createQuaternionFromRPY(0,0,y+1.5707);//+90 degrees yaw to be in nao look orientation
   q.normalize();
   tf::quaternionTFToMsg(q,map_to_odom_tf.transform.rotation);
 
   geometry_msgs::PoseStamped zero_pose_;
   zero_pose_.header.stamp = map_to_marker_tf.header.stamp;
   zero_pose_.header.frame_id = "map";
-  tf::Quaternion qq= tf::createQuaternionFromRPY(0, 0, 0).normalize(); //+90 degrees yaw to be in nao look orientation
+  tf::Quaternion qq= tf::createQuaternionFromRPY(0, 0, 0).normalize(); 
   tf::quaternionTFToMsg(qq,zero_pose_.pose.orientation);
   
   tf2::doTransform(zero_pose_, nao_pose_to_map_coord_, map_to_odom_tf);
