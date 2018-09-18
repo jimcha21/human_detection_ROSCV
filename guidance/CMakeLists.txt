@@ -67,6 +67,10 @@ add_executable(guidanceNode
   src/GuidanceNode.cpp
   src/DJI_utility.cpp)
 
+add_executable(laserscan_transform_toNao
+  nodes/laserscan_transform_toNao.cpp
+  src/DJI_utility.cpp)
+
 add_executable(armarker_subscriber
   nodes/armarker_subscriber.cpp
 	src/DJI_utility.cpp
