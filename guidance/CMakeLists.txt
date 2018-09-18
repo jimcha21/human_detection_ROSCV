@@ -76,6 +76,11 @@ add_executable(maptomarker_tf
   nodes/maptomarker_tf.cpp
   src/DJI_utility.cpp)
 
+add_executable(initialpose_pub 
+  nodes/initialpose_pub.cpp
+    src/DJI_utility.cpp
+      )
+
 add_executable(tf_publisher 
   nodes/tf_publisher.cpp
     src/DJI_utility.cpp

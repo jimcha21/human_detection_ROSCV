@@ -17,7 +17,7 @@
 
   <node pkg="guidance" type="maptomarker_tf" name="maptomarker_tf"
   args="ar_marker_4"/>
-  <node pkg="guidance" type="armarker_subscriber" name="armarker_subscriber"/>
+  <node pkg="guidance" type="armarker_subscriber" name="armarker_subscriber"/>  
 
 <!-- Hokuyo Lidar  -->
 
