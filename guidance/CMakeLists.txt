@@ -5,7 +5,8 @@ set(yaml-cpp_DIR "/home/ubuntu/Documents/yaml-cpp/build")
 #message(FATAL_ERROR ${YAML_CPP_VERSION})
 #message(WARNING ${yaml-cpp_DIR})
 find_package(yaml-cpp REQUIRED)
-
+find_package(Eigen3 REQUIRED) 
+find_package(PCL REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   cv_bridge
@@ -15,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
 	camera_info_manager
   tf
+	pcl_ros
 	yaml-cpp	
 )
 
@@ -33,7 +35,9 @@ catkin_package(
 include_directories(
   ${OpenCV_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
+	${PCL_INCLUDE_DIRS}
   ${YAML_CPP_INCLUDE_DIRS}
+	${Eigen_INCLUDE_DIRS}}
 	include
 )
 
@@ -68,9 +72,14 @@ add_executable(guidanceNode
   src/DJI_utility.cpp)
 
 add_executable(laserscan_transform_toNao
-  nodes/laserscan_transform_toNao.cpp
-  src/DJI_utility.cpp)
-
+  nodes/laserscan_transform_toNao.cpp)
+	
+target_link_libraries(laserscan_transform_toNao
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+  )
+	
+	
 add_executable(armarker_subscriber
   nodes/armarker_subscriber.cpp
 	src/DJI_utility.cpp

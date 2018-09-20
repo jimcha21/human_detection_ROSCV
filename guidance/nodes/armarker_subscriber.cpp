@@ -31,7 +31,7 @@ void markerCallback(const ar_track_alvar_msgs::AlvarMarkersPtr& msg)
   geometry_msgs::TransformStamped map_to_odom_tf;
   
   map_to_odom_tf.header.stamp = map_to_marker_tf.header.stamp;
-  map_to_odom_tf.header.frame_id = "map";
+  map_to_odom_tf.header.frame_id = "M100_base_link";
   map_to_odom_tf.child_frame_id = "odom";
   
   tf::vector3TFToMsg(tf::Vector3(map_to_marker_tf.transform.translation.x,map_to_marker_tf.transform.translation.y,0),map_to_odom_tf.transform.translation); 

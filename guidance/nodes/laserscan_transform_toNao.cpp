@@ -5,31 +5,45 @@
 #include <tf/transform_listener.h>
 #include "math.h"
 
-sensor_msgs::LaserScan laserscan_,naolaser_;
+#include <sensor_msgs/PointCloud2.h>
+#include <sensor_msgs/PointCloud.h>
+
+#include <pcl_ros/point_cloud.h>
+#include <pcl_ros/transforms.h>
+#include <pcl/io/pcd_io.h>
+#include <pcl/point_types.h>
+#include <pcl/conversions.h>
+#include <tf/transform_listener.h>
+#include <tf/transform_broadcaster.h>
+#include <sensor_msgs/PointCloud.h>
+
 bool got_laser = false;
+typedef pcl::PointCloud<pcl::PointXYZ> Pointcloud;
+Pointcloud::Ptr output (new Pointcloud);
+ros::Publisher pub;
 
-/*std_msgs/Header header
-  uint32 seq
-  time stamp
-  string frame_id
-  float32 angle_min
-  float32 angle_max
-  float32 angle_increment
-  float32 time_increment
-  float32 scan_time
-  float32 range_min
-  float32 range_max
-  float32[] ranges
-  float32[] intensities
-*/
-
-void laserCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
+void scanCallback (const sensor_msgs::LaserScan::ConstPtr& scan_in)
 {
-  laserscan_ = naolaser_ = *msg;
-  naolaser_.header.frame_id = "ar_marker_4";
-  std::cout << laserscan_.ranges.size() << std::endl;
-  got_laser=true;
+	output->header.stamp = pcl_conversions::toPCL( scan_in->header.stamp);
+	output->header.frame_id = scan_in->header.frame_id;
+	output->width  = 1; output->height = scan_in->ranges.size();
+	output->is_dense = false;
+	output->points.resize (output->width * output->height);
+	
+	for(int i=0;i<scan_in->ranges.size();i++){
+		
+		tf::Point p_;
+    p_.setX(scan_in->ranges[i]*cos( scan_in->angle_increment*i+ scan_in->angle_min)); 
+    p_.setY(scan_in->ranges[i]*sin( scan_in->angle_increment*i+ scan_in->angle_min)); 
+    p_.setZ(0); 
 
+		output->points[i].x = p_.getX();
+		output->points[i].y = p_.getY();
+		output->points[i].z = p_.getZ();
+			
+	}
+
+	pub.publish(output);
 }
 
 int main(int argc, char **argv)
@@ -38,39 +52,11 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "laserscan_toNao");
 
   ros::NodeHandle n;
-  ros::Subscriber sub = n.subscribe("/scan", 1, laserCallback);
-  ros::Publisher pub = n.advertise<sensor_msgs::LaserScan>("nao_scan", 1);
-
-  tf::TransformListener listener;
-  ros::Rate l(40);
-
-  while(ros::ok){
-
-    if(!got_laser)
-    {
-      l.sleep();
-      ros::spinOnce();
-      continue;
-    }      
-
-/*    tf::StampedTransform mapTolaser_tf,mapToarmarker_tf;
-    try{
-      listener.lookupTransform("/map", "/laser", ros::Time(0), mapTolaser_tf);
-      listener.lookupTransform("/map", "/guidanceDown_leftcamera_opticalframe", ros::Time(0), mapToarmarker_tf);
-    }
-    catch (tf::TransformException ex){
-      ROS_ERROR("%s",ex.what());
-      ros::Duration(1.0).sleep();
-    }*/
-
-
-
-     pub.publish(naolaser_);
-
-    l.sleep();
-    ros::spinOnce();
-
-  }
-
+  ros::Subscriber sub = n.subscribe("/scan", 1, scanCallback);
+  pub = n.advertise<Pointcloud>("/pcl_scan", 1);
+	//prob wants while ros ok and publish in
+  //if(got_laser)
+	ros::spin();
   return 0;
+
 }
