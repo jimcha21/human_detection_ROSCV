@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+
+<launch>
+
+<!-- TF  -->
+
+<!--  <node pkg="guidance" type="tf_publisher" name="tf_publisher"/>
+  <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher"
+    args=" 0.08 0 0.05 0 0 0 M100_base_link laser 20"/>
+-->
+<!-- Camera Info  -->
+
+<!--  <node pkg="guidance" type="camerainfo_publisher" name="camerainfo_publisher"
+  args="front rear left right down"/>
+-->
+<!-- Nao Locator  -->
+
+<!--  <node pkg="guidance" type="maptomarker_tf" name="maptomarker_tf"
+  args="ar_marker_4"/>
+-->	<node pkg="guidance" type="armarker_subscriber" name="armarker_subscriber"/> 
+
+<!-- Hokuyo Lidar  -->
+
+<!--  <node pkg="urg_node" type="urg_node" name="urg_node"
+    args=" _ip_address:='192.168.1.10' "/>-->
+
+<!-- lidartocloud and cloudtolasernao -->
+
+	<node pkg="guidance" type="laserscan_transform_toNao" name="laserscan_transform_toNao"/> 
+	<node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan_node" output="screen"/> 
+
+<!-- Hector SLAM -->
+
+ <!--
+  <arg name="geotiff_map_file_path" default="$(find hector_geotiff)/maps"/>
+
+ <include file="$(find hector_mapping)/launch/mapping_default.launch">
+    <arg name="tf_map_scanmatch_transform_frame_name" value="M100_base_link"/>
+    <arg name="base_frame" value="M100_base_link"/>
+    <arg name="odom_frame" value="M100_base_link"/>
+ </include>
+
+  <include file="$(find hector_geotiff)/launch/geotiff_mapper.launch">
+    <arg name="trajectory_source_frame_name" value="M100_base_link"/>
+    <arg name="map_file_path" value="$(arg geotiff_map_file_path)"/>
+  </include>-->
+ 
+<!--   <node pkg="hector_exploration_node" type="exploration_planner_node" name="hector_exploration_node" output="screen">
+     <rosparam file="$(find hector_exploration_node)/config/costmap.yaml" command="load" />
+  </node>
+ -->
+
+<!--            MARKER DETECTION                           -->
+
+<!--    <arg name="marker_size" default="7" />
+  <arg name="max_new_marker_error" default="0.08" />
+  <arg name="max_track_error" default="0.2" />
+  <arg name="cam_image_topic" default="/guidance/front/left_camera/image_raw" />
+  <arg name="cam_info_topic" default="/guidance/front/left_camera/camera_info" />
+  <arg name="output_frame" default="/M100_base_link" />
+
+  <node name="ar_track_alvar" pkg="ar_track_alvar" type="individualMarkersNoKinect" respawn="false" output="screen">
+    <param name="marker_size"           type="double" value="$(arg marker_size)" />
+    <param name="max_new_marker_error"  type="double" value="$(arg max_new_marker_error)" />
+    <param name="max_track_error"       type="double" value="$(arg max_track_error)" />
+    <param name="output_frame"          type="string" value="$(arg output_frame)" />
+
+    <remap from="camera_image"  to="$(arg cam_image_topic)" />
+    <remap from="camera_info"   to="$(arg cam_info_topic)" />
+  </node> 
+-->
+
+
+	</launch>
