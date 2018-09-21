@@ -16,7 +16,6 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
 	camera_info_manager
   tf
-	pcl_ros
 	yaml-cpp	
 )
 
@@ -71,14 +70,17 @@ add_executable(guidanceNode
   src/GuidanceNode.cpp
   src/DJI_utility.cpp)
 
+add_executable(nao_laser
+ nodes/nao_laser.cpp
+ src/DJI_utility.cpp)
+	
 add_executable(laserscan_transform_toNao
   nodes/laserscan_transform_toNao.cpp)
 	
 target_link_libraries(laserscan_transform_toNao
   ${catkin_LIBRARIES}
   ${PCL_LIBRARIES}
-  )
-	
+  )	
 	
 add_executable(armarker_subscriber
   nodes/armarker_subscriber.cpp
