@@ -29,6 +29,8 @@ void scanCallback (const sensor_msgs::LaserScan::ConstPtr& scan_in)
 	output->width  = 1; output->height = scan_in->ranges.size();
 	output->is_dense = false;
 	output->points.resize (output->width * output->height);
+	ROS_INFO("elave scan");
+	
 	
 	for(int i=0;i<scan_in->ranges.size();i++){
 		

@@ -3,7 +3,7 @@
 #include <geometry_msgs/TransformStamped.h>
 #include <stdio.h>
 
-std::string marker_topic_="/ar_marker_1";
+std::string parent_frame="map", marker_topic_="/ar_marker_4";
 
 int main(int argc, char** argv){
 
@@ -26,7 +26,7 @@ int main(int argc, char** argv){
   while (node.ok()){
     tf::StampedTransform transform;
     try{
-      listener.lookupTransform("/M100_base_link", marker_topic_,
+      listener.lookupTransform(parent_frame, marker_topic_,
                                ros::Time(0), transform);
     }
     catch (tf::TransformException &ex) {
@@ -36,7 +36,7 @@ int main(int argc, char** argv){
     }
 
     geometry_msgs::TransformStamped transform_;
-    transform_.header.stamp = ros::Time::now(); transform_.header.frame_id = "M100_base_link";
+    transform_.header.stamp = ros::Time::now(); transform_.header.frame_id = parent_frame;
     transform_.transform.translation.x = transform.getOrigin().x();
     transform_.transform.translation.y = transform.getOrigin().y();
     transform_.transform.translation.z = transform.getOrigin().z();
