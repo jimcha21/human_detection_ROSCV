@@ -17,7 +17,7 @@
 
   <node pkg="guidance" type="maptomarker_tf" name="maptomarker_tf"
   args="ar_marker_4"/>
-<!--  <node pkg="guidance" type="armarker_subscriber" name="armarker_subscriber"/>  -->
+  <node pkg="guidance" type="armarker_subscriber" name="armarker_subscriber"/>  
 
 <!-- Hokuyo Lidar  -->
 
@@ -50,8 +50,8 @@
     <arg name="marker_size" default="7" />
   <arg name="max_new_marker_error" default="0.08" />
   <arg name="max_track_error" default="0.2" />
-  <arg name="cam_image_topic" default="/guidance/front/left_camera/image_raw" />
-  <arg name="cam_info_topic" default="/guidance/front/left_camera/camera_info" />
+  <arg name="cam_image_topic" default="/guidance/down/left_camera/image_raw" />
+  <arg name="cam_info_topic" default="/guidance/down/left_camera/camera_info" />
   <arg name="output_frame" default="/M100_base_link" />
 
   <node name="ar_track_alvar" pkg="ar_track_alvar" type="individualMarkersNoKinect" respawn="false" output="screen">

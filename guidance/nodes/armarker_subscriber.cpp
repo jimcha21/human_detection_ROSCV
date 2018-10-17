@@ -26,13 +26,14 @@ void markerCallback(const ar_track_alvar_msgs::AlvarMarkersPtr& msg)
 {
   if(msg->markers.size()==0)
     return;
-	
+	std::cout<<"saas"<<std::endl;
+  	
 	static tf2_ros::TransformBroadcaster br;
   geometry_msgs::TransformStamped map_to_odom_tf;
   
   map_to_odom_tf.header.stamp = map_to_marker_tf.header.stamp;
-  map_to_odom_tf.header.frame_id = "M100_base_link";
-  map_to_odom_tf.child_frame_id = "laser_nao";
+  map_to_odom_tf.header.frame_id = "map";
+  map_to_odom_tf.child_frame_id = "odom";
   
   tf::vector3TFToMsg(tf::Vector3(map_to_marker_tf.transform.translation.x,map_to_marker_tf.transform.translation.y,0),map_to_odom_tf.transform.translation); 
   tf::Quaternion q;
@@ -47,7 +48,7 @@ void markerCallback(const ar_track_alvar_msgs::AlvarMarkersPtr& msg)
 
   geometry_msgs::PoseStamped zero_pose_;
   zero_pose_.header.stamp = map_to_marker_tf.header.stamp;
-  zero_pose_.header.frame_id = "M100_base_link";
+  zero_pose_.header.frame_id = "map";
   tf::Quaternion qq= tf::createQuaternionFromRPY(0, 0, 0).normalize();
   tf::quaternionTFToMsg(qq,zero_pose_.pose.orientation);
   
@@ -90,7 +91,7 @@ int main(int argc, char **argv)
     nao_initial_pose_.pose.covariance[35] = 0.06853891945200942;
 
     //keep publishing until ros::kill .. fake_localization node subs on it ..
-    //initial_naopose_pub.publish(nao_initial_pose_);
+    initial_naopose_pub.publish(nao_initial_pose_);
     //return 0;
     //std::cout<<"publishing initial pose"<<std::endl;
     rate.sleep();
